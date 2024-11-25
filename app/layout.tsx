@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body
-        className={`relative font-global min-h-screen antialiased bg-gradient-bg from-bgGradient-start to-bgGradient-end px-8`}
+        className={`relative font-global min-h-screen antialiased bg-gradient-bg from-bgGradient-start to-bgGradient-end px-8 overflow-x-hidden`}
       >
         <Navbar />
         {children}
