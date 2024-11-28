@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/global/Navbar";
+import SessionProvider from "@/components/global/SessionProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,9 +17,11 @@ export default function RootLayout({
     <html lang="fr">
       <body
         className={`relative font-global min-h-screen antialiased bg-gradient-bg from-bgGradient-start to-bgGradient-end px-8 overflow-x-hidden`}
-      >
+        >
+        <SessionProvider>
         <Navbar />
-        {children}
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );

@@ -23,8 +23,13 @@ import {
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { useSession } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export default function Navbar() {
+  const { data: session } = useSession();
+
+  console.log(session);
   return (
     <NavigationMenu className="mt-12 lg:bg-[#202020] lg:bg-opacity-50 lg:rounded-full h-16 lg:w-[95%] xl:w-[1200px] lg:mx-auto fixed top-0 left-0 right-0 px-8 lg:px-0">
       <ul className="flex justify-between w-full items-center lg:hidden">
@@ -160,13 +165,17 @@ export default function Navbar() {
             Nous contacter
           </Link>
         </ul>
-        <Link href={"/"}>
+        <Link href={"/inscription"}>
           <Button className="xl:hidden">
             <User className="min-w-6 min-h-6" size={20} weight="regular" />
           </Button>
-          <Button className="hidden xl:block">
-            Nous rejoindre
-          </Button>
+          {session ? (<Avatar>
+            <AvatarImage src={session.user?.image ?? ""} alt={session.user?.name ?? ""} />
+            <AvatarFallback>{session.user?.name ?? ""}</AvatarFallback>
+          </Avatar>
+          ) : (
+              <Button className="hidden xl:block">Nous rejoindre</Button>
+          )}
         </Link>
       </div>
     </NavigationMenu>

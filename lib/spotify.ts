@@ -1,3 +1,6 @@
+import connectDb from "./mongodb";
+import Track from "@/models/track";
+
 export async function getAccessToken(): Promise<string> {
   const client_id = process.env.SPOTIFY_CLIENT_ID as string;
   const client_secret = process.env.SPOTIFY_CLIENT_SECRET as string;
@@ -30,11 +33,47 @@ export async function getListTracks() {
       },
     }
   );
+  
   if (!response.ok) {
-    throw new Error("Failed to fetch artist data");
+    throw new Error("Échec de la récupération des données des pistes");
   }
 
   const listTracks = await response.json();
 
-  return listTracks;
+  try {
+    await connectDb();
+
+    for (const item of listTracks.tracks.items) {
+      const track = item.track;
+      
+      const trackData = {
+        spotifyId: track.id,
+        name: track.name,
+        previewUrl: track.preview_url,
+        artists: track.artists.map((artist: any) => ({
+          id: artist.id,
+          name: artist.name,
+        })),
+        album: {
+          id: track.album.id,
+          name: track.album.name,
+          images: track.album.images,
+        },
+        popularity: track.popularity,
+      };
+
+      await Track.findOneAndUpdate(
+        { spotifyId: track.id },
+        trackData,
+        { upsert: true, new: true }
+      );
+    }
+
+    console.log("Pistes sauvegardées avec succès dans MongoDB");
+    
+    return listTracks;
+  } catch (error) {
+    console.error("Erreur lors de la sauvegarde des pistes:", error);
+    throw new Error("Échec de la sauvegarde des pistes dans la base de données");
+  }
 }
