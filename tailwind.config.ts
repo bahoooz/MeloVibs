@@ -17,6 +17,9 @@ export default {
           start: '#292B51',
           end: '#503080',
         },
+        greenColorSecondary: '#28CB62',
+        blueColorTertiary: '#6077D7',
+        btnColorSecondary: '#0F172A',
       },
       backgroundImage: {
         'gradient-bg': 'linear-gradient(to bottom, var(--tw-gradient-stops))',

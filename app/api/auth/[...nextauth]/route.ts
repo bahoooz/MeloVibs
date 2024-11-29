@@ -31,6 +31,8 @@ const authOptions = NextAuth({
                         email: user.email,
                         name: user.name,
                         image: user.image,
+                        votedTracks: user.votedTracks,
+                        isAdmin: user.isAdmin,
                     };
                 } catch (error) {
                     console.error("Erreur d'authentification:", error);
@@ -42,17 +44,28 @@ const authOptions = NextAuth({
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token.id = user.id;
+                // Propriétés standard
+                token.name = user.name;
                 token.email = user.email;
+                token.picture = user.image;
+                // Propriétés personnalisées
+                token.id = user.id;
+                token.votedTracks = user.votedTracks;
+                token.isAdmin = user.isAdmin;
             }
             return token;
         },
         async session({ session, token }) {
             if (token) {
                 session.user = {
-                    email: token.email,
+                    // Propriétés standard  
                     name: token.name,
+                    email: token.email,
                     image: token.picture,
+                    // Propriétés personnalisées
+                    id: token.id,
+                    votedTracks: token.votedTracks,
+                    isAdmin: token.isAdmin,
                 }
             }
             return session;

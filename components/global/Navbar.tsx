@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -25,17 +25,19 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import BurgerMenu from "./BurgerMenu";
+import UserAvatar from "./UserAvatar";
 
 export default function Navbar() {
   const { data: session } = useSession();
+  const [isOpen, setIsOpen] = useState(false);
 
-  console.log(session);
   return (
-    <NavigationMenu className="mt-12 lg:bg-[#202020] lg:bg-opacity-50 lg:rounded-full h-16 lg:w-[95%] xl:w-[1200px] lg:mx-auto fixed top-0 left-0 right-0 px-8 lg:px-0">
+    <NavigationMenu className="mt-12 max-w-full lg:bg-[#202020] lg:bg-opacity-50 lg:rounded-full h-16 lg:w-[95%] xl:w-[1200px] lg:mx-auto fixed top-0 left-0 right-0 px-8 lg:px-0">
       <ul className="flex justify-between w-full items-center lg:hidden">
         <li className="font-bold text-2xl">WazyUp</li>
         <li>
-          <List weight="light" size={32} />
+          <List weight="light" size={32} onClick={() => setIsOpen(!isOpen)} />
         </li>
       </ul>
       <div className="hidden lg:flex w-full justify-between items-center px-3">
@@ -169,15 +171,12 @@ export default function Navbar() {
           <Button className="xl:hidden">
             <User className="min-w-6 min-h-6" size={20} weight="regular" />
           </Button>
-          {session ? (<Avatar>
-            <AvatarImage src={session.user?.image ?? ""} alt={session.user?.name ?? ""} />
-            <AvatarFallback>{session.user?.name ?? ""}</AvatarFallback>
-          </Avatar>
-          ) : (
+          {session ? (<UserAvatar />) : (
               <Button className="hidden xl:block">Nous rejoindre</Button>
           )}
         </Link>
       </div>
+      <BurgerMenu isOpen={isOpen} setIsOpen={setIsOpen} />
     </NavigationMenu>
   );
 }
