@@ -20,7 +20,7 @@ import { useTrackStore } from "@/store/useTrackStore";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "../ui/button";
 
-interface Track {
+export interface Track {
   _id: string;
   spotifyId: string;
   name: string;
