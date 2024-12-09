@@ -1,10 +1,10 @@
-import SignUpForm from '@/components/AuthPages/SignUpForm'
-import React from 'react'
+import SignUpForm from "@/components/AuthPages/SignUpForm";
+import React from "react";
 
 export default function Inscription() {
-    return (
-        <div className='h-[200vh]'>
-            <SignUpForm />
-        </div>
-    )
+  return (
+    <div className="px-8 mb-40">
+      <SignUpForm />
+    </div>
+  );
 }

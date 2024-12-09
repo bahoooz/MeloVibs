@@ -39,11 +39,15 @@ export async function getListTracks() {
   }
 
   const listTracks = await response.json();
+  console.log('Données des pistes Spotify:', listTracks.tracks.items);
+  
+  const tracksItems = listTracks.tracks.items;
 
   try {
     await connectDb();
+    console.log("Connexion à la base de données réussie");
 
-    for (const item of listTracks.tracks.items) {
+    for (const item of tracksItems) {
       const track = item.track;
       
       const trackData = {
@@ -58,20 +62,27 @@ export async function getListTracks() {
           id: track.album.id,
           name: track.album.name,
           images: track.album.images,
+          share_link: track.album.external_urls.spotify,
+          release_date: track.album.release_date,
         },
         popularity: track.popularity,
+        duration_ms: track.duration_ms,
       };
+
+      console.log('Mise à jour du track:', trackData);
 
       await Track.findOneAndUpdate(
         { spotifyId: track.id },
         trackData,
         { upsert: true, new: true }
-      );
+      ).catch(error => {
+        console.error("Erreur lors de la mise à jour du track:", error);
+      });
     }
 
-    console.log("Pistes sauvegardées avec succès dans MongoDB");
+    // console.log("Pistes sauvegardées avec succès dans MongoDB");
     
-    return listTracks;
+    return tracksItems;
   } catch (error) {
     console.error("Erreur lors de la sauvegarde des pistes:", error);
     throw new Error("Échec de la sauvegarde des pistes dans la base de données");

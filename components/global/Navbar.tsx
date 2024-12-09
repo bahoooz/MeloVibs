@@ -24,7 +24,6 @@ import {
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import BurgerMenu from "./BurgerMenu";
 import UserAvatar from "./UserAvatar";
 
@@ -33,11 +32,18 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <NavigationMenu className="mt-12 max-w-full lg:bg-[#202020] lg:bg-opacity-50 lg:rounded-full h-16 lg:w-[95%] xl:w-[1200px] lg:mx-auto fixed top-0 left-0 right-0 px-8 lg:px-0">
+    <NavigationMenu className="mt-12 max-w-full lg:bg-[#252639]/80 lg:rounded-full h-16 lg:w-[95%] xl:w-[1200px] lg:mx-auto fixed top-0 left-0 right-0 px-8 lg:px-0 z-50">
       <ul className="flex justify-between w-full items-center lg:hidden">
-        <li className="font-bold text-2xl">WazyUp</li>
+        <li className="">
+          <UserAvatar className="w-12 h-12" />
+        </li>
         <li>
-          <List weight="light" size={32} onClick={() => setIsOpen(!isOpen)} />
+          <List
+            weight="light"
+            size={32}
+            onClick={() => setIsOpen(!isOpen)}
+            className="cursor-pointer"
+          />
         </li>
       </ul>
       <div className="hidden lg:flex w-full justify-between items-center px-3">
@@ -78,7 +84,10 @@ export default function Navbar() {
               <div className="py-6 flex justify-center items-center">
                 <ul className="flex flex-col gap-6">
                   <li>
-                    <Link href={"/"} className="flex gap-4 group hover:underline">
+                    <Link
+                      href={"/"}
+                      className="flex gap-4 group hover:underline"
+                    >
                       <MicrophoneStage
                         size={24}
                         weight="light"
@@ -89,11 +98,14 @@ export default function Navbar() {
                         weight="fill"
                         className="hidden group-hover:block"
                       />{" "}
-                      Classement par artistes
+                      Classement des artistes
                     </Link>
                   </li>
                   <li>
-                    <Link href={"/"} className="flex gap-4 group hover:underline">
+                    <Link
+                      href={"/"}
+                      className="flex gap-4 group hover:underline"
+                    >
                       <MusicNote
                         size={24}
                         weight="light"
@@ -104,11 +116,14 @@ export default function Navbar() {
                         weight="fill"
                         className="hidden group-hover:block"
                       />{" "}
-                      Classement du mois par musiques
+                      Classement du mois des musiques
                     </Link>
                   </li>
                   <li>
-                    <Link href={"/"} className="flex gap-4 group hover:underline">
+                    <Link
+                      href={"/"}
+                      className="flex gap-4 group hover:underline"
+                    >
                       <MusicNotesPlus
                         size={24}
                         weight="light"
@@ -119,7 +134,7 @@ export default function Navbar() {
                         weight="fill"
                         className="hidden group-hover:block"
                       />{" "}
-                      Classement par musiques les plus votées
+                      Classement des musiques les plus votées
                     </Link>
                   </li>
                 </ul>
@@ -167,14 +182,16 @@ export default function Navbar() {
             Nous contacter
           </Link>
         </ul>
-        <Link href={"/inscription"}>
-          <Button className="xl:hidden">
-            <User className="min-w-6 min-h-6" size={20} weight="regular" />
-          </Button>
-          {session ? (<UserAvatar />) : (
-              <Button className="hidden xl:block">Nous rejoindre</Button>
-          )}
-        </Link>
+        {session ? (
+          <UserAvatar className="hover:scale-[1.45] transition-all duration-200" />
+        ) : (
+          <Link href={"/connexion"}>
+            <Button className="xl:hidden">
+              <User className="min-w-6 min-h-6" size={20} weight="regular" />
+            </Button>
+            <Button className="hidden xl:block">Nous rejoindre</Button>
+          </Link>
+        )}
       </div>
       <BurgerMenu isOpen={isOpen} setIsOpen={setIsOpen} />
     </NavigationMenu>

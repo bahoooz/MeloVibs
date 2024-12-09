@@ -9,7 +9,9 @@ export async function GET() {
       .sort({ popularity: -1 })
       .limit(5);
     
+      // console.log("tracks", tracks);
     return NextResponse.json({ tracks });
+    
   } catch (error) {
     console.error("Erreur lors de la récupération des tracks:", error);
     return NextResponse.json(

@@ -5,6 +5,9 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+  CarouselDots,
 } from "../ui/carousel";
 import {
   Card,
@@ -19,6 +22,7 @@ import { Skeleton } from "../ui/skeleton";
 import { useTrackStore } from "@/store/useTrackStore";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "../ui/button";
+import { createHandleVote } from "@/lib/utils";
 
 export interface Track {
   _id: string;
@@ -43,25 +47,25 @@ export interface Track {
 }
 
 export default function MostPopularTracks() {
-  const [tracks, setTracks] = useState<Track[]>([]);
+  const { tracks, setTracks, addVote, removeVote, isVoted } = useTrackStore();
   const [isLoading, setIsLoading] = useState(true);
-  const { addVote, removeVote, isVoted } = useTrackStore();
-  const { toast } = useToast();
-
+  const handleVote = createHandleVote(isVoted, addVote, removeVote);
   useEffect(() => {
     async function initialize() {
       try {
         const [tracksRes, votesRes] = await Promise.all([
           fetch("/api/tracks"),
-          fetch("/api/user/votes")
+          fetch("/api/user/votes"),
         ]);
-        
+
         const tracksData = await tracksRes.json();
         const votesData = await votesRes.json();
-        
+
         setTracks(tracksData.tracks);
         if (votesData.votedTracks) {
-          useTrackStore.setState({ votedTracks: new Set(votesData.votedTracks) });
+          useTrackStore.setState({
+            votedTracks: new Set(votesData.votedTracks),
+          });
         }
       } catch (error) {
         console.error("Erreur lors de l'initialisation:", error);
@@ -72,41 +76,6 @@ export default function MostPopularTracks() {
 
     initialize();
   }, []);
-
-  const handleVote = async (trackId: string) => {
-    try {
-      if (isVoted(trackId)) {
-        await removeVote(trackId);
-        // Rafraîchir les données après le vote
-        const res = await fetch("/api/tracks");
-        const data = await res.json();
-        setTracks(data.tracks);
-        
-        toast({
-          title: "Vote retiré",
-          description: "Votre vote a été retiré avec succès",
-        });
-      } else {
-        await addVote(trackId);
-        // Rafraîchir les données après le vote
-        const res = await fetch("/api/tracks");
-        const data = await res.json();
-        setTracks(data.tracks);
-        
-        toast({
-          title: "Vote ajouté",
-          description: "Votre vote a été ajouté avec succès",
-        });
-      }
-    } catch (error) {
-      console.error("Erreur lors du vote:", error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors du vote",
-        variant: "destructive",
-      });
-    }
-  };
 
   if (isLoading) {
     return (
@@ -135,34 +104,40 @@ export default function MostPopularTracks() {
   }
 
   return (
-    <Carousel className="w-full">
-      <CarouselContent>
+    <Carousel
+      className="w-full xl:w-[500px] relative sm:w-[600px] lg:w-[700px] overflow-hidden 2xl:overflow-visible rounded-t-[30px]"
+      autoPlay
+      autoPlayInterval={3000}
+      loop
+    >
+      <CarouselContent className="rounded-[30px]">
         {tracks.map((track) => (
           <CarouselItem key={track._id}>
             <Card>
-              <CardContent className="flex flex-col items-center justify-center gap-12">
-                <CardHeader>
+              <CardContent className="flex flex-col items-center justify-center gap-12  sm:mx-auto xl:mx-0">
+                <CardHeader className="sm:w-full">
                   <Image
                     src={track.album.images[0].url}
                     alt={`Cover de ${track.name}`}
                     width={track.album.images[0].width}
                     height={track.album.images[0].height}
-                    className="rounded-[30px]"
+                    className="rounded-[30px] sm:w-full"
                   />
                 </CardHeader>
-                <CardFooter className="flex w-full justify-between gap-5 items-start">
-                  <div className="flex flex-col gap-2">
+                <CardFooter className="flex w-full justify-between gap-4 items-start">
+                  <div className="flex flex-col gap-2 xl:items-center">
                     <Button
                       onClick={() => handleVote(track._id)}
-                      className={`bg-[#0F172A] w-10 h-10 rounded-full flex items-center justify-center transition-colors p-0 ${
+                      className={`bg-[#0F172A] w-10 xl:w-fit xl:pl-1 xl:pr-3 h-10 rounded-full flex items-center justify-center transition-colors p-0 ${
                         isVoted(track._id) ? "border-[3px] border-white" : ""
                       }`}
                     >
                       <ArrowCircleUp
-                        size={1}
+                        size={32}
                         weight={isVoted(track._id) ? "fill" : "light"}
-                        className="min-w-6 min-h-6"
+                        className="min-w-6 xl:min-w-8 min-h-6 xl:min-h-8"
                       />
+                      <span className="hidden xl:block">Voter</span>
                     </Button>
                     <span className="text-xs">{track.votes} votes</span>
                   </div>
@@ -172,7 +147,7 @@ export default function MostPopularTracks() {
                       {track.artists[0].name}
                     </h4>
                   </CardTitle>
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:gap-5">
                     <Play size={32} weight="light" />
                     <SpeakerHigh size={32} weight="light" />
                   </div>
@@ -182,6 +157,10 @@ export default function MostPopularTracks() {
           </CarouselItem>
         ))}
       </CarouselContent>
+
+      <CarouselDots className="hidden 2xl:flex 2xl:absolute 2xl:flex-col 2xl:top-0 2xl:-right-28 2xl:w-fit 2xl:h-[500px] 2xl:justify-center 2xl:gap-14" />
+
+      <CarouselDots className="2xl:hidden mt-12 sm:w-[600px] lg:w-[700px] xl:w-full sm:mx-auto " />
     </Carousel>
   );
 }

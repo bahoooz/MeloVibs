@@ -10,7 +10,7 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const trackId = await params.id;
+    const trackId = params.id;
     const session = await getServerSession(authOptions) as Session | null;
 
     if (!session?.user?.email) {
@@ -58,36 +58,32 @@ export async function POST(
 
 export async function DELETE(
   request: NextRequest,
+  // @ts-ignore -- Next.js params type issue
   { params }: { params: { id: string } }
 ) {
   try {
-
-    // 1. Vérifier si l'utilisateur est connecté
+    const trackId = params.id;
     const session = await getServerSession(authOptions) as Session | null;
+
     if (!session?.user?.email) {
       return NextResponse.json({ error: "Vous devez être connecté pour retirer votre vote" }, { status: 401 });
     }
 
     await connectDb();
 
-    // 2. Vérifier si l'utilisateur a bien voté pour ce track
     const user = await User.findOne({ email: session?.user?.email });
-    if (!user?.votedTracks.includes(params.id)) {
+    if (!user?.votedTracks.includes(trackId)) {
       return NextResponse.json({ error: "Vous n'avez pas voté pour ce track" }, { status: 400 });
     }
 
-    // 3. Mettre à jour le track ET l'utilisateur en parallèle
-
     const [updatedTrack, updatedUser] = await Promise.all([
-      // Décrémenter le compteur de votes du track
       Track.findByIdAndUpdate(
-        params.id,
+        trackId,
         { $inc: { votes: -1 } },
         { new: true }
       ),
-      // Retirer l'ID du track des votes de l'utilisateur
       User.findOneAndUpdate({ email: session?.user?.email },
-        { $pull: { votedTracks: params.id } },
+        { $pull: { votedTracks: trackId } },
         { new: true }
       )
     ])

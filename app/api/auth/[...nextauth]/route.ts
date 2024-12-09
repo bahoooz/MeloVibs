@@ -19,6 +19,7 @@ const authOptions = NextAuth({
                 try {
                     await connectDb();
                     const user = await User.findOne({ email: credentials?.email });
+
                     if (!user) {
                         throw new Error("Email non trouvé");
                     }
@@ -33,6 +34,7 @@ const authOptions = NextAuth({
                         image: user.image,
                         votedTracks: user.votedTracks,
                         isAdmin: user.isAdmin,
+                        createdAt: user.createdAt,
                     };
                 } catch (error) {
                     console.error("Erreur d'authentification:", error);
@@ -42,30 +44,46 @@ const authOptions = NextAuth({
         })
     ],
     callbacks: {
-        async jwt({ token, user }) {
+        async jwt({ token, user, trigger }) {
             if (user) {
-                // Propriétés standard
                 token.name = user.name;
                 token.email = user.email;
                 token.picture = user.image;
-                // Propriétés personnalisées
                 token.id = user.id;
                 token.votedTracks = user.votedTracks;
                 token.isAdmin = user.isAdmin;
+                token.createdAt = user.createdAt;
+            }
+
+            if (trigger === "signIn" || trigger === "update") {
+                try {
+                    await connectDb();
+                    const dbUser = await User.findOne({ email: token.email });
+                    if (dbUser) {
+                        token.name = dbUser.name;
+                        token.email = dbUser.email;
+                        token.picture = dbUser.image;
+                        token.id = dbUser._id.toString();
+                        token.votedTracks = dbUser.votedTracks;
+                        token.isAdmin = dbUser.isAdmin;
+                        token.createdAt = dbUser.createdAt;
+                    }
+                } catch (error) {
+                    console.error("Erreur lors de la mise à jour du token:", error);
+                }
             }
             return token;
         },
         async session({ session, token }) {
             if (token) {
                 session.user = {
-                    // Propriétés standard  
                     name: token.name,
                     email: token.email,
                     image: token.picture,
-                    // Propriétés personnalisées
                     id: token.id,
-                    votedTracks: token.votedTracks,
+                    votedTracks: token.votedTracks || [],
                     isAdmin: token.isAdmin,
+                    createdAt: token.createdAt,
                 }
             }
             return session;

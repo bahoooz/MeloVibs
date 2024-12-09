@@ -16,9 +16,12 @@ interface TrackTypes extends Document {
       height: number;
       width: number;
     }[];
+    share_link: string;
+    release_date: string;
   };
   popularity: number;
   votes: number;
+  duration_ms: number;
 }
 
 const trackSchema = new Schema<TrackTypes>(
@@ -48,6 +51,14 @@ const trackSchema = new Schema<TrackTypes>(
         height: Number,
         width: Number,
       }],
+      share_link: {
+        type: String,
+        required: true,
+      },
+      release_date: {
+        type: String,
+        required: true,
+      }
     },
     popularity: {
       type: Number,
@@ -56,6 +67,10 @@ const trackSchema = new Schema<TrackTypes>(
     votes: {
       type: Number,
       default: 0,
+    },
+    duration_ms: {
+      type: Number,
+      required: true,
     },
   },
   {

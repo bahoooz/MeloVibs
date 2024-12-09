@@ -3,8 +3,8 @@ import React from 'react'
 
 export default function Connexion() {
   return (
-    <div>Connexion
-        <SignInForm />
+    <div className="px-8 mb-40">
+      <SignInForm />
     </div>
   )
 }

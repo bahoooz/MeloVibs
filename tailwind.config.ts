@@ -11,6 +11,7 @@ export default {
     extend: {
 		fontFamily: {
 			global: ['"Libre Franklin"', 'sans-serif'],
+      title: [""]
 		},
       colors: {
         bgGradient: {
@@ -20,6 +21,7 @@ export default {
         greenColorSecondary: '#28CB62',
         blueColorTertiary: '#6077D7',
         btnColorSecondary: '#0F172A',
+        bgColorTransparent: 'rgba(24, 24, 27, 0.2)',
       },
       backgroundImage: {
         'gradient-bg': 'linear-gradient(to bottom, var(--tw-gradient-stops))',

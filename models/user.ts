@@ -9,6 +9,7 @@ interface UserTypes extends Document {
   votedTracks: string[];
   isEmailVerified: boolean;
   isAdmin: boolean;
+  createdAt: Date;
 }
 
 const userSchema = new Schema<UserTypes>(
@@ -35,7 +36,7 @@ const userSchema = new Schema<UserTypes>(
       type: String,
       required: true,
       default:
-        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+        "https://avatars.githubusercontent.com/u/124599?v=4",
     },
     votedTracks: {
       type: [String],
