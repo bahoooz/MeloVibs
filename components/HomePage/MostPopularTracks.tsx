@@ -54,7 +54,7 @@ export default function MostPopularTracks() {
     async function initialize() {
       try {
         const [tracksRes, votesRes] = await Promise.all([
-          fetch("/api/tracks"),
+          fetch("/api/tracks/tracks-header-homepage"),
           fetch("/api/user/votes"),
         ]);
 
@@ -105,12 +105,12 @@ export default function MostPopularTracks() {
 
   return (
     <Carousel
-      className="w-full xl:w-[500px] relative sm:w-[600px] lg:w-[700px] overflow-hidden 2xl:overflow-visible rounded-t-[30px]"
+      className="w-full xl:w-[500px] relative sm:w-[600px] lg:w-[700px] 2xl:overflow-visible rounded-t-[30px]"
       autoPlay
       autoPlayInterval={3000}
       loop
     >
-      <CarouselContent className="rounded-[30px]">
+      <CarouselContent className="rounded-[30px] carousel-header-home">
         {tracks.map((track) => (
           <CarouselItem key={track._id}>
             <Card>

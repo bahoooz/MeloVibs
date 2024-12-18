@@ -10,6 +10,8 @@ interface TrackStore {
   tracks: Track[];
   // Tableau contenant les pistes spécifiques au mois en cours
   tracksOfMonth: Track[];
+  // Genre actuel
+  currentGenre: string;
   
   // Méthodes pour mettre à jour l'état
   setTracks: (tracks: Track[]) => void;
@@ -17,6 +19,7 @@ interface TrackStore {
   addVote: (trackId: string) => Promise<void>;
   removeVote: (trackId: string) => Promise<void>;
   isVoted: (trackId: string) => boolean;
+  setCurrentGenre: (genre: string) => void;
 }
 
 // Création du store avec Zustand
@@ -25,6 +28,7 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
   votedTracks: new Set(),
   tracks: [],
   tracksOfMonth: [],
+  currentGenre: '',
   
   // Méthodes simples pour mettre à jour les listes de pistes
   setTracks: (tracks) => set({ tracks }),
@@ -45,9 +49,9 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
       const data = await response.json();
       set({ votedTracks: new Set(data.votedTracks) });
       
-      // Récupération des données mises à jour
-      const tracksRes = await fetch("/api/tracks");
-      const tracksOfMonthRes = await fetch("/api/tracks/tracks-of-month");
+      // Utilisation du genre actuel pour la mise à jour
+      const tracksRes = await fetch(`/api/tracks/get-all-tracks/${get().currentGenre}`);
+      const tracksOfMonthRes = await fetch("/api/tracks/tracks-ranking-homepage");
       
       // Attente parallèle des deux réponses
       const [tracksData, tracksOfMonthData] = await Promise.all([
@@ -79,9 +83,9 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
       const data = await response.json();
       set({ votedTracks: new Set(data.votedTracks) });
       
-      // Récupération des données mises à jour
-      const tracksRes = await fetch("/api/tracks");
-      const tracksOfMonthRes = await fetch("/api/tracks/tracks-of-month");
+      // Utilisation du genre actuel pour la mise à jour
+      const tracksRes = await fetch(`/api/tracks/get-all-tracks/${get().currentGenre}`);
+      const tracksOfMonthRes = await fetch("/api/tracks/tracks-ranking-homepage");
       
       // Attente parallèle des deux réponses
       const [tracksData, tracksOfMonthData] = await Promise.all([
@@ -103,4 +107,7 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
   isVoted: (trackId: string) => {
     return get().votedTracks.has(trackId);
   },
+
+  // Méthode pour mettre à jour le genre actuel
+  setCurrentGenre: (genre) => set({ currentGenre: genre }),
 })); 

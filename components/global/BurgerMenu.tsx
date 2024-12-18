@@ -96,7 +96,7 @@ export default function BurgerMenu({
             </li>
             <li>
               <Link
-                href={"/"}
+                href={"/classements"}
                 className="flex items-center gap-3 group hover:underline"
               >
                 <MusicNote
@@ -162,7 +162,7 @@ export default function BurgerMenu({
             weight="fill"
             className="hidden group-hover:block"
           />
-          Nous contacter
+          Contact
         </Link>
       </NavigationMenu>
     </div>

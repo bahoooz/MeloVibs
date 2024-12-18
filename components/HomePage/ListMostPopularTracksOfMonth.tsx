@@ -26,7 +26,7 @@ export default function ListMostPopularTracksOfMonth() {
     async function fetchTracks() {
       try {
         const [tracksRes, votesRes] = await Promise.all([
-          fetch("/api/tracks/tracks-of-month"),
+          fetch("/api/tracks/tracks-ranking-homepage"),
           fetch("/api/user/votes"),
         ]);
 
@@ -102,7 +102,6 @@ export default function ListMostPopularTracksOfMonth() {
                     isVoted(track._id) ? "border-[3px] border-white" : ""
                   }`}
                   stylesIsVotedIcon={isVoted(track._id) ? "fill" : "light"}
-                  // popularity_track={track.popularity >= 70 ? "Hit du moment" : track.popularity >= 50 ? "" : "" }
                   popularity_track={
                     track.popularity >= 80
                       ? "Hit incontournable"

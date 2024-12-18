@@ -19,6 +19,7 @@ interface TrackTypes extends Document {
     share_link: string;
     release_date: string;
   };
+  genres: string[];
   popularity: number;
   votes: number;
   duration_ms: number;
@@ -58,7 +59,11 @@ const trackSchema = new Schema<TrackTypes>(
       release_date: {
         type: String,
         required: true,
-      }
+      },
+    },
+    genres: {
+      type: [String],
+      default: [],
     },
     popularity: {
       type: Number,

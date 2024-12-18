@@ -103,7 +103,7 @@ export default function Navbar() {
                   </li>
                   <li>
                     <Link
-                      href={"/"}
+                      href={"/classements"}
                       className="flex gap-4 group hover:underline"
                     >
                       <MusicNote
@@ -179,7 +179,7 @@ export default function Navbar() {
               weight="fill"
               className="hidden group-hover:block"
             />
-            Nous contacter
+            Contact
           </Link>
         </ul>
         {session ? (

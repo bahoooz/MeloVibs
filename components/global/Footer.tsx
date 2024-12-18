@@ -9,7 +9,7 @@ export default function Footer() {
   const { data: session } = useSession();
 
   return (
-    <footer className="bg-[#422B70] py-16 md:py-24 xl:py-32 text-center md:text-left border-t-[5px] border-greenColorSecondary">
+    <footer className="bg-[#422B70] py-16 md:py-24 xl:py-32 text-center md:text-left border-t-[5px] border-greenColorSecondary mt-60">
       <div className="flex flex-col gap-16 md:gap-32 md:flex-row md:flex-wrap md:justify-center md:px-16">
         <div className="flex flex-col gap-10">
           <h3 className="uppercase text-xl text-greenColorSecondary">

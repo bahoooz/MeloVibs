@@ -10,7 +10,8 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { ArrowCircleUp, Play, ShareFat } from "@phosphor-icons/react";
 
-interface CardTrackProps {
+export interface CardTrackProps {
+  _id?: string;
   image: string;
   title: string;
   artist: string;
