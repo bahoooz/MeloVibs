@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { Button } from "../ui/button";
 
 export default function MusicMostPopularByGenre() {
   return (
     <section className="mt-32 lg:mt-44">
       <h2 className="text-5xl mb-20 lg:mb-32 md:w-[600px] md:mx-auto lg:w-[700px] xl:w-[1200px] xl:text-center">
-        Découvrez les musiques les plus streamées par genre
+        Découvrez les morceaux les plus streamées par genre
       </h2>
       <div className="flex flex-col gap-10 sm:gap-5 xl:gap-10 sm:flex-wrap sm:flex-row md:w-[600px] lg:w-[700px] xl:w-[1200px] md:mx-auto">
         <Link
@@ -83,6 +84,11 @@ export default function MusicMostPopularByGenre() {
             height={1755}
             className="h-[175px] xl:h-[400px] w-full object-cover rounded-2xl brightness-50 [object-position:70%_50%] xl:[object-position:55%_50%]"
           />
+        </Link>
+      </div>
+      <div className="mx-auto w-fit mt-10">
+        <Link href="/classements">
+          <Button>Voir tous les classements</Button>
         </Link>
       </div>
     </section>

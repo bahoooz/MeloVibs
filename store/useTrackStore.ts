@@ -37,67 +37,76 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
   // Méthode pour ajouter un vote
   addVote: async (trackId: string) => {
     try {
-      // Envoi de la requête POST pour voter
       const response = await fetch(`/api/tracks/vote/${trackId}`, {
         method: 'POST',
       });
       
-      // Vérification de la réponse
       if (!response.ok) throw new Error('Erreur lors du vote');
       
-      // Mise à jour du Set des votes
       const data = await response.json();
       set({ votedTracks: new Set(data.votedTracks) });
       
-      // Utilisation du genre actuel pour la mise à jour
-      const tracksRes = await fetch(`/api/tracks/get-all-tracks/${get().currentGenre}`);
-      const tracksOfMonthRes = await fetch("/api/tracks/tracks-ranking-homepage");
+      // Récupération des tracks en fonction du contexte
+      const promises = [fetch("/api/tracks/tracks-ranking-homepage")];
       
-      // Attente parallèle des deux réponses
-      const [tracksData, tracksOfMonthData] = await Promise.all([
-        tracksRes.json(),
-        tracksOfMonthRes.json()
-      ]);
+      // Ajouter la requête pour get-all-tracks seulement si un genre est sélectionné
+      if (get().currentGenre) {
+        promises.push(fetch(`/api/tracks/get-all-tracks/${get().currentGenre}`));
+      }
       
-      // Mise à jour des deux listes de pistes
-      set({ 
-        tracks: tracksData.tracks,
+      const responses = await Promise.all(promises);
+      const jsonPromises = responses.map(res => res.json());
+      const [tracksOfMonthData, tracksData] = await Promise.all(jsonPromises);
+      
+      // Mise à jour du state en fonction des données disponibles
+      const newState: any = {
         tracksOfMonth: tracksOfMonthData.tracks
-      });
+      };
+      
+      if (tracksData) {
+        newState.tracks = tracksData.tracks;
+      }
+      
+      set(newState);
     } catch (error) {
       console.error('Erreur lors du vote:', error);
     }
   },
 
-  // Méthode pour supprimer un vote (similaire à addVote)
+  // Méthode pour supprimer un vote
   removeVote: async (trackId: string) => {
     try {
-      // Envoi de la requête DELETE pour retirer le vote
       const response = await fetch(`/api/tracks/vote/${trackId}`, {
         method: 'DELETE',
       });
       
       if (!response.ok) throw new Error('Erreur lors de la suppression du vote');
       
-      // Mise à jour du Set des votes
       const data = await response.json();
       set({ votedTracks: new Set(data.votedTracks) });
       
-      // Utilisation du genre actuel pour la mise à jour
-      const tracksRes = await fetch(`/api/tracks/get-all-tracks/${get().currentGenre}`);
-      const tracksOfMonthRes = await fetch("/api/tracks/tracks-ranking-homepage");
+      // Récupération des tracks en fonction du contexte
+      const promises = [fetch("/api/tracks/tracks-ranking-homepage")];
       
-      // Attente parallèle des deux réponses
-      const [tracksData, tracksOfMonthData] = await Promise.all([
-        tracksRes.json(),
-        tracksOfMonthRes.json()
-      ]);
+      // Ajouter la requête pour get-all-tracks seulement si un genre est sélectionné
+      if (get().currentGenre) {
+        promises.push(fetch(`/api/tracks/get-all-tracks/${get().currentGenre}`));
+      }
       
-      // Mise à jour des deux listes de pistes
-      set({ 
-        tracks: tracksData.tracks,
+      const responses = await Promise.all(promises);
+      const jsonPromises = responses.map(res => res.json());
+      const [tracksOfMonthData, tracksData] = await Promise.all(jsonPromises);
+      
+      // Mise à jour du state en fonction des données disponibles
+      const newState: any = {
         tracksOfMonth: tracksOfMonthData.tracks
-      });
+      };
+      
+      if (tracksData) {
+        newState.tracks = tracksData.tracks;
+      }
+      
+      set(newState);
     } catch (error) {
       console.error('Erreur lors de la suppression du vote:', error);
     }
