@@ -40,6 +40,7 @@ export default function BurgerMenu({
       <NavigationMenu className="flex flex-col gap-6 text-lg items-start mx-auto min-w-[380px] w-[500px] max-w-[90vw] absolute px-8 -translate-x-1/2 -translate-y-1/2 left-1/2 top-[50%] sm:top-1/2">
         <Link
           href={"/"}
+          onClick={() => setIsOpen(false)}
           className="flex items-center gap-3 group hover:underline"
         >
           <HouseSimple
@@ -81,6 +82,7 @@ export default function BurgerMenu({
             <li>
               <Link
                 href={"/"}
+                onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 group hover:underline"
               >
                 <MicrophoneStage
@@ -91,12 +93,13 @@ export default function BurgerMenu({
                   className="min-h-6 min-w-6 hidden group-hover:block"
                   weight="fill"
                 />
-                Classement par artistes
+                Classement des artistes
               </Link>
             </li>
             <li>
               <Link
                 href={"/classements"}
+                onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 group hover:underline"
               >
                 <MusicNote
@@ -107,29 +110,14 @@ export default function BurgerMenu({
                   className="min-h-6 min-w-6 hidden group-hover:block"
                   weight="fill"
                 />
-                Classement du mois par musiques
-              </Link>
-            </li>
-            <li>
-              <Link
-                href={"/"}
-                className="flex items-center gap-3 group hover:underline"
-              >
-                <MusicNotesPlus
-                  className="min-h-6 min-w-6 group-hover:hidden"
-                  weight="light"
-                />
-                <MusicNotesPlus
-                  className="min-h-6 min-w-6 hidden group-hover:block"
-                  weight="fill"
-                />
-                Classement par musiques les plus votées
+                Classement des musiques
               </Link>
             </li>
           </ul>
         </div>
         <Link
           href={"/"}
+          onClick={() => setIsOpen(false)}
           className="flex items-center gap-3 group hover:underline"
         >
           <Gift size={24} weight="light" className="group-hover:hidden" />
@@ -138,6 +126,7 @@ export default function BurgerMenu({
         </Link>
         <Link
           href={"/"}
+          onClick={() => setIsOpen(false)}
           className="flex items-center gap-3 group hover:underline"
         >
           <Question size={24} weight="light" className="group-hover:hidden" />
@@ -150,6 +139,7 @@ export default function BurgerMenu({
         </Link>
         <Link
           href={"/"}
+          onClick={() => setIsOpen(false)}
           className="flex items-center gap-3 group hover:underline"
         >
           <PaperPlaneRight

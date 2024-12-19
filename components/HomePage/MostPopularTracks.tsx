@@ -5,8 +5,6 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
   CarouselDots,
 } from "../ui/carousel";
 import {
@@ -20,7 +18,6 @@ import Image from "next/image";
 import { ArrowCircleUp, Play, SpeakerHigh } from "@phosphor-icons/react";
 import { Skeleton } from "../ui/skeleton";
 import { useTrackStore } from "@/store/useTrackStore";
-import { useToast } from "@/hooks/use-toast";
 import { Button } from "../ui/button";
 import { createHandleVote } from "@/lib/utils";
 
@@ -47,12 +44,15 @@ export interface Track {
 }
 
 export default function MostPopularTracks() {
-  const { tracks, setTracks, addVote, removeVote, isVoted } = useTrackStore();
+  const { tracks, setTracks, addVote, removeVote, isVoted, setCurrentGenre } = useTrackStore();
   const [isLoading, setIsLoading] = useState(true);
   const handleVote = createHandleVote(isVoted, addVote, removeVote);
+
   useEffect(() => {
     async function initialize() {
       try {
+        setCurrentGenre('');
+
         const [tracksRes, votesRes] = await Promise.all([
           fetch("/api/tracks/tracks-header-homepage"),
           fetch("/api/user/votes"),
@@ -142,8 +142,8 @@ export default function MostPopularTracks() {
                     <span className="text-xs">{track.votes} votes</span>
                   </div>
                   <CardTitle className="text-center flex flex-col gap-3">
-                    <h3 className="font-medium text-2xl">{track.name}</h3>
-                    <h4 className="font-medium text-xl text-[#28CB62]">
+                    <h3 className="font-medium text-2xl truncate max-w-[200px] sm:max-w-[400px] lg:max-w-[500px] xl:max-w-[250px]">{track.name}</h3>
+                    <h4 className="font-medium text-xl text-[#28CB62] truncate max-w-[200px] sm:max-w-[400px] lg:max-w-[500px] xl:max-w-[250px]">
                       {track.artists[0].name}
                     </h4>
                   </CardTitle>

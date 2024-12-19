@@ -4,8 +4,6 @@ import React, { useState } from "react";
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
   NavigationMenuTrigger,
   NavigationMenuContent,
 } from "../ui/navigation-menu";
@@ -116,25 +114,7 @@ export default function Navbar() {
                         weight="fill"
                         className="hidden group-hover:block"
                       />{" "}
-                      Classement du mois des musiques
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href={"/"}
-                      className="flex gap-4 group hover:underline"
-                    >
-                      <MusicNotesPlus
-                        size={24}
-                        weight="light"
-                        className="group-hover:hidden"
-                      />
-                      <MusicNotesPlus
-                        size={24}
-                        weight="fill"
-                        className="hidden group-hover:block"
-                      />{" "}
-                      Classement des musiques les plus votées
+                      Classement des musiques
                     </Link>
                   </li>
                 </ul>

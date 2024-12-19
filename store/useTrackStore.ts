@@ -47,7 +47,10 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
       set({ votedTracks: new Set(data.votedTracks) });
       
       // Récupération des tracks en fonction du contexte
-      const promises = [fetch("/api/tracks/tracks-ranking-homepage")];
+      const promises = [
+        fetch("/api/tracks/tracks-ranking-homepage"),
+        fetch("/api/tracks/tracks-header-homepage")
+      ];
       
       // Ajouter la requête pour get-all-tracks seulement si un genre est sélectionné
       if (get().currentGenre) {
@@ -56,11 +59,12 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
       
       const responses = await Promise.all(promises);
       const jsonPromises = responses.map(res => res.json());
-      const [tracksOfMonthData, tracksData] = await Promise.all(jsonPromises);
+      const [tracksOfMonthData, tracksHeaderData, tracksData] = await Promise.all(jsonPromises);
       
       // Mise à jour du state en fonction des données disponibles
       const newState: any = {
-        tracksOfMonth: tracksOfMonthData.tracks
+        tracksOfMonth: tracksOfMonthData.tracks,
+        tracks: tracksHeaderData.tracks
       };
       
       if (tracksData) {
@@ -86,7 +90,10 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
       set({ votedTracks: new Set(data.votedTracks) });
       
       // Récupération des tracks en fonction du contexte
-      const promises = [fetch("/api/tracks/tracks-ranking-homepage")];
+      const promises = [
+        fetch("/api/tracks/tracks-ranking-homepage"),
+        fetch("/api/tracks/tracks-header-homepage")
+      ];
       
       // Ajouter la requête pour get-all-tracks seulement si un genre est sélectionné
       if (get().currentGenre) {
@@ -95,11 +102,12 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
       
       const responses = await Promise.all(promises);
       const jsonPromises = responses.map(res => res.json());
-      const [tracksOfMonthData, tracksData] = await Promise.all(jsonPromises);
+      const [tracksOfMonthData, tracksHeaderData, tracksData] = await Promise.all(jsonPromises);
       
       // Mise à jour du state en fonction des données disponibles
       const newState: any = {
-        tracksOfMonth: tracksOfMonthData.tracks
+        tracksOfMonth: tracksOfMonthData.tracks,
+        tracks: tracksHeaderData.tracks
       };
       
       if (tracksData) {

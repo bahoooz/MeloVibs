@@ -5,10 +5,8 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession, Session } from "next-auth";
 import User from "@/models/user";
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const trackId = params.id;
     const session = (await getServerSession(authOptions)) as Session | null;
@@ -51,10 +49,8 @@ export async function POST(
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   try {
     const trackId = params.id;
     const session = (await getServerSession(authOptions)) as Session | null;
