@@ -3,7 +3,6 @@ import { Button } from "../ui/button";
 import MostPopularTracks from "./MostPopularTracks";
 import Link from "next/link";
 import MeloVibsTitle from "../global/MeloVibsTitle";
-import GreenEffectHeader from "./GreenEffectHeader";
 
 export default function Header() {
   return (

@@ -5,6 +5,7 @@ import { Skeleton } from "../ui/skeleton";
 import { Image } from "@phosphor-icons/react";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import VotesTimer from "./VotesTimer";
 
 export default function StatsAboutYou() {
   const { data: session, status } = useSession();

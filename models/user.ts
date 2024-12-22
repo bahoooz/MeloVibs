@@ -10,6 +10,8 @@ interface UserTypes extends Document {
   isEmailVerified: boolean;
   isAdmin: boolean;
   createdAt: Date;
+  remainingVotes: number;
+  lastVoteRefresh: Date;
 }
 
 const userSchema = new Schema<UserTypes>(
@@ -52,6 +54,17 @@ const userSchema = new Schema<UserTypes>(
       type: Boolean,
       required: true,
       default: false,
+    },
+    remainingVotes: {
+      type: Number,
+      required: true,
+      default: 5,
+      max: 10,
+    },
+    lastVoteRefresh: {
+      type: Date,
+      required: true,
+      default: Date.now(),
     },
   },
   {

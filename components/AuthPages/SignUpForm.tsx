@@ -32,22 +32,39 @@ export default function SignUpForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await fetch("api/auth/signup", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-    const data = await res.json();
-    if (res.ok) {
-      console.log("Inscription réussie");
-      console.log(data);
-      router.push("/connexion");
-    } else if (res.status === 400) {
-      console.log("Inscription échouée :", data.error);
-    } else if (res.status === 500) {
-      console.log("Erreur interne du serveur :", data.error);
+    
+    try {
+      // Valider les données avec le schéma Zod
+      const validatedData = schema.parse(formData);
+      
+      // Vérifier si les mots de passe correspondent
+      if (validatedData.password !== validatedData.confirmPassword) {
+        console.log("Les mots de passe ne correspondent pas");
+        return;
+      }
+
+      const res = await fetch("api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(validatedData),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        console.log("Inscription réussie");
+        console.log(data);
+        router.push("/connexion");
+      } else if (res.status === 400) {
+        console.log("Inscription échouée :", data.error);
+      } else if (res.status === 500) {
+        console.log("Erreur interne du serveur :", data.error);
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        console.log("Erreurs de validation:", error.errors);
+        // Ici vous pourriez gérer l'affichage des erreurs dans l'interface
+      }
     }
   };
 
@@ -71,7 +88,8 @@ export default function SignUpForm() {
           <div className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
               <label className="text-greenColorSecondary" htmlFor="name">
-                Nom d'utilisateur
+                Nom d'utilisateur{" "}
+                <span className="opacity-80 text-sm">(définitif)</span>
               </label>
               <Input
                 type="text"

@@ -35,6 +35,8 @@ const authOptions = NextAuth({
                         votedTracks: user.votedTracks,
                         isAdmin: user.isAdmin,
                         createdAt: user.createdAt,
+                        remainingVotes: user.remainingVotes,
+                        lastVoteRefresh: user.lastVoteRefresh,
                     };
                 } catch (error) {
                     console.error("Erreur d'authentification:", error);
@@ -53,6 +55,8 @@ const authOptions = NextAuth({
                 token.votedTracks = user.votedTracks;
                 token.isAdmin = user.isAdmin;
                 token.createdAt = user.createdAt;
+                token.remainingVotes = user.remainingVotes;
+                token.lastVoteRefresh = user.lastVoteRefresh;
             }
 
             if (trigger === "signIn" || trigger === "update") {
@@ -67,6 +71,8 @@ const authOptions = NextAuth({
                         token.votedTracks = dbUser.votedTracks;
                         token.isAdmin = dbUser.isAdmin;
                         token.createdAt = dbUser.createdAt;
+                        token.remainingVotes = dbUser.remainingVotes;
+                        token.lastVoteRefresh = dbUser.lastVoteRefresh;
                     }
                 } catch (error) {
                     console.error("Erreur lors de la mise à jour du token:", error);
@@ -84,6 +90,8 @@ const authOptions = NextAuth({
                     votedTracks: token.votedTracks || [],
                     isAdmin: token.isAdmin,
                     createdAt: token.createdAt,
+                    remainingVotes: token.remainingVotes,
+                    lastVoteRefresh: token.lastVoteRefresh,
                 }
             }
             return session;

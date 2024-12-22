@@ -11,6 +11,8 @@ declare module "next-auth" {
         votedTracks: string[];
         isAdmin: boolean;
         createdAt: Date;
+        remainingVotes: number;
+        lastVoteRefresh: Date;
     }
 
     interface Session extends DefaultSession {
@@ -22,6 +24,8 @@ declare module "next-auth" {
             votedTracks: string[];
             isAdmin: boolean;
             createdAt: Date;
+            remainingVotes: number;
+            lastVoteRefresh: Date;
         }
     }
 }
@@ -35,5 +39,7 @@ declare module "next-auth/jwt" {
         votedTracks: string[];
         isAdmin: boolean;
         createdAt: Date;
+        remainingVotes: number;
+        lastVoteRefresh: Date;
     }
 } 

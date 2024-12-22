@@ -79,13 +79,11 @@ export default function CardTrack({
           />
         </Button>
         <Button
-          onClick={onClick}
           className={`bg-blueColorTertiary w-12 md:w-10 h-12 md:h-10 rounded-full hidden sm:flex items-center justify-center transition-colors p-0`}
         >
           <Play size={16} className="min-h-6 min-w-6" weight={"light"} />
         </Button>
         <Button
-          onClick={onClick}
           className={`bg-white w-12 md:w-10 h-12 md:h-10 rounded-full sm:flex items-center justify-center transition-colors p-0`}
         >
           <ShareFat

@@ -26,12 +26,20 @@ export const createHandleVote = (
           description: "Votre vote a été retiré avec succès",
         });
       } else {
-        await addVote(trackId);
-        await update();
-        toast({
-          title: "Vote ajouté",
-          description: "Votre vote a été ajouté avec succès",
-        });
+        try {
+          await addVote(trackId);
+          await update();
+          toast({
+            title: "Vote ajouté",
+            description: "Votre vote a été ajouté avec succès",
+          });
+        } catch (error: any) {
+          toast({
+            title: "Erreur",
+            description: error.message || "Une erreur est survenue lors du vote",
+            variant: "destructive",
+          });
+        }
       }
     } catch (error) {
       console.error("Erreur lors du vote:", error);
@@ -43,3 +51,24 @@ export const createHandleVote = (
     }
   };
 };
+
+export async function refreshVotes(user: any) {
+  if (user.isAdmin) {
+    return user;
+  }
+
+  const REFRESH_INTERVAL = 3 * 60 * 60 * 1000;
+  const VOTES_PER_REFRESH = 2;
+  const MAX_VOTES = 10;
+
+  const now = new Date();
+  const timeSinceLastRefresh = now.getTime() - user.lastVoteRefresh.getTime();
+  if (timeSinceLastRefresh >= REFRESH_INTERVAL) {
+    const refreshCount = Math.floor(timeSinceLastRefresh / REFRESH_INTERVAL);
+    const newVotes = Math.min(user.remainingVotes + (refreshCount * VOTES_PER_REFRESH), MAX_VOTES);
+    user.remainingVotes = newVotes;
+    user.lastVoteRefresh = now;
+    await user.save()
+  }
+  return user;
+}

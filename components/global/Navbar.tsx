@@ -13,7 +13,6 @@ import {
   List,
   MicrophoneStage,
   MusicNote,
-  MusicNotesPlus,
   PaperPlaneRight,
   Question,
   Ranking,

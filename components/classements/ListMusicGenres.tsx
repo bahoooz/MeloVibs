@@ -63,7 +63,7 @@ export default function ListMusicGenres() {
             RAP US
           </h4>
           <Image
-            src={"/ClassementsMedia/rap_us_cover.webp"}
+            src={"/ClassementsMedia/cover_rap_us.png"}
             alt="Cover Rap"
             width={1170}
             height={1755}
@@ -235,7 +235,7 @@ export default function ListMusicGenres() {
                   RAP US
                 </h4>
                 <Image
-                  src={"/ClassementsMedia/rap_us_cover.webp"}
+                  src={"/ClassementsMedia/cover_rap_us.png"}
                   alt="Cover Afro Beats"
                   width={1170}
                   height={1755}

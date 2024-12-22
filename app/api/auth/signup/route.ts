@@ -51,10 +51,10 @@ export async function POST(request: NextRequest) {
         email,
         name,
         password: hashedPassword,
-        // image: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-        // votes: 0,
-        // isEmailVerified: false,
-        // isAdmin: false
+        remainingVotes: 5,
+        lastVoteRefresh: new Date(),
+        createdAt: new Date(),
+        votedTracks: [],
       });
   
       await newUser.save();
