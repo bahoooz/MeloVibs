@@ -1,13 +1,18 @@
-import { getServerSession } from "next-auth";
+import { getServerSession, Session } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/auth-options";
 import connectDb from "@/lib/mongodb";
 import User from "@/models/user";
 import bcrypt from "bcryptjs";
 
+interface UpdateData {
+  email?: string;
+  password?: string;
+}
+
 export async function PUT(request: NextRequest) {
   try {
-    const session: any = await getServerSession(authOptions);
+    const session: Session | null = await getServerSession(authOptions);
     
     // Vérifier l'authentification
     if (!session?.user?.email) {
@@ -35,7 +40,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Préparer l'objet de mise à jour
-    const updateData: any = {};
+    const updateData: UpdateData = {};
 
     // Si un email est fourni et différent de l'actuel
     if (email && email !== session.user.email) {

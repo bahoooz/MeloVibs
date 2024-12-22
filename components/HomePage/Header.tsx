@@ -32,7 +32,7 @@ export default function Header() {
               <span className="text-greenColorSecondary">
                 propulser tes artistes favoris au sommet
               </span>{" "}
-              et de participer à l'aventure musicale avec des{" "}
+              et de participer à l&apos;aventure musicale avec des{" "}
               <span className="text-greenColorSecondary">
                 votes qui comptent vraiment
               </span>{" "}

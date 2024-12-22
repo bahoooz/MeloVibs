@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-interface TrackTypes extends Document {
+export interface TrackTypes extends Document {
   spotifyId: string;
   name: string;
   previewUrl: string | null;

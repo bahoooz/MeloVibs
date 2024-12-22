@@ -12,14 +12,18 @@ import {
   PaginationContent,
   PaginationItem,
 } from "../ui/pagination";
+import { useToast } from "@/hooks/use-toast";
+import { useSession } from "next-auth/react";
 
 export default function ListTracksRanking({genre}: {genre: string}) {
+  const { toast } = useToast();
+  const { update } = useSession();
   // Initialisation des états et des fonctions du store
   const { tracks, setTracks, addVote, removeVote, isVoted } = useTrackStore();
   const [currentPage, setCurrentPage] = useState(1); // État pour gérer la page courante
   const tracksPerPage = 30; // Nombre de pistes par page
   const tracksPerCarousel = 5; // Nombre de pistes par carousel
-  const handleVote = createHandleVote(isVoted, addVote, removeVote);
+  const handleVote = createHandleVote(toast, update, isVoted, addVote, removeVote);
 
   // Calcul du nombre total de pages nécessaires
   const totalPages = Math.ceil(tracks.length / tracksPerPage);
@@ -56,7 +60,7 @@ export default function ListTracksRanking({genre}: {genre: string}) {
     }
 
     initialize();
-  }, []);
+  }, [genre, setTracks]);
 
   // Fonction pour générer les numéros de page à afficher dans la pagination
   const getPageNumbers = () => {

@@ -15,12 +15,16 @@ import { Skeleton } from "../ui/skeleton";
 import CardTrack from "@/components/global/CardTrack";
 import { createHandleVote } from "@/lib/utils";
 import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
+import { useSession } from "next-auth/react";
 
 export default function ListMostPopularTracksOfMonth() {
+  const { update } = useSession();
+  const { toast } = useToast();
   const { tracksOfMonth, setTracksOfMonth, addVote, removeVote, isVoted } =
     useTrackStore();
   const [isLoading, setIsLoading] = useState(true);
-  const handleVote = createHandleVote(isVoted, addVote, removeVote);
+  const handleVote = createHandleVote(toast, update, isVoted, addVote, removeVote);
 
   useEffect(() => {
     async function fetchTracks() {
@@ -47,7 +51,7 @@ export default function ListMostPopularTracksOfMonth() {
     }
 
     fetchTracks();
-  }, []);
+  }, [setTracksOfMonth]);
 
   if (isLoading) {
     return (

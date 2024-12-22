@@ -1,5 +1,4 @@
 import {
-  MusicNotesPlus,
   MicrophoneStage,
   MusicNote,
   Ranking,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 
 interface VotesTimerProps {
@@ -15,20 +15,19 @@ export default function VotesTimer({ lastVoteRefresh }: VotesTimerProps) {
     seconds: number;
   }>({ hours: 0, minutes: 0, seconds: 0 });
 
-  const refreshVotes = async () => {
+  const refreshVotes = useCallback(async () => {
     try {
       const response = await fetch("/api/user/refresh-votes", {
         method: "POST",
       });
 
       if (response.ok) {
-        // Rafraîchir la session pour mettre à jour l'interface
         await update();
       }
     } catch (error) {
       console.error("Erreur lors du rafraîchissement des votes:", error);
     }
-  };
+  }, [update]);
 
   useEffect(() => {
     const calculateTimeRemaining = () => {
@@ -60,7 +59,7 @@ export default function VotesTimer({ lastVoteRefresh }: VotesTimerProps) {
     setTimeRemaining(calculateTimeRemaining());
 
     return () => clearInterval(timer);
-  }, [lastVoteRefresh, update]);
+  }, [lastVoteRefresh, update, refreshVotes]);
 
   return (
     <h3 className={`text-blueColorTertiary font-semibold`}>

@@ -14,7 +14,7 @@ export default function Sidebar() {
           Profil
         </h2>
         <h2 className="text-xl lg:text-2xl font-medium text-blueColorTertiary title lg:absolute bottom-12">
-          MeloVib<span className="text-greenColorSecondary">'s</span>
+          MeloVib<span className="text-greenColorSecondary">&apos;s</span>
         </h2>
       </div>
       <nav className="mb-12">

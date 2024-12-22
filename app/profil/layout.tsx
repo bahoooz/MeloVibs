@@ -1,4 +1,3 @@
-import ProfileContainer from "@/components/ProfilePage/ProfileContainer";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

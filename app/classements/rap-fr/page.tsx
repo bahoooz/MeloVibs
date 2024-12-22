@@ -11,7 +11,7 @@ export default function RapFr() {
 
   useEffect(() => {
     setCurrentGenre("rap-fr");
-  }, []);
+  }, [setCurrentGenre]);
   return (
     <div className="mt-48 lg:mt-52 xl:mt-56 px-8 overflow-x-hidden w-screen">
       <div className="mb-28 lg:mb-32 flex flex-col gap-6">

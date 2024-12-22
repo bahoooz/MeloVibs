@@ -82,13 +82,13 @@ export default function SignUpForm() {
       />
       <div className="lg:py-12">
         <h1 className="text-greenColorSecondary text-center lg:text-start my-9 lg:my-0 lg:mb-12 text-2xl lg:text-5xl font-medium">
-          S'inscrire
+          S&apos;inscrire
         </h1>
         <div className="px-6 md:px-16 lg:px-0">
           <div className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
               <label className="text-greenColorSecondary" htmlFor="name">
-                Nom d'utilisateur{" "}
+                Nom d&apos;utilisateur{" "}
                 <span className="opacity-80 text-sm">(définitif)</span>
               </label>
               <Input
@@ -100,7 +100,7 @@ export default function SignUpForm() {
                 }
               />
               <span className="text-[#64748B] text-sm">
-                Entrez votre nom d'utilisateur
+                Entrez votre nom d&apos;utilisateur
               </span>
             </div>
             <div className="flex flex-col gap-2">
@@ -159,13 +159,13 @@ export default function SignUpForm() {
           <div className="flex flex-col items-center gap-5">
             <div className="flex flex-col sm:flex-row gap-5 w-full items-center">
               <Button type="submit" className="rounded-md text-white w-full">
-                S'inscrire
+                S&apos;inscrire
               </Button>
               <span className="uppercase text-greenColorSecondary font-mediumé">
                 ou
               </span>
               <Button className="bg-white text-black w-full rounded-md px-8">
-                S'inscrire avec{" "}
+                S&apos;inscrire avec{" "}
                 <Image
                   src="/FormsMedia/google_logo.png"
                   alt="google"

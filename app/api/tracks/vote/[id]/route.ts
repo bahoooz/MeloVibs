@@ -1,56 +1,49 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDb from "@/lib/mongodb";
 import Track from "@/models/track";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/app/api/auth/auth-options";
 import { getServerSession, Session } from "next-auth";
 import User from "@/models/user";
-import { refreshVotes } from "@/lib/utils";
+
+interface UserDocument {
+  _id: string;
+  email: string;
+  votedTracks: string[];
+  remainingVotes: number;
+  lastVoteRefresh: Date;
+  isAdmin: boolean;
+}
 
 export async function POST(request: NextRequest, props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
   try {
-    const trackId = params.id;
-    const session = (await getServerSession(authOptions)) as Session | null;
+    const session = await getServerSession(authOptions) as Session;
+    const { id: trackId } = await props.params;
 
     if (!session?.user?.email) {
       return NextResponse.json(
-        { error: "Vous devez être connecté pour voter" },
+        { error: "Non authentifié" },
         { status: 401 }
       );
     }
 
     await connectDb();
-    let user: any = await User.findOne({ email: session.user?.email });
-    
-    // Rafraîchir les votes disponibles
-    user = await refreshVotes(user);
+    const user = await User.findOne({ email: session.user.email }) as UserDocument | null;
 
-    if (!user.isAdmin && user.remainingVotes <= 0) {
-      const now = new Date();
-      const lastRefresh = new Date(user.lastVoteRefresh);
-      const nextRefresh = new Date(lastRefresh.getTime() + (3 * 60 * 60 * 1000));
-      
-      // Calcul des heures et minutes restantes
-      const timeRemaining = nextRefresh.getTime() - now.getTime();
-      const hoursRemaining = Math.floor(timeRemaining / (1000 * 60 * 60));
-      const minutesRemaining = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-      
-      // Construction du message
-      let timeMessage = "";
-      if (hoursRemaining > 0) {
-        timeMessage += `${hoursRemaining}h`;
-      }
-      if (minutesRemaining > 0 || hoursRemaining === 0) {
-        timeMessage += `${minutesRemaining}min`;
-      }
-
+    if (!user) {
       return NextResponse.json(
-        { error: `Vous n'avez plus de votes disponibles. Prochain vote dans ${timeMessage}.` },
+        { error: "Utilisateur non trouvé" },
+        { status: 404 }
+      );
+    }
+
+    if (user.remainingVotes <= 0 && !user.isAdmin) {
+      return NextResponse.json(
+        { error: "Vous n'avez plus de votes disponibles" },
         { status: 400 }
       );
     }
 
-    if (user?.votedTracks.includes(trackId)) {
+    if (user.votedTracks.includes(trackId)) {
       return NextResponse.json(
         { error: "Vous avez déjà voté pour ce track" },
         { status: 400 }

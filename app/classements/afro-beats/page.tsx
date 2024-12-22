@@ -11,7 +11,7 @@ export default function AfroBeats() {
 
   useEffect(() => {
     setCurrentGenre("afro-beats");
-  }, []);
+  }, [setCurrentGenre]);
 
   return (
     <div className="mt-48 lg:mt-52 xl:mt-56 px-8 overflow-x-hidden w-screen">

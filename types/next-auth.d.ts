@@ -3,7 +3,7 @@ import { JWT } from "next-auth/jwt";
 import { DefaultSession } from "next-auth";
 
 declare module "next-auth" {
-    interface User {
+    export interface User {
         id: string;
         email: string;
         name: string;
@@ -15,7 +15,7 @@ declare module "next-auth" {
         lastVoteRefresh: Date;
     }
 
-    interface Session extends DefaultSession {
+    export interface Session extends DefaultSession {
         user: {
             id: string;
             email: string;

@@ -3,14 +3,21 @@
 import ProfileContainer from "@/components/ProfilePage/ProfileContainer";
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import VotesTimer from "@/components/HomePage/VotesTimer";
+import VotesTimer from "@/components/ProfilePage/VotesTimer";
 import Image from "next/image";
 import { Spiral } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
+import { TrackTypes } from "@/models/track";
+import { Types } from "mongoose";
+
+// Créer un type qui combine TrackTypes avec l'ID MongoDB
+type TrackWithId = TrackTypes & {
+  _id: Types.ObjectId;
+};
 
 export default function Votes() {
   const { data: session } = useSession();
-  const [votedTracks, setVotedTracks] = useState([]);
+  const [votedTracks, setVotedTracks] = useState<TrackWithId[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -87,7 +94,7 @@ export default function Votes() {
                 Historique
               </h2>
               <Button className="hidden lg:block xl:hidden">
-                Voir l'historique
+                Voir l&apos;historique
               </Button>
               <div className="lg:hidden xl:block">
                 {isLoading ? (
@@ -105,9 +112,9 @@ export default function Votes() {
                         : "xl:max-h-[250px]"
                     } overflow-y-scroll`}
                   >
-                    {votedTracks.map((track: any) => (
+                    {votedTracks.map((track: TrackWithId) => (
                       <div
-                        key={track._id}
+                        key={track._id.toString()}
                         className="w-full h-[25vw] sm:h-[184px] xl:h-[121.22px] relative flex flex-col justify-center items-center overflow-hidden rounded-2xl text-center px-2 shadow-xl"
                       >
                         <h3 className="text-greenColorSecondary font-medium mb-2 relative z-10">

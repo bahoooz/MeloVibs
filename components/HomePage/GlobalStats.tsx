@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import MeloVibsTitle from "../global/MeloVibsTitle";
-import GreenEffectGlobalStats from "./GreenEffectGlobalStats";
 
 export default function GlobalStats() {
   const [totalVotes, setTotalVotes] = useState(0);
@@ -27,7 +26,7 @@ export default function GlobalStats() {
   return (
     <section className="mt-32 lg:mt-44">
       <h2 className="text-5xl mb-20 lg:mb-32 md:w-[600px] md:mx-auto lg:w-[700px] xl:w-[1200px] xl:text-center">
-        <MeloVibsTitle />, c'est :
+        <MeloVibsTitle />, c&apos;est :
       </h2>
       <div className="mx-auto w-fit flex flex-col gap-8 font-semibold text-lg lg:textx-xl xl:text-center">
         <p>
@@ -35,7 +34,7 @@ export default function GlobalStats() {
           <span className="text-greenColorSecondary">{totalVotes}</span>
         </p>
         <p>
-          Membre(s) de l'équipe :{" "}
+          Membre(s) de l&apos;équipe :{" "}
           <span className="text-greenColorSecondary">1</span>
         </p>
         <p>

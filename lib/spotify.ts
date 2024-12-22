@@ -1,6 +1,11 @@
 import connectDb from "./mongodb";
 import Track from "@/models/track";
 
+interface Artist {
+  id: string;
+  name: string;
+}
+
 export async function getAccessToken(): Promise<string> {
   const client_id = process.env.SPOTIFY_CLIENT_ID as string;
   const client_secret = process.env.SPOTIFY_CLIENT_SECRET as string;
@@ -55,7 +60,7 @@ export async function getListRapFrTracks() {
         spotifyId: track.id,
         name: track.name,
         previewUrl: track.preview_url,
-        artists: track.artists.map((artist: any) => ({
+        artists: track.artists.map((artist: Artist) => ({
           id: artist.id,
           name: artist.name,
         })),
@@ -123,7 +128,7 @@ export async function getListPopTracks() {
         spotifyId: track.id,
         name: track.name,
         previewUrl: track.preview_url,
-        artists: track.artists.map((artist: any) => ({
+        artists: track.artists.map((artist: Artist) => ({
           id: artist.id,
           name: artist.name,
         })),
@@ -191,7 +196,7 @@ export async function getListJazzTracks() {
         spotifyId: track.id,
         name: track.name,
         previewUrl: track.preview_url,
-        artists: track.artists.map((artist: any) => ({
+        artists: track.artists.map((artist: Artist) => ({
           id: artist.id,
           name: artist.name,
         })),
@@ -258,7 +263,7 @@ export async function getListRnBTracks() {
         spotifyId: track.id,
         name: track.name,
         previewUrl: track.preview_url,
-        artists: track.artists.map((artist: any) => ({
+        artists: track.artists.map((artist: Artist) => ({
           id: artist.id,
           name: artist.name,
         })),
@@ -325,7 +330,7 @@ export async function getListAfroBeatsTracks() {
         spotifyId: track.id,
         name: track.name,
         previewUrl: track.preview_url,
-        artists: track.artists.map((artist: any) => ({
+        artists: track.artists.map((artist: Artist) => ({
           id: artist.id,
           name: artist.name,
         })),

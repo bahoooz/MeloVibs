@@ -20,6 +20,8 @@ import { Skeleton } from "../ui/skeleton";
 import { useTrackStore } from "@/store/useTrackStore";
 import { Button } from "../ui/button";
 import { createHandleVote } from "@/lib/utils";
+import { useSession } from "next-auth/react";
+import { useToast } from "@/hooks/use-toast";
 
 export interface Track {
   _id: string;
@@ -44,9 +46,11 @@ export interface Track {
 }
 
 export default function MostPopularTracks() {
+  const { toast } = useToast();
+  const { update } = useSession();
   const { tracks, setTracks, addVote, removeVote, isVoted, setCurrentGenre } = useTrackStore();
   const [isLoading, setIsLoading] = useState(true);
-  const handleVote = createHandleVote(isVoted, addVote, removeVote);
+  const handleVote = createHandleVote(toast, update, isVoted, addVote, removeVote);
 
   useEffect(() => {
     async function initialize() {
@@ -75,7 +79,7 @@ export default function MostPopularTracks() {
     }
 
     initialize();
-  }, []);
+  }, [setCurrentGenre, setTracks]);
 
   if (isLoading) {
     return (

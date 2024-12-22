@@ -1,21 +1,31 @@
 import { clsx, type ClassValue } from "clsx"
+import { Session } from "next-auth";
 import { twMerge } from "tailwind-merge"
-import { Track } from "@/components/HomePage/MostPopularTracks";
-import { useToast } from "@/hooks/use-toast";
-import { useSession } from "next-auth/react";
+import { ToastActionElement } from "@/components/ui/toast"
+import { UserTypes } from "@/models/user";
+
+interface ToastProps {
+  title?: string;
+  description?: string;
+  variant?: "default" | "destructive";
+  action?: ToastActionElement;
+}
+
+interface VoteError extends Error {
+  message: string;
+}
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
 export const createHandleVote = (
+  toast: (props: ToastProps) => void,
+  update: () => Promise<Session | null>,
   isVoted: (trackId: string) => boolean,
   addVote: (trackId: string) => Promise<void>,
   removeVote: (trackId: string) => Promise<void>,
 ) => {
-  const { toast } = useToast();
-  const { update } = useSession();
-
   return async (trackId: string) => {
     try {
       if (isVoted(trackId)) {
@@ -33,10 +43,11 @@ export const createHandleVote = (
             title: "Vote ajouté",
             description: "Votre vote a été ajouté avec succès",
           });
-        } catch (error: any) {
+        } catch (error: unknown) {
+          const voteError = error as VoteError;
           toast({
             title: "Erreur",
-            description: error.message || "Une erreur est survenue lors du vote",
+            description: voteError.message || "Une erreur est survenue lors du vote",
             variant: "destructive",
           });
         }
@@ -52,7 +63,7 @@ export const createHandleVote = (
   };
 };
 
-export async function refreshVotes(user: any) {
+export async function refreshVotes(user: UserTypes) {
   if (user.isAdmin) {
     return user;
   }
