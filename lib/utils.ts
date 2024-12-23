@@ -68,16 +68,21 @@ export async function refreshVotes(user: UserTypes) {
     return user;
   }
 
-  const REFRESH_INTERVAL = 3 * 60 * 60 * 1000;
+  const REFRESH_INTERVAL = 3 * 60 * 60 * 1000; // 3 heures
   const VOTES_PER_REFRESH = 2;
   const MAX_VOTES = 10;
 
   const now = new Date();
   const timeSinceLastRefresh = now.getTime() - user.lastVoteRefresh.getTime();
   if (timeSinceLastRefresh >= REFRESH_INTERVAL) {
+    // Calculer le nombre de votes à ajouter
     const refreshCount = Math.floor(timeSinceLastRefresh / REFRESH_INTERVAL);
-    const newVotes = Math.min(user.remainingVotes + (refreshCount * VOTES_PER_REFRESH), MAX_VOTES);
-    user.remainingVotes = newVotes;
+    const votesToAdd = Math.min(
+      refreshCount * VOTES_PER_REFRESH,  // Nombre total de votes à ajouter
+      MAX_VOTES - user.remainingVotes    // Nombre de votes possibles avant d'atteindre MAX_VOTES
+    );
+    
+    user.remainingVotes = Math.min(user.remainingVotes + votesToAdd, MAX_VOTES);
     user.lastVoteRefresh = now;
     await user.save()
   }

@@ -35,7 +35,10 @@ export async function POST() {
     
     if (periodsElapsed > 0) {
       // Calculer le nombre de votes à ajouter (2 par période)
-      const votesToAdd = Math.min(periodsElapsed * 2, 10 - (user.remainingVotes || 0));
+      const votesToAdd = Math.min(
+        periodsElapsed * 2,                    // Nombre total de votes à ajouter
+        10 - (user.remainingVotes || 0)        // Nombre de votes possibles avant d'atteindre 10
+      );
 
       const updatedUser = await User.findOneAndUpdate(
         { email: session.user.email },
@@ -48,7 +51,7 @@ export async function POST() {
 
       return NextResponse.json({
         success: true,
-        remainingVotes: updatedUser?.remainingVotes || 0,
+        remainingVotes: Math.min(updatedUser?.remainingVotes || 0, 10), // Double vérification
         lastVoteRefresh: updatedUser?.lastVoteRefresh || now,
         votesAdded: votesToAdd
       });
