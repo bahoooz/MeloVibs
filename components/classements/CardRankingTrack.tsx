@@ -8,6 +8,7 @@ import { ArrowCircleUp, DotsThreeVertical } from "@phosphor-icons/react";
 interface CardRankingTrackProps extends CardTrackProps {
   ranking: number;
   podium: boolean;
+  popularity: number;
 }
 
 export default function CardRankingTrack({
@@ -22,6 +23,7 @@ export default function CardRankingTrack({
   height,
   ranking,
   podium = false,
+  popularity
 }: CardRankingTrackProps) {
   return (
     <Card className="h-[350px] lg:h-[290px] w-full max-w-[300px] rounded-3xl bg-[#18181B]/20 flex flex-col justify-between overflow-visible">
@@ -85,7 +87,7 @@ export default function CardRankingTrack({
           podium ? 'w-full' : 'w-[90%] lg:w-[80%] max-w-[90%] lg:max-w-[80%]'
         }`}>
           <h4 className="text-xl text-blueColorTertiary font-medium min-w-full truncate">
-            {artist}
+            {artist} - {popularity}
           </h4>
           <h4 className="font-medium truncate w-[98%] max-w-[99%]">{title}</h4>
         </div>

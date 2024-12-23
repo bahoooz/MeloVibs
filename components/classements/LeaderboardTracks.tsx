@@ -4,7 +4,13 @@ import { createHandleVote } from "@/lib/utils";
 import { useTrackStore } from "@/store/useTrackStore";
 import React, { useEffect, useState } from "react";
 import CardRankingTrack from "./CardRankingTrack";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../ui/carousel";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "../ui/carousel";
 import {
   Pagination,
   PaginationEllipsis,
@@ -14,8 +20,21 @@ import {
 } from "../ui/pagination";
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
+import { Track } from "../HomePage/MostPopularTracks";
 
-export default function ListTracksRanking({genre}: {genre: string}) {
+interface ListTracksRankingProps {
+  genre: string;
+  sortMethodByPopularityOrVotes: string;
+  sortMethodByDate: string;
+  sortMethodByIncreasingOrDecreasing: string;
+}
+
+export default function ListTracksRanking({
+  genre,
+  sortMethodByPopularityOrVotes,
+  sortMethodByDate,
+  sortMethodByIncreasingOrDecreasing,
+}: ListTracksRankingProps) {
   const { toast } = useToast();
   const { update } = useSession();
   // Initialisation des états et des fonctions du store
@@ -23,7 +42,13 @@ export default function ListTracksRanking({genre}: {genre: string}) {
   const [currentPage, setCurrentPage] = useState(1); // État pour gérer la page courante
   const tracksPerPage = 30; // Nombre de pistes par page
   const tracksPerCarousel = 5; // Nombre de pistes par carousel
-  const handleVote = createHandleVote(toast, update, isVoted, addVote, removeVote);
+  const handleVote = createHandleVote(
+    toast,
+    update,
+    isVoted,
+    addVote,
+    removeVote
+  );
 
   // Calcul du nombre total de pages nécessaires
   const totalPages = Math.ceil(tracks.length / tracksPerPage);
@@ -47,20 +72,59 @@ export default function ListTracksRanking({genre}: {genre: string}) {
         const tracksData = await tracksRes.json();
         const votesData = await votesRes.json();
 
-        // Mise à jour du store avec les données récupérées
-        setTracks(tracksData.tracks);
+        let filteredTracks = [...tracksData.tracks];
+
+        // Simplifions la logique de tri
+        if (sortMethodByIncreasingOrDecreasing === "increasing") {
+          if (sortMethodByPopularityOrVotes === "popularity") {
+            filteredTracks.sort((a: Track, b: Track) => a.popularity - b.popularity);
+          } else {
+            filteredTracks.sort((a: Track, b: Track) => a.votes - b.votes);
+          }
+        } else {
+          if (sortMethodByPopularityOrVotes === "popularity") {
+            filteredTracks.sort((a: Track, b: Track) => b.popularity - a.popularity);
+          } else {
+            filteredTracks.sort((a: Track, b: Track) => b.votes - a.votes);
+          }
+        }
+
+        // Appliquons le filtre par date
+        const today = new Date();
+        filteredTracks = filteredTracks.filter((track: Track) => {
+          const dateTrack = new Date(track.album.release_date);
+          const diffTime = Math.abs(today.getTime() - dateTrack.getTime());
+          const diffMonths = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30));
+          
+          switch (sortMethodByDate) {
+            case "30-last-days": return diffMonths <= 1;
+            case "3-last-months": return diffMonths <= 3;
+            case "6-last-months": return diffMonths <= 6;
+            case "12-last-months": return diffMonths <= 12;
+            default: return true;
+          }
+        });
+
         if (votesData.votedTracks) {
           useTrackStore.setState({
             votedTracks: new Set(votesData.votedTracks),
           });
         }
+
+        setTracks(filteredTracks);
       } catch (error) {
         console.error("Erreur lors de l'initialisation:", error);
       }
     }
 
     initialize();
-  }, [genre, setTracks]);
+  }, [
+    genre,
+    setTracks,
+    sortMethodByPopularityOrVotes,
+    sortMethodByDate,
+    sortMethodByIncreasingOrDecreasing,
+  ]);
 
   // Fonction pour générer les numéros de page à afficher dans la pagination
   const getPageNumbers = () => {
@@ -117,24 +181,23 @@ export default function ListTracksRanking({genre}: {genre: string}) {
                   key={`track-${track._id}-${currentPage}`}
                   className="basis-[300px] pl-8 sm:pl-10"
                 >
-
-                    <CardRankingTrack
-                      _id={track._id}
-                      title={track.name}
-                      artist={track.artists[0].name}
-                      image={track.album.images[0].url}
-                      votes={track.votes}
-                      width={track.album.images[0].width}
-                      height={track.album.images[0].height}
-                      onClick={() => handleVote(track._id)}
-                      stylesIsVotedButton={`${
-                        isVoted(track._id) ? "border-[3px] border-white" : ""
-                      }`}
-                      stylesIsVotedIcon={isVoted(track._id) ? "fill" : "light"}
-                      ranking={globalIndex}
-                      podium={currentPage === 1 && i === 0 ? true : false}
-                    />
-
+                  <CardRankingTrack
+                    _id={track._id}
+                    title={track.name}
+                    artist={track.artists[0].name}
+                    image={track.album.images[0].url}
+                    votes={track.votes}
+                    width={track.album.images[0].width}
+                    height={track.album.images[0].height}
+                    onClick={() => handleVote(track._id)}
+                    stylesIsVotedButton={`${
+                      isVoted(track._id) ? "border-[3px] border-white" : ""
+                    }`}
+                    stylesIsVotedIcon={isVoted(track._id) ? "fill" : "light"}
+                    ranking={globalIndex}
+                    podium={currentPage === 1 && i === 0 ? true : false}
+                    popularity={track.popularity}
+                  />
                 </CarouselItem>
               );
             })}
@@ -149,7 +212,7 @@ export default function ListTracksRanking({genre}: {genre: string}) {
 
   // Au début du composant, ajoutez ce hook personnalisé
   const [windowWidth, setWindowWidth] = useState(
-    typeof window !== 'undefined' ? window.innerWidth : 0
+    typeof window !== "undefined" ? window.innerWidth : 0
   );
 
   useEffect(() => {
@@ -157,23 +220,21 @@ export default function ListTracksRanking({genre}: {genre: string}) {
       setWindowWidth(window.innerWidth);
     }
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Rendu du composant
   return (
     <div>
       {/* Carousels visibles uniquement sur mobile et tablette */}
-      <div className="flex flex-col gap-20 lg:hidden">
-        {renderCarousels()}
-      </div>
+      <div className="flex flex-col gap-20 lg:hidden">{renderCarousels()}</div>
 
       {/* Grille visible uniquement sur desktop */}
       <div className="hidden lg:grid lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-5 gap-8 lg:w-[700px] xl:w-[1200px] mx-auto">
         {getCurrentPageTracks().map((track, index) => {
           const globalIndex = (currentPage - 1) * tracksPerPage + index + 1;
-          
+
           return (
             <CardRankingTrack
               key={`track-grid-${track._id}`}
@@ -190,11 +251,13 @@ export default function ListTracksRanking({genre}: {genre: string}) {
               }`}
               stylesIsVotedIcon={isVoted(track._id) ? "fill" : "light"}
               ranking={globalIndex}
-              podium={currentPage === 1 && (
-                windowWidth >= 1280 // 2xl breakpoint
+              podium={
+                currentPage === 1 &&
+                (windowWidth >= 1280 // 2xl breakpoint
                   ? globalIndex <= 5
-                  : globalIndex <= 3
-              )}
+                  : globalIndex <= 3)
+              }
+              popularity={track.popularity}
             />
           );
         })}
@@ -218,7 +281,7 @@ export default function ListTracksRanking({genre}: {genre: string}) {
                     setCurrentPage(pageNum);
                     window.scrollTo({
                       top: 0,
-                      behavior: "smooth"
+                      behavior: "smooth",
                     });
                   }}
                   isActive={currentPage === pageNum}

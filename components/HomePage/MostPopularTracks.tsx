@@ -40,6 +40,7 @@ export interface Track {
       height: number;
       width: number;
     }[];
+    release_date: string;
   };
   popularity: number;
   votes: number;
