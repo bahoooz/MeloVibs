@@ -31,7 +31,7 @@ export default function Navbar() {
   return (
     <NavigationMenu className="mt-12 max-w-full lg:bg-[#252639]/80 lg:rounded-full h-16 lg:w-[95%] xl:w-[1200px] lg:mx-auto fixed top-0 left-0 right-0 px-8 lg:px-0 z-50">
       <ul className="flex justify-between w-full items-center lg:hidden">
-        <li className="">
+        <li className={session ? "" : "opacity-0"}>
           <UserAvatar className="w-12 h-12" />
         </li>
         <li>

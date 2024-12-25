@@ -78,7 +78,6 @@ export default function SignUpForm() {
       toast({
         title: "Erreur",
         description: responseData.error,
-        variant: "destructive",
         emojis: "❌",
       });
       console.log("Inscription échouée :", responseData.error);
@@ -86,7 +85,6 @@ export default function SignUpForm() {
       toast({
         title: "Erreur",
         description: "Erreur interne du serveur",
-        variant: "destructive",
         emojis: "❌",
       });
       console.log("Erreur interne du serveur :", responseData.error);
