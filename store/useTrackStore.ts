@@ -1,5 +1,6 @@
 // Import du type Track et de la fonction create de Zustand pour la gestion d'état
-import { Track } from '@/components/HomePage/MostPopularTracks';
+import { Track } from '@/types/track';
+import { launchConfetti } from '@/lib/confetti';
 import { create } from 'zustand';
 
 // Interface définissant la structure du store
@@ -45,7 +46,8 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
       
       const data = await response.json();
       set({ votedTracks: new Set(data.votedTracks) });
-      
+
+      launchConfetti();
       // Récupération des tracks en fonction du contexte
       const promises = [
         fetch("/api/tracks/tracks-ranking-homepage"),
@@ -60,7 +62,7 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
       const responses = await Promise.all(promises);
       const jsonPromises = responses.map(res => res.json());
       const [tracksOfMonthData, tracksHeaderData, tracksData] = await Promise.all(jsonPromises);
-      
+
       // Mise à jour du state en fonction des données disponibles
       const newState: any = {
         tracksOfMonth: tracksOfMonthData.tracks,

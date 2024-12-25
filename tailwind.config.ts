@@ -9,22 +9,23 @@ export default {
   ],
   theme: {
     extend: {
-		fontFamily: {
-			global: ['"Libre Franklin"', 'sans-serif'],
-      title: [""]
-		},
+      fontFamily: {
+        global: ['"Libre Franklin"', "sans-serif"],
+        title: [""],
+      },
       colors: {
         bgGradient: {
-          start: '#292B51',
-          end: '#503080',
+          start: "#292B51",
+          end: "#503080",
         },
-        greenColorSecondary: '#28CB62',
-        blueColorTertiary: '#6077D7',
-        btnColorSecondary: '#0F172A',
-        bgColorTransparent: 'rgba(24, 24, 27, 0.2)',
+        greenColorSecondary: "#28CB62",
+        blueColorTertiary: "#6077D7",
+        btnColorSecondary: "#0F172A",
+        bgColorTransparent: "rgba(24, 24, 27, 0.2)",
+        btnColorIsVoted: "#7B3AC1",
       },
       backgroundImage: {
-        'gradient-bg': 'linear-gradient(to bottom, var(--tw-gradient-stops))',
+        "gradient-bg": "linear-gradient(to bottom, var(--tw-gradient-stops))",
       },
     },
   },

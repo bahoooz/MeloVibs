@@ -16,8 +16,8 @@ export interface TrackTypes extends Document {
       height: number;
       width: number;
     }[];
-    share_link: string;
     release_date: string;
+    share_link: string;
   };
   genres: string[];
   popularity: number;
@@ -52,11 +52,11 @@ const trackSchema = new Schema<TrackTypes>(
         height: Number,
         width: Number,
       }],
-      share_link: {
+      release_date: {
         type: String,
         required: true,
       },
-      release_date: {
+      share_link: {
         type: String,
         required: true,
       },

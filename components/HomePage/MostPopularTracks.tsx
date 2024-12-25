@@ -49,14 +49,21 @@ export interface Track {
 export default function MostPopularTracks() {
   const { toast } = useToast();
   const { update } = useSession();
-  const { tracks, setTracks, addVote, removeVote, isVoted, setCurrentGenre } = useTrackStore();
+  const { tracks, setTracks, addVote, removeVote, isVoted, setCurrentGenre } =
+    useTrackStore();
   const [isLoading, setIsLoading] = useState(true);
-  const handleVote = createHandleVote(toast, update, isVoted, addVote, removeVote);
+  const handleVote = createHandleVote(
+    toast,
+    update,
+    isVoted,
+    addVote,
+    removeVote
+  );
 
   useEffect(() => {
     async function initialize() {
       try {
-        setCurrentGenre('');
+        setCurrentGenre("");
 
         const [tracksRes, votesRes] = await Promise.all([
           fetch("/api/tracks/tracks-header-homepage"),
@@ -84,27 +91,29 @@ export default function MostPopularTracks() {
 
   if (isLoading) {
     return (
-      <Card>
-        <CardContent className="flex flex-col items-center justify-center">
-          <CardHeader>
-            <Skeleton className="h-[300px] w-[300px] rounded-[30px]" />
-          </CardHeader>
-          <CardFooter className="flex w-full justify-between">
-            <div>
-              <Skeleton className="h-10 w-10 rounded-full" />
-              <Skeleton className="mt-2 h-4 w-16" />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Skeleton className="h-6 w-32" />
-              <Skeleton className="h-4 w-24" />
-            </div>
-            <div className="flex gap-2">
-              <Skeleton className="h-8 w-8 rounded-full" />
-              <Skeleton className="h-8 w-8 rounded-full" />
-            </div>
-          </CardFooter>
-        </CardContent>
-      </Card>
+      <div className="w-full xl:w-[500px] sm:w-[600px] lg:w-[700px]">
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center gap-12">
+            <CardHeader className="w-full p-0">
+              <Skeleton className="aspect-square w-full rounded-[30px]" />
+            </CardHeader>
+            <CardFooter className="flex w-full justify-between items-start px-0">
+              <div className="flex flex-col gap-2 xl:items-center">
+                <Skeleton className="h-12 xl:h-10 w-12 xl:w-[92.3px] rounded-full" />
+                <Skeleton className="h-4 w-16" />
+              </div>
+              <div className="flex flex-col gap-3">
+                <Skeleton className="h-8 w-[200px] sm:w-[400px] lg:w-[500px] xl:w-[250px]" />
+                <Skeleton className="h-6 w-[150px] sm:w-[300px] lg:w-[400px] xl:w-[200px]" />
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:gap-5">
+                <Skeleton className="h-8 w-8 rounded-full" />
+                <Skeleton className="h-8 w-8 rounded-full" />
+              </div>
+            </CardFooter>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
@@ -133,21 +142,36 @@ export default function MostPopularTracks() {
                   <div className="flex flex-col gap-2 xl:items-center">
                     <Button
                       onClick={() => handleVote(track._id)}
-                      className={`bg-[#0F172A] w-10 xl:w-fit xl:pl-1 xl:pr-3 h-10 rounded-full flex items-center justify-center transition-colors p-0 ${
-                        isVoted(track._id) ? "border-[3px] border-white" : ""
+                      className={`bg-[#0F172A] h-12 xl:h-10 w-12 rounded-full flex items-center transition-all duration-300 ease-in-out p-0 hover:bg-btnColorIsVoted ${
+                        isVoted(track._id)
+                          ? "bg-btnColorIsVoted xl:min-w-[92.3px] relative"
+                          : "xl:w-fit xl:pl-1 xl:pr-3 xl:min-w-[92.3px] justify-center"
                       }`}
                     >
                       <ArrowCircleUp
                         size={32}
-                        weight={isVoted(track._id) ? "fill" : "light"}
-                        className="min-w-6 xl:min-w-8 min-h-6 xl:min-h-8"
+                        weight="light"
+                        className={`min-w-8 min-h-8 xl:min-w-8 xl:min-h-8 duration-300 ${
+                          isVoted(track._id)
+                            ? "min-w-[60px] min-h-[60px] xl:absolute xl:right-1/2 xl:translate-x-1/2"
+                            : ""
+                        }`}
                       />
-                      <span className="hidden xl:block">Voter</span>
+
+                      <span
+                        className={`${
+                          isVoted(track._id) ? "hidden" : "hidden xl:block"
+                        }`}
+                      >
+                        Voter
+                      </span>
                     </Button>
                     <span className="text-xs">{track.votes} votes</span>
                   </div>
                   <CardTitle className="text-center flex flex-col gap-3">
-                    <h3 className="font-medium text-2xl truncate max-w-[200px] sm:max-w-[400px] lg:max-w-[500px] xl:max-w-[250px]">{track.name}</h3>
+                    <h3 className="font-medium text-2xl truncate max-w-[200px] sm:max-w-[400px] lg:max-w-[500px] xl:max-w-[250px]">
+                      {track.name}
+                    </h3>
                     <h4 className="font-medium text-xl text-[#28CB62] truncate max-w-[200px] sm:max-w-[400px] lg:max-w-[500px] xl:max-w-[250px]">
                       {track.artists[0].name}
                     </h4>

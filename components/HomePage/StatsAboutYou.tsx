@@ -12,7 +12,7 @@ export default function StatsAboutYou() {
   if (status === "loading") {
     return (
       <section className="mt-32 lg:mt-44">
-        <h2 className="text-5xl font-bold mb-20 lg:mb-32 md:w-[600px] md:mx-auto lg:w-[700px] xl:w-[1200px] xl:text-center">
+        <h2 className="text-5xl mb-20 lg:mb-32 md:w-[600px] md:mx-auto lg:w-[700px] xl:w-[1200px] xl:text-center">
           Quelques statistiques sur vous
         </h2>
         <div className="flex flex-col items-center gap-4">

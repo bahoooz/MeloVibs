@@ -1,7 +1,6 @@
 "use client";
 
 import GlobalStats from "@/components/HomePage/GlobalStats";
-import GreenEffectGlobalStats from "@/components/HomePage/GreenEffectGlobalStats";
 import GreenEffectHeader from "@/components/HomePage/GreenEffectHeader";
 import Header from "@/components/HomePage/Header";
 import ListMostPopularTracksOfMonth from "@/components/HomePage/ListMostPopularTracksOfMonth";
@@ -53,7 +52,6 @@ export default function Home() {
       <MusicMostPopularByGenre />
       <GlobalStats />
       <GreenEffectHeader />
-      <GreenEffectGlobalStats />
     </div>
   );
 }
