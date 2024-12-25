@@ -4,6 +4,12 @@ import Track from "@/models/track";
 import { authOptions } from "@/app/api/auth/auth-options";
 import { getServerSession, Session } from "next-auth";
 import User from "@/models/user";
+import Artist from "@/models/artist";
+
+interface Artist {
+  id: string;
+  name: string;
+}
 
 interface UserDocument {
   _id: string;
@@ -50,6 +56,19 @@ export async function POST(request: NextRequest, props: { params: Promise<{ id: 
       );
     }
 
+    const track = await Track.findById(trackId);
+    if (!track) {
+      return NextResponse.json({ error: "Track non trouvé" }, { status: 404 });
+    }
+
+    const artistUpdatePromises = track.artists.map((artist: Artist) => 
+      Artist.findOneAndUpdate(
+        { spotifyId: artist.id },
+        { $inc: { votes: 1 } },
+        { new: true }
+      )
+    );
+
     const [updatedTrack, updatedUser] = await Promise.all([
       Track.findByIdAndUpdate(trackId, { $inc: { votes: 1 } }, { new: true }),
       User.findOneAndUpdate(
@@ -59,11 +78,9 @@ export async function POST(request: NextRequest, props: { params: Promise<{ id: 
           $inc: { remainingVotes: -1 }
         },
         { new: true }
-      )
+      ),
+      ...artistUpdatePromises
     ]);
-    if (!updatedTrack) {
-      return NextResponse.json({ error: "Track non trouvé" }, { status: 404 });
-    }
 
     return NextResponse.json({
       track: updatedTrack,
@@ -99,6 +116,19 @@ export async function DELETE(request: NextRequest, props: { params: Promise<{ id
       );
     }
 
+    const track = await Track.findById(trackId);
+    if (!track) {
+      return NextResponse.json({ error: "Track non trouvé" }, { status: 404 });
+    }
+
+    const artistUpdatePromises = track.artists.map((artist: Artist) => 
+      Artist.findOneAndUpdate(
+        { spotifyId: artist.id },
+        { $inc: { votes: -1 } },
+        { new: true }
+      )
+    );
+
     const [updatedTrack, updatedUser] = await Promise.all([
       Track.findByIdAndUpdate(trackId, { $inc: { votes: -1 } }, { new: true }),
       User.findOneAndUpdate(
@@ -106,11 +136,8 @@ export async function DELETE(request: NextRequest, props: { params: Promise<{ id
         { $pull: { votedTracks: trackId } },
         { new: true }
       ),
+      ...artistUpdatePromises
     ]);
-
-    if (!updatedTrack) {
-      return NextResponse.json({ error: "Track non trouvé" }, { status: 404 });
-    }
 
     return NextResponse.json({
       track: updatedTrack,

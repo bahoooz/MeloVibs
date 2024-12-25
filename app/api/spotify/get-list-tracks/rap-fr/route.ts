@@ -7,6 +7,9 @@ export async function GET() {
     return NextResponse.json(tracks);
   } catch (error) {
     console.error("Erreur lors de la récupération des pistes Rap-fr :", error);
-    return NextResponse.json({ error: "Failed to fetch tracks" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch tracks" },
+      { status: 500 }
+    );
   }
 }

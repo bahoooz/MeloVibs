@@ -93,7 +93,7 @@ export default function UpdateForm() {
       </div>
       <div className="flex flex-col gap-2">
         <label className="text-greenColorSecondary" htmlFor="name">
-          Email
+          Confirmer le mot de passe
         </label>
         <Input
           type="password"

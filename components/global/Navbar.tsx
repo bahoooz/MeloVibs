@@ -82,7 +82,7 @@ export default function Navbar() {
                 <ul className="flex flex-col gap-6">
                   <li>
                     <Link
-                      href={"/"}
+                      href={"/classements/artistes"}
                       className="flex gap-4 group hover:underline"
                     >
                       <MicrophoneStage
@@ -100,7 +100,7 @@ export default function Navbar() {
                   </li>
                   <li>
                     <Link
-                      href={"/classements"}
+                      href={"/classements/morceaux"}
                       className="flex gap-4 group hover:underline"
                     >
                       <MusicNote
