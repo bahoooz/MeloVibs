@@ -88,7 +88,7 @@ export default function MusicMostPopularByGenre() {
       </div>
       <div className="mx-auto w-fit mt-10">
         <Link href="/classements">
-          <Button>Voir tous les classements</Button>
+          <Button>Voir tous les genres</Button>
         </Link>
       </div>
     </section>

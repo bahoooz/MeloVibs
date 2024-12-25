@@ -1,77 +1,102 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Input } from "../ui/input";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useToast } from "@/hooks/use-toast";
 
 // Définir le schéma de validation avec Zod
-const schema = z.object({
-  name: z.string().min(1, "Le nom est requis"),
-  email: z.string().email("Email invalide"),
-  password: z
-    .string()
-    .min(6, "Le mot de passe doit contenir au moins 6 caractères"),
-  confirmPassword: z
-    .string()
-    .min(6, "Le mot de passe doit contenir au moins 6 caractères"),
-});
-
-export default function SignUpForm() {
-  const router = useRouter();
-
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+const schema = z
+  .object({
+    name: z
+      .string()
+      .min(3, "Le nom doit contenir au moins 3 caractères")
+      .max(30, "Le nom ne doit pas dépasser 30 caractères"),
+    email: z
+      .string()
+      .min(1, "L'email est requis")
+      .email("Veuillez entrer un email valide")
+      .max(96, "L'email ne doit pas dépasser 96 caractères"),
+    password: z
+      .string()
+      .min(8, "Le mot de passe doit contenir au moins 8 caractères")
+      .regex(
+        /^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*\-_])/,
+        "Le mot de passe doit contenir au moins une majuscule, un chiffre et un symbole (!@#$%^&*)"
+      )
+      .max(64, "Le mot de passe ne doit pas dépasser 64 caractères"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Les mots de passe ne correspondent pas",
+    path: ["confirmPassword"], // Ceci indique sur quel champ l'erreur doit s'afficher
   });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    
-    try {
-      // Valider les données avec le schéma Zod
-      const validatedData = schema.parse(formData);
-      
-      // Vérifier si les mots de passe correspondent
-      if (validatedData.password !== validatedData.confirmPassword) {
-        console.log("Les mots de passe ne correspondent pas");
-        return;
-      }
+// Définir le type à partir du schéma
+type FormData = z.infer<typeof schema>;
 
-      const res = await fetch("api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(validatedData),
+export default function SignUpForm() {
+  const { toast } = useToast();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  });
+
+  const router = useRouter();
+
+  const onSubmit = async (formData: FormData) => {
+    if (formData.password !== formData.confirmPassword) {
+      return;
+    }
+
+    const res = await fetch("api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+    const responseData = await res.json();
+
+    if (res.ok) {
+      toast({
+        title: "Inscription réussie",
+        description: "Votre compte a été créé avec succès",
+        emojis: "✔️",
       });
-      const data = await res.json();
-      if (res.ok) {
-        console.log("Inscription réussie");
-        console.log(data);
-        router.push("/connexion");
-      } else if (res.status === 400) {
-        console.log("Inscription échouée :", data.error);
-      } else if (res.status === 500) {
-        console.log("Erreur interne du serveur :", data.error);
-      }
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        console.log("Erreurs de validation:", error.errors);
-        // Ici vous pourriez gérer l'affichage des erreurs dans l'interface
-      }
+      console.log("Inscription réussie");
+      console.log(responseData);
+      router.push("/connexion");
+    } else if (res.status === 400) {
+      toast({
+        title: "Erreur",
+        description: responseData.error,
+        variant: "destructive",
+        emojis: "❌",
+      });
+      console.log("Inscription échouée :", responseData.error);
+    } else if (res.status === 500) {
+      toast({
+        title: "Erreur",
+        description: "Erreur interne du serveur",
+        variant: "destructive",
+        emojis: "❌",
+      });
+      console.log("Erreur interne du serveur :", responseData.error);
     }
   };
 
   return (
     <form
       className="mt-48 text-black bg-[#0F172A] rounded-2xl overflow-hidden sm:w-[500px] md:w-[600px] lg:w-fit sm:mx-auto lg:flex lg:items-stretch lg:px-12 xl:px-20 lg:py-12 xl:py-20 lg:gap-12 xl:gap-20 h-full"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <Image
         src="/FormsMedia/pnl_inscription.jpg"
@@ -85,7 +110,7 @@ export default function SignUpForm() {
           S&apos;inscrire
         </h1>
         <div className="px-6 md:px-16 lg:px-0">
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-5 lg:max-w-[344.39px]">
             <div className="flex flex-col gap-2">
               <label className="text-greenColorSecondary" htmlFor="name">
                 Nom d&apos;utilisateur{" "}
@@ -94,28 +119,32 @@ export default function SignUpForm() {
               <Input
                 type="text"
                 placeholder="Nom d'utilisateur"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
+                {...register("name")}
               />
-              <span className="text-[#64748B] text-sm">
-                Entrez votre nom d&apos;utilisateur
-              </span>
+              {errors.name ? (
+                <span className="text-red-400 text-sm">
+                  {errors.name.message}
+                </span>
+              ) : (
+                <span className="text-[#64748B] text-sm">
+                  Entrez votre nom d&apos;utilisateur
+                </span>
+              )}
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-greenColorSecondary" htmlFor="email">
                 Email
               </label>
-              <Input
-                type="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-              />
-              <span className="text-[#64748B] text-sm">Entrez votre email</span>
+              <Input type="email" placeholder="Email" {...register("email")} />
+              {errors.email ? (
+                <span className="text-red-400 text-sm">
+                  {errors.email.message}
+                </span>
+              ) : (
+                <span className="text-[#64748B] text-sm">
+                  Entrez votre email
+                </span>
+              )}
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-greenColorSecondary" htmlFor="password">
@@ -124,14 +153,17 @@ export default function SignUpForm() {
               <Input
                 type="password"
                 placeholder="Mot de passe"
-                value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
+                {...register("password")}
               />
-              <span className="text-[#64748B] text-sm">
-                Entrez votre mot de passe
-              </span>
+              {errors.password ? (
+                <span className="text-red-400 text-sm">
+                  {errors.password.message}
+                </span>
+              ) : (
+                <span className="text-[#64748B] text-sm">
+                  Entrez votre mot de passe
+                </span>
+              )}
             </div>
             <div className="flex flex-col gap-2">
               <label
@@ -143,14 +175,17 @@ export default function SignUpForm() {
               <Input
                 type="password"
                 placeholder="Confirmer le mot de passe"
-                value={formData.confirmPassword}
-                onChange={(e) =>
-                  setFormData({ ...formData, confirmPassword: e.target.value })
-                }
+                {...register("confirmPassword")}
               />
-              <span className="text-[#64748B] text-sm">
-                Confirmez votre mot de passe
-              </span>
+              {errors.confirmPassword ? (
+                <span className="text-red-400 text-sm">
+                  {errors.confirmPassword.message}
+                </span>
+              ) : (
+                <span className="text-[#64748B] text-sm">
+                  Confirmez votre mot de passe
+                </span>
+              )}
             </div>
           </div>
 

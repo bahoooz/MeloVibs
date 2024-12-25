@@ -1,114 +1,166 @@
+"use client";
+
 import React from "react";
 import { Input } from "../ui/input";
-import { useSession, } from "next-auth/react";
-import { useState } from "react";
+import { useSession } from "next-auth/react";
 import { Button } from "../ui/button";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useToast } from "@/hooks/use-toast";
+
+const schema = z.object({
+  email: z
+    .string()
+    .min(1, "L'email est requis")
+    .email("Veuillez entrer un email valide")
+    .max(96, "L'email ne doit pas dépasser 96 caractères"),
+  password: z
+    .string()
+    .optional()
+    .refine((val) => !val || val.length >= 8, {
+      message: "Le mot de passe doit contenir au moins 8 caractères",
+    })
+    .refine((val) => !val || /^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*\-_])/.test(val), {
+      message: "Le mot de passe doit contenir au moins une majuscule, un chiffre et un symbole (!@#$%^&*)",
+    })
+    .refine((val) => !val || val.length <= 64, {
+      message: "Le mot de passe ne doit pas dépasser 64 caractères",
+    }),
+  confirmPassword: z.string().optional(),
+}).refine((data) => {
+  if (data.password || data.confirmPassword) {
+    return data.password === data.confirmPassword;
+  }
+  return true;
+}, {
+  message: "Les mots de passe ne correspondent pas",
+  path: ["confirmPassword"],
+});
+
+type FormData = z.infer<typeof schema>;
 
 export default function UpdateForm() {
   const { data: session } = useSession();
+  const { toast } = useToast();
 
-  const [formData, setFormData] = useState({
-    email: session?.user?.email || "",
-    password: "",
-    confirmPassword: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      email: session?.user?.email || "",
+      password: "",
+      confirmPassword: "",
+    }
   });
 
-  console.log(formData);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async (formData: FormData) => {
     try {
-        if (formData.password && formData.password !== formData.confirmPassword) {
-            throw new Error("Les mots de passe ne correspondent pas");
-        }
+      const res = await fetch("/api/user/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password || undefined,
+        }),
+      });
 
-        if (formData.password && formData.password.length < 6) {
-            throw new Error("Le mot de passe doit contenir au moins 6 caractères");
-        }
+      const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.error || "Échec de la mise à jour des données");
+      }
 
-        const res = await fetch("/api/user/update", {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                email: formData.email,
-                password: formData.password || undefined,
-            }),
-        });
-
-        const data = await res.json();
-        
-        if (!res.ok) {
-            throw new Error(data.error || "Échec de la mise à jour des données");
-        }
-
-        setFormData({
-            ...formData,
-            password: "",
-            confirmPassword: "",
-        });
-        
-        alert("Données mises à jour avec succès");
+      reset({ 
+        email: formData.email,
+        password: "",
+        confirmPassword: "" 
+      });
+      
+      toast({
+        title: "Changements effectués",
+        description: "Profil mis à jour avec succès",
+        emojis: "✔️",
+      });
 
     } catch (error) {
-        console.error(error);
-        alert(error instanceof Error ? error.message : "Une erreur est survenue");
+      toast({
+        title: "Erreur",
+        description: error instanceof Error ? error.message : "Une erreur est survenue",
+        variant: "destructive",
+        emojis: "❌",
+      });
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 xl:w-full xl:mt-8">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 xl:w-full xl:mt-8">
       <div className="flex flex-col gap-2">
-        <label className="text-greenColorSecondary" htmlFor="name">
+        <label className="text-greenColorSecondary" htmlFor="email">
           Email
         </label>
         <Input
-          type="text"
+          type="email"
           placeholder="Adresse email"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          {...register("email")}
           className="text-black"
         />
-        <span className="text-[#64748B] text-sm">
-          Modifiez votre adresse email
-        </span>
+        {errors.email ? (
+          <span className="text-red-400 text-sm">{errors.email.message}</span>
+        ) : (
+          <span className="text-[#64748B] text-sm">
+            Modifiez votre adresse email
+          </span>
+        )}
       </div>
+
       <div className="flex flex-col gap-2">
-        <label className="text-greenColorSecondary" htmlFor="name">
+        <label className="text-greenColorSecondary" htmlFor="password">
           Mot de passe
         </label>
         <Input
           type="password"
           placeholder="Mot de passe"
-          value={formData.password}
-          onChange={(e) =>
-            setFormData({ ...formData, password: e.target.value })
-          }
+          {...register("password")}
           className="text-black"
         />
-        <span className="text-[#64748B] text-sm">
-          Modifiez votre mot de passe
-        </span>
+        {errors.password ? (
+          <span className="text-red-400 text-sm">{errors.password.message}</span>
+        ) : (
+          <span className="text-[#64748B] text-sm">
+            Modifiez votre mot de passe
+          </span>
+        )}
       </div>
+
       <div className="flex flex-col gap-2">
-        <label className="text-greenColorSecondary" htmlFor="name">
+        <label className="text-greenColorSecondary" htmlFor="confirmPassword">
           Confirmer le mot de passe
         </label>
         <Input
           type="password"
           placeholder="Confirmation du mot de passe"
-          value={formData.confirmPassword}
-          onChange={(e) =>
-            setFormData({ ...formData, confirmPassword: e.target.value })
-          }
+          {...register("confirmPassword")}
           className="text-black"
         />
-        <span className="text-[#64748B] text-sm">
-          Confirmez votre mot de passe
-        </span>
+        {errors.confirmPassword ? (
+          <span className="text-red-400 text-sm">{errors.confirmPassword.message}</span>
+        ) : (
+          <span className="text-[#64748B] text-sm">
+            Confirmez votre mot de passe
+          </span>
+        )}
       </div>
-      <Button className="rounded-md mt-4 xl:absolute right-12 bottom-8 xl:px-8" type="submit">Mettre à jour</Button>
+
+      <Button className="rounded-md mt-4 xl:absolute right-12 bottom-8 xl:px-8" type="submit">
+        Mettre à jour
+      </Button>
     </form>
   );
 }

@@ -5,13 +5,13 @@ export interface UserTypes extends Document {
   name: string;
   email: string;
   password: string;
-  image: string;
   votedTracks: string[];
   isEmailVerified: boolean;
   isAdmin: boolean;
   createdAt: Date;
   remainingVotes: number;
   lastVoteRefresh: Date;
+  points: number;
 }
 
 const userSchema = new Schema<UserTypes>(
@@ -33,12 +33,6 @@ const userSchema = new Schema<UserTypes>(
     password: {
       type: String,
       required: false,
-    },
-    image: {
-      type: String,
-      required: true,
-      default:
-        "https://avatars.githubusercontent.com/u/124599?v=4",
     },
     votedTracks: {
       type: [String],
@@ -66,6 +60,12 @@ const userSchema = new Schema<UserTypes>(
       required: true,
       default: Date.now(),
     },
+    points: {
+      type: Number,
+      required: true,
+      default: 0,
+      min: 0,
+    }
   },
   {
     timestamps: true,

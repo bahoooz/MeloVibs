@@ -162,7 +162,7 @@ export default function Navbar() {
           </Link>
         </ul>
         {session ? (
-          <UserAvatar className="hover:scale-[1.45] transition-all duration-200" />
+          <UserAvatar className="hover:scale-105 transition-all duration-200" />
         ) : (
           <Link href={"/connexion"}>
             <Button className="xl:hidden">

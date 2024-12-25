@@ -110,7 +110,7 @@ export default function CardTrack({
       </CardContent>
       <CardFooter
         className={`flex justify-center md:mt-6 px-4 mb-4 ${
-          preview_url ? " gap-5 md:gap-4" : "gap-8 md:gap-6"
+          preview_url ? " gap-5 md:gap-4" : "gap-6"
         }`}
       >
         <Button

@@ -41,7 +41,6 @@ export const authOptions: AuthOptions = {
                         id: user._id.toString(),
                         email: user.email,
                         name: user.name,
-                        image: user.image,
                         votedTracks: user.votedTracks,
                         isAdmin: user.isAdmin,
                         createdAt: user.createdAt,
@@ -76,7 +75,6 @@ export const authOptions: AuthOptions = {
                     if (dbUser) {
                         token.name = dbUser.name;
                         token.email = dbUser.email;
-                        token.picture = dbUser.image;
                         token.id = dbUser._id.toString();
                         token.votedTracks = dbUser.votedTracks;
                         token.isAdmin = dbUser.isAdmin;
@@ -95,7 +93,6 @@ export const authOptions: AuthOptions = {
                 session.user = {
                     name: token.name,
                     email: token.email,
-                    image: token.picture,
                     id: token.id,
                     votedTracks: token.votedTracks || [],
                     isAdmin: token.isAdmin,

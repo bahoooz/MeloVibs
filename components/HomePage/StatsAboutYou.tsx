@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import React from "react";
-import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Skeleton } from "../ui/skeleton";
 import { Image } from "@phosphor-icons/react";
 import Link from "next/link";
@@ -34,17 +34,13 @@ export default function StatsAboutYou() {
       </h2>
       {session ? (
         <div className="flex flex-col gap-10 sm:gap-16 sm:flex-row sm:items-center sm:justify-center">
-          <Avatar className="w-full h-full max-w-[400px] mx-auto sm:mx-0 sm:w-[200px] lg:w-[300px] sm:h-[200px] lg:h-[300px] sm:max-w-fit">
-            <AvatarImage
-              src={session.user?.image || ""}
-              className="object-cover"
-            />
-            <AvatarFallback>
-              {session.user?.name
-                ?.split(" ")
-                .map((n: string) => n[0])
-                .join("")}
-            </AvatarFallback>
+          <Avatar className="w-full h-auto aspect-square max-h-[400px] max-w-[400px] mx-auto sm:mx-0 sm:w-[200px] lg:w-[300px] sm:h-[200px] lg:h-[300px] sm:max-w-fit bg-greenColorSecondary border-4 lg:border-8">
+          <AvatarFallback className="text-7xl sm:text-6xl lg:text-8xl font-medium">
+            {session.user?.name
+              ?.split(" ")
+              .map((n: string) => n[0])
+              .join("")}
+          </AvatarFallback>
           </Avatar>
           <div className="flex flex-col gap-5 text-lg lg:text-xl mx-auto sm:mx-0">
             <p>

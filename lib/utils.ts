@@ -9,6 +9,7 @@ interface ToastProps {
   description?: string;
   variant?: "default" | "destructive";
   action?: ToastActionElement;
+  emojis?: string;
 }
 
 interface VoteError extends Error {
@@ -28,12 +29,24 @@ export const createHandleVote = (
 ) => {
   return async (trackId: string) => {
     try {
+      // Vérifier si l'utilisateur est connecté en vérifiant la session
+      const session = await update();
+      if (!session?.user) {
+        toast({
+          title: "Connexion requise",
+          description: "Veuillez vous connecter pour voter",
+          emojis: "🔒",
+        });
+        return;
+      }
+
       if (isVoted(trackId)) {
         await removeVote(trackId);
         await update();
         toast({
           title: "Vote retiré",
           description: "Votre vote a été retiré avec succès",
+          emojis: "✖️",
         });
       } else {
         try {
@@ -42,13 +55,14 @@ export const createHandleVote = (
           toast({
             title: "Vote ajouté",
             description: "Votre vote a été ajouté avec succès",
+            emojis: "🎵",
           });
         } catch (error: unknown) {
           const voteError = error as VoteError;
           toast({
-            title: "Erreur",
+            title: "Plus de votes",
             description: voteError.message || "Une erreur est survenue lors du vote",
-            variant: "destructive",
+            emojis: "⏳",
           });
         }
       }
@@ -57,7 +71,7 @@ export const createHandleVote = (
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors du vote",
-        variant: "destructive",
+        emojis: "❌",
       });
     }
   };

@@ -1,13 +1,25 @@
 "use client";
 
 import ProfileContainer from "@/components/ProfilePage/ProfileContainer";
-import React from "react";
+import React, { useEffect } from "react";
 import UpdateForm from "@/components/ProfilePage/UpdateForm";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Profil() {
   const { data: session } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!session?.user) {
+      router.push("/");
+    }
+  }, [session, router]);
+
+  if (!session?.user) {
+    return null;
+  }
 
   return (
     <ProfileContainer className="xl:relative">

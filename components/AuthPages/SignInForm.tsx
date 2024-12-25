@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { z } from "zod";
@@ -8,24 +8,34 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useToast } from "@/hooks/use-toast";
 
 const schema = z.object({
-  email: z.string().email("Email invalide"),
-  password: z
+  email: z
     .string()
-    .min(6, "Le mot de passe doit contenir au moins 6 caractères"),
+    .min(1, "L'email est requis")
+    .email("Veuillez entrer un email valide")
+    .max(96, "L'email ne doit pas dépasser 96 caractères"),
+  password: z.string().min(1, "Le mot de passe est requis"),
 });
 
-export default function SignInForm() {
-  const router = useRouter();
+type FormData = z.infer<typeof schema>;
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+export default function SignInForm() {
+  const { toast } = useToast();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
   });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const router = useRouter();
+
+  const onSubmit = async (formData: FormData) => {
     try {
       schema.parse(formData);
       const res = await signIn("credentials", {
@@ -34,23 +44,34 @@ export default function SignInForm() {
         password: formData.password,
       });
       if (res?.ok) {
+        toast({
+          title: "Connexion réussie",
+          description: "Vous êtes maintenant connecté",
+          emojis: "✔️",
+        });
         router.push("/");
-        console.log("Connexion réussie");
       } else {
-        console.error("Erreur de connexion:", res?.error);
+        toast({
+          title: "Erreur de connexion",
+          description: "Email ou mot de passe incorrect",
+          emojis: "❌",
+        });
       }
     } catch (error) {
+      toast({
+        title: "Erreur de connexion",
+        description: "Veuillez vérifier vos identifiants",
+        emojis: "❌",
+      });
       if (error instanceof z.ZodError) {
         console.error("Erreur de validation:", error.errors);
-      } else {
-        console.error("Erreur inattendue:", error);
       }
     }
   };
   return (
     <form
       className="mt-48 text-black bg-[#0F172A] rounded-2xl overflow-hidden sm:w-[500px] md:w-[600px] lg:w-fit sm:mx-auto lg:flex lg:items-stretch lg:px-12 xl:px-20 lg:py-12 xl:py-20 lg:gap-12 xl:gap-20 h-full"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <Image
         src="/FormsMedia/sdm_connexion.jpg"
@@ -69,15 +90,16 @@ export default function SignInForm() {
               <label className="text-greenColorSecondary" htmlFor="email">
                 Email
               </label>
-              <Input
-                type="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-              />
-              <span className="text-[#64748B] text-sm">Entrez votre email</span>
+              <Input type="email" placeholder="Email" {...register("email")} />
+              {errors.email ? (
+                <span className="text-red-400 text-sm">
+                  {errors.email.message}
+                </span>
+              ) : (
+                <span className="text-[#64748B] text-sm">
+                  Entrez votre email
+                </span>
+              )}
             </div>
 
             <div className="flex flex-col gap-2">
@@ -87,14 +109,17 @@ export default function SignInForm() {
               <Input
                 type="password"
                 placeholder="Mot de passe"
-                value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
+                {...register("password")}
               />
-              <span className="text-[#64748B] text-sm">
-                Entrez votre mot de passe
-              </span>
+              {errors.password ? (
+                <span className="text-red-400 text-sm">
+                  {errors.password.message}
+                </span>
+              ) : (
+                <span className="text-[#64748B] text-sm">
+                  Entrez votre mot de passe
+                </span>
+              )}
             </div>
           </div>
           <hr className="my-8 border-greenColorSecondary" />

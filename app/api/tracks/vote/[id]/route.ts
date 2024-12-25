@@ -44,7 +44,7 @@ export async function POST(request: NextRequest, props: { params: Promise<{ id: 
 
     if (user.remainingVotes <= 0 && !user.isAdmin) {
       return NextResponse.json(
-        { error: "Vous n'avez plus de votes disponibles" },
+        { error: "Attendez 3 heures pour voter à nouveau" },
         { status: 400 }
       );
     }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 import { signOut, useSession } from "next-auth/react";
 import {
   DropdownMenu,
@@ -10,19 +10,22 @@ import {
 import Link from "next/link";
 import { SignOut, User } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 export default function UserAvatar({ className }: { className?: string }) {
   const { data: session } = useSession();
-  
+  const { toast } = useToast();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className={cn("cursor-pointer", className)}>
-          <AvatarImage
-            src={session?.user?.image || ""}
-            className="object-cover"
-          />
-          <AvatarFallback>
+        <Avatar
+          className={cn(
+            "cursor-pointer bg-greenColorSecondary border-2 hover:border-btnColorIsVoted transition-all duration-200",
+            className
+          )}
+        >
+          <AvatarFallback className="text-xl font-medium">
             {session?.user?.name
               ?.split(" ")
               .map((n: string) => n[0])
@@ -41,7 +44,16 @@ export default function UserAvatar({ className }: { className?: string }) {
         </DropdownMenuItem>
         <DropdownMenuItem className="p-0">
           <p
-            onClick={() => signOut()}
+            onClick={async () => {
+              toast({
+                title: "Déconnexion",
+                description: "Vous avez été déconnecté avec succès",
+                emojis: "👋",
+              });
+              // Attendre un peu avant la déconnexion
+              await new Promise(resolve => setTimeout(resolve, 1500));
+              await signOut();
+            }}
             className="cursor-pointer flex items-center gap-3 text-base text-red-400  w-full hover:bg-red-400 px-4 hover:text-white h-10"
           >
             <SignOut className="min-w-5 min-h-5" /> Se déconnecter

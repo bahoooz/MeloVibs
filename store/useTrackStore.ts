@@ -42,7 +42,10 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
         method: 'POST',
       });
       
-      if (!response.ok) throw new Error('Erreur lors du vote');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Erreur lors du vote');
+      }
       
       const data = await response.json();
       set({ votedTracks: new Set(data.votedTracks) });
@@ -72,10 +75,9 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
       if (tracksData) {
         newState.tracks = tracksData.tracks;
       }
-      
       set(newState);
     } catch (error) {
-      console.error('Erreur lors du vote:', error);
+      throw error;
     }
   },
 
