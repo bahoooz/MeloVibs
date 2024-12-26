@@ -11,7 +11,7 @@ export default function Sidebar() {
     <div className="lg:bg-white lg:px-6 lg:py-12 lg:relative rounded-3xl">
       <div className="flex justify-between mb-8">
         <h2 className="text-greenColorSecondary text-xl lg:text-2xl font-medium">
-          Profil
+          Profil - {session?.user.isEmailVerified ? "✉️✔️" : "✉️❌"}
         </h2>
         <h2 className="text-xl lg:text-2xl font-medium text-blueColorTertiary title lg:absolute bottom-12">
           MeloVib<span className="text-greenColorSecondary">&apos;s</span>

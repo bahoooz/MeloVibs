@@ -97,6 +97,7 @@ export default function SignUpForm() {
       onSubmit={handleSubmit(onSubmit)}
     >
       <Image
+        priority
         src="/FormsMedia/pnl_inscription.jpg"
         alt="image pnl inscription"
         width={675}

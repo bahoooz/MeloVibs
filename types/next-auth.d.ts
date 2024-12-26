@@ -13,6 +13,7 @@ declare module "next-auth" {
         createdAt: Date;
         remainingVotes: number;
         lastVoteRefresh: Date;
+        isEmailVerified: boolean;
     }
 
     export interface Session extends DefaultSession {
@@ -26,6 +27,7 @@ declare module "next-auth" {
             createdAt: Date;
             remainingVotes: number;
             lastVoteRefresh: Date;
+            isEmailVerified: boolean;
         }
     }
 }
@@ -41,5 +43,6 @@ declare module "next-auth/jwt" {
         createdAt: Date;
         remainingVotes: number;
         lastVoteRefresh: Date;
+        isEmailVerified: boolean;
     }
 } 

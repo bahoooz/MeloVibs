@@ -2,6 +2,8 @@ import connectDb from "@/lib/mongodb";
 import User from "@/models/user";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import crypto from 'crypto';
+import { sendVerificationEmail } from '@/lib/nodemailer';
 
 export async function POST(request: NextRequest) {
     const { name, email, password, confirmPassword } = await request.json();
@@ -45,6 +47,7 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
       }
+      const verificationToken = crypto.randomBytes(32).toString('hex');
       const hashedPassword = await bcrypt.hash(password, 10);
   
       const newUser = new User({
@@ -55,12 +58,15 @@ export async function POST(request: NextRequest) {
         lastVoteRefresh: new Date(),
         createdAt: new Date(),
         votedTracks: [],
+        verificationToken,
+        isEmailVerified: false
       });
   
       await newUser.save();
+      await sendVerificationEmail(email, verificationToken);
   
       return NextResponse.json(
-        { message: "User created successfully" },
+        { message: "Utilisateur créé avec succès. Veuillez vérifier votre email." },
         { status: 201 }
       );
     } catch (error) {

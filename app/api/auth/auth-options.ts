@@ -46,6 +46,7 @@ export const authOptions: AuthOptions = {
                         createdAt: user.createdAt,
                         remainingVotes: user.remainingVotes,
                         lastVoteRefresh: user.lastVoteRefresh,
+                        isEmailVerified: user.isEmailVerified
                     };
                 } catch (error) {
                     console.error("Erreur d'authentification:", error);
@@ -66,6 +67,7 @@ export const authOptions: AuthOptions = {
                 token.createdAt = user.createdAt;
                 token.remainingVotes = user.remainingVotes;
                 token.lastVoteRefresh = user.lastVoteRefresh;
+                token.isEmailVerified = user.isEmailVerified;
             }
 
             if (trigger === "signIn" || trigger === "update") {
@@ -81,6 +83,7 @@ export const authOptions: AuthOptions = {
                         token.createdAt = dbUser.createdAt;
                         token.remainingVotes = dbUser.remainingVotes;
                         token.lastVoteRefresh = dbUser.lastVoteRefresh;
+                        token.isEmailVerified = dbUser.isEmailVerified;
                     }
                 } catch (error) {
                     console.error("Erreur lors de la mise à jour du token:", error);
@@ -99,6 +102,7 @@ export const authOptions: AuthOptions = {
                     createdAt: token.createdAt,
                     remainingVotes: token.remainingVotes,
                     lastVoteRefresh: token.lastVoteRefresh,
+                    isEmailVerified: token.isEmailVerified,
                 }
             }
             return session;

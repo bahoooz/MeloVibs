@@ -12,6 +12,7 @@ export interface UserTypes extends Document {
   remainingVotes: number;
   lastVoteRefresh: Date;
   points: number;
+  verificationToken: string | undefined;
 }
 
 const userSchema = new Schema<UserTypes>(
@@ -38,6 +39,9 @@ const userSchema = new Schema<UserTypes>(
       type: [String],
       required: true,
       default: [],
+    },
+    verificationToken: {
+      type: String,
     },
     isEmailVerified: {
       type: Boolean,

@@ -1,10 +1,12 @@
 import SignInForm from '@/components/AuthPages/SignInForm'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 export default function Connexion() {
   return (
     <div className="px-8 mb-40">
-      <SignInForm />
+      <Suspense fallback={<div>Chargement...</div>}>
+        <SignInForm />
+      </Suspense>
     </div>
   )
 }

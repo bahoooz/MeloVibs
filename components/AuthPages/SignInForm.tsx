@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { z } from "zod";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -29,51 +29,108 @@ export default function SignInForm() {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const verified = searchParams.get("verified");
+  const [isResending, setIsResending] = useState(false);
 
-  const onSubmit = async (formData: FormData) => {
-    try {
-      schema.parse(formData);
-      const res = await signIn("credentials", {
-        redirect: false,
-        email: formData.email,
-        password: formData.password,
+  useEffect(() => {
+    if (verified) {
+      toast({
+        title: "Email vérifié avec succès !",
+        description: "Vous pouvez maintenant vous connecter.",
+        emojis: "✔️",
       });
-      if (res?.ok) {
+    }
+  }, [verified, toast]);
+
+  const onSubmit = async (data: FormData) => {
+    try {
+      const result = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
         toast({
-          title: "Connexion réussie",
-          description: "Vous êtes maintenant connecté",
-          emojis: "✔️",
-        });
-        router.push("/");
-      } else {
-        toast({
-          title: "Erreur de connexion",
+          title: "Erreur",
           description: "Email ou mot de passe incorrect",
           emojis: "❌",
         });
+        return;
+      }
+
+      toast({
+        title: "Connexion réussie",
+        description: "Vous êtes maintenant connecté",
+        emojis: "✔️",
+      });
+
+      if (verified) {
+        router.push("/verification-reussie");
+      } else {
+        router.push("/");
       }
     } catch (error) {
       toast({
-        title: "Erreur de connexion",
-        description: "Veuillez vérifier vos identifiants",
+        title: "Erreur",
+        description: "Une erreur est survenue : " + error,
         emojis: "❌",
       });
-      if (error instanceof z.ZodError) {
-        console.error("Erreur de validation:", error.errors);
-      }
     }
   };
+
+  const handleResendVerification = async (email: string) => {
+    try {
+      setIsResending(true);
+      const response = await fetch("/api/auth/resend-verification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast({
+          title: "Erreur",
+          description: data.error,
+          emojis: "❌",
+        });
+        return;
+      }
+
+      toast({
+        title: "Email envoyé !",
+        description: "Vérifiez votre boîte de réception",
+        emojis: "✔️",
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue : " + error,
+        emojis: "❌",
+      });
+    } finally {
+      setIsResending(false);
+    }
+  };
+
   return (
     <form
       className="mt-48 text-black bg-[#0F172A] rounded-2xl overflow-hidden sm:w-[500px] md:w-[600px] lg:w-fit sm:mx-auto lg:flex lg:items-stretch lg:px-12 xl:px-20 lg:py-12 xl:py-20 lg:gap-12 xl:gap-20 h-full"
       onSubmit={handleSubmit(onSubmit)}
     >
       <Image
+        priority
         src="/FormsMedia/sdm_connexion.jpg"
         alt="image sdm connexion"
         width={1284}
@@ -123,7 +180,7 @@ export default function SignInForm() {
             </div>
           </div>
           <hr className="my-8 border-greenColorSecondary" />
-          <div className="flex flex-col items-center gap-5">
+          <div className="flex flex-col items-center gap-10">
             <div className="flex flex-col sm:flex-row gap-5 w-full items-center">
               <Button type="submit" className="rounded-md text-white w-full">
                 Se connecter
@@ -141,12 +198,24 @@ export default function SignInForm() {
                 />
               </Button>
             </div>
-            <Link
-              href="/inscription"
-              className="text-greenColorSecondary mb-9 lg:mb-0 text-sm underline lg:w-full lg:text-end"
-            >
-              Pas de compte ? En créer un
-            </Link>
+            <div className="flex flex-row-reverse justify-between items-start gap-4 lg:gap-10 w-full">
+              <Link
+                href="/inscription"
+                className="text-greenColorSecondary text-sm underline text-end lg:w-fit"
+              >
+                Pas de compte ? En créer un
+              </Link>
+              <button
+                type="button"
+                onClick={() => handleResendVerification(getValues("email"))}
+                disabled={isResending}
+                className="text-greenColorSecondary mb-9 lg:mb-0 text-sm underline lg:w-fit lg:min-w-[201.33px] text-start"
+              >
+                {isResending
+                  ? "Envoi en cours..."
+                  : "Renvoyer l'email de vérification"}
+              </button>
+            </div>
           </div>
         </div>
       </div>

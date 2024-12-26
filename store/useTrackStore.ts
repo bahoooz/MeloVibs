@@ -2,6 +2,8 @@
 import { Track } from '@/types/track';
 import { launchConfetti } from '@/lib/confetti';
 import { create } from 'zustand';
+import { toast } from '@/hooks/use-toast';
+import { playSound } from '@/lib/playSound';
 
 // Interface définissant la structure du store
 interface TrackStore {
@@ -46,11 +48,17 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
         const errorData = await response.json();
         throw new Error(errorData.error || 'Erreur lors du vote');
       }
-      
+      toast({
+        title: "Vote ajouté",
+        description: "Votre vote a été ajouté avec succès",
+        emojis: "🎵",
+      });
+      launchConfetti();
+      playSound("/Sounds/upvote-sound.mp3")
+
       const data = await response.json();
       set({ votedTracks: new Set(data.votedTracks) });
 
-      launchConfetti();
       // Récupération des tracks en fonction du contexte
       const promises = [
         fetch("/api/tracks/tracks-ranking-homepage"),
@@ -89,7 +97,12 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
       });
       
       if (!response.ok) throw new Error('Erreur lors de la suppression du vote');
-      
+      toast({
+          title: "Vote retiré",
+          description: "Votre vote a été retiré avec succès",
+          emojis: "✖️",
+        });
+      playSound("/Sounds/downvote-sound.wav")
       const data = await response.json();
       set({ votedTracks: new Set(data.votedTracks) });
       

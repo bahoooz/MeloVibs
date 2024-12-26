@@ -43,20 +43,10 @@ export const createHandleVote = (
       if (isVoted(trackId)) {
         await removeVote(trackId);
         await update();
-        toast({
-          title: "Vote retiré",
-          description: "Votre vote a été retiré avec succès",
-          emojis: "✖️",
-        });
       } else {
         try {
           await addVote(trackId);
           await update();
-          toast({
-            title: "Vote ajouté",
-            description: "Votre vote a été ajouté avec succès",
-            emojis: "🎵",
-          });
         } catch (error: unknown) {
           const voteError = error as VoteError;
           toast({
