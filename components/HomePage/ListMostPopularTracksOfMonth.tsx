@@ -42,7 +42,6 @@ export default function ListMostPopularTracksOfMonth() {
         const tracksData = await tracksRes.json();
         const votesData = await votesRes.json();
 
-        console.log("Track example:", tracksData.tracks[0]);
 
         setTracksOfMonth(tracksData.tracks);
         if (votesData.votedTracks) {

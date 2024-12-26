@@ -14,32 +14,36 @@ export default function Header() {
           </h1>
           <div className="flex flex-col gap-5 sm:text-justify xl:text-lg">
             <p>
-              La plateforme musicale ultime où{" "}
+              La plateforme musicale{" "}
               <span className="text-greenColorSecondary">
-                tu as le pouvoir de décider quelle musique règne chaque mois
+                destinée aux fans de musique{" "}
+              </span>
+              qui vous permet de{" "}
+              <span className="text-greenColorSecondary">
+                voter pour vos morceaux préférés
               </span>{" "}
-              ! 🎶{" "}
+              ! 🎶
             </p>
             <p>
-              <span className="text-greenColorSecondary">Découvre</span>,{" "}
-              <span className="text-greenColorSecondary">écoute</span> et{" "}
+              <span className="text-greenColorSecondary">Découvre</span> et{" "}
               <span className="text-greenColorSecondary">vote</span> pour tes
               morceaux préférés dans différents genres musicaux. Suis les{" "}
               <span className="text-greenColorSecondary">
                 classements évolutifs
               </span>{" "}
-              et découvre les hits qui font vibrer la communauté. À toi de{" "}
+              et découvre les tendances qui font vibrer la communauté. À toi de{" "}
               <span className="text-greenColorSecondary">
-                propulser tes artistes favoris au sommet
+                propulser tes artistes favoris
               </span>{" "}
-              et de participer à l&apos;aventure musicale avec des{" "}
+              au sommet de MeloVib&apos;s et de participer à cette aventure musicale
+              avec des votes qui{" "}
               <span className="text-greenColorSecondary">
-                votes qui comptent vraiment
+                 soutiennent tes artistes préférés
               </span>{" "}
               ! 🎤✨
             </p>{" "}
             <p>
-              Chaque mois, explore les tendances et fais entendre ta voix dans
+              Chaque mois, explore les classements et ajoute tes votes dans
               un{" "}
               <span className="text-greenColorSecondary">
                 univers musical interactif et dynamique

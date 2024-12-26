@@ -46,399 +46,160 @@ export async function getAccessToken(): Promise<string> {
   return data.access_token;
 }
 
-// Fonction pour récupérer les pistes de la playlist "Rap Français"
-export async function getListRapFrTracks() {
+// Fonction générique pour récupérer les tracks d'une playlist
+async function getPlaylistTracks(playlistIds: string[], genre: string) {
   const token = await getAccessToken();
 
-  const res = await fetch(
-    "https://api.spotify.com/v1/playlists/298rv22FYrjBdEuZBB0upz?si=d0786ac0855b42f2/tracks",
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error(
-      "Échec de la récupération des données des pistes de la playlist Rap Français"
-    );
-  }
-
-  const listTracks = await res.json();
-  // console.log('Données des pistes Spotify de la playlist Rap Français :', listTracks.tracks.items);
-
-  const tracksItems = listTracks.tracks.items;
-
   try {
+    const playlistsData = await Promise.all(
+      playlistIds.map(id => 
+        fetch(`https://api.spotify.com/v1/playlists/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }).then(res => {
+          if (!res.ok) {
+            throw new Error(`Échec de la récupération de la playlist ${id}`);
+          }
+          return res.json();
+        })
+      )
+    );
+
+    const allTracksItems = playlistsData
+      .flatMap(playlist => playlist.tracks.items)
+      .filter(item => item && item.track);
+
     await connectDb();
-    console.log("Connexion à la base de données réussie");
+    console.log(`Connexion à la base de données réussie pour ${genre}`);
+    console.log(`Nombre de tracks ${genre} trouvés:`, allTracksItems.length);
 
-    for (const item of tracksItems) {
+    for (const item of allTracksItems) {
       const track = item.track;
+      
+      try {
+        const trackData = {
+          spotifyId: track.id,
+          name: track.name,
+          previewUrl: track.preview_url,
+          artists: track.artists.map((artist: Artist) => ({
+            id: artist.id,
+            name: artist.name,
+          })),
+          album: {
+            id: track.album.id,
+            name: track.album.name,
+            images: track.album.images,
+            share_link: track.album.external_urls.spotify,
+            release_date: track.album.release_date,
+          },
+          popularity: track.popularity,
+          duration_ms: track.duration_ms,
+          genres: [genre],
+        };
 
-      const trackData = {
-        spotifyId: track.id,
-        name: track.name,
-        previewUrl: track.preview_url,
-        artists: track.artists.map((artist: Artist) => ({
-          id: artist.id,
-          name: artist.name,
-        })),
-        album: {
-          id: track.album.id,
-          name: track.album.name,
-          images: track.album.images,
-          share_link: track.album.external_urls.spotify,
-          release_date: track.album.release_date,
-        },
-        popularity: track.popularity,
-        duration_ms: track.duration_ms,
-        genres: ["rap-fr"],
-      };
-
-      // console.log('Mise à jour du track:', trackData);
-
-      await Track.findOneAndUpdate({ spotifyId: track.id }, trackData, {
-        upsert: true,
-        new: true,
-      }).catch((error) => {
-        console.error(
-          "Erreur lors de la mise à jour du track de la playlist Rap Français :",
-          error
+        await Track.findOneAndUpdate(
+          { spotifyId: track.id }, 
+          trackData, 
+          { upsert: true, new: true }
         );
-      });
+      } catch (error) {
+        console.error(`Erreur lors du traitement du track ${genre}:`, track?.name, error);
+        continue;
+      }
     }
 
-    // console.log("Pistes sauvegardées avec succès dans MongoDB");
-
-    return tracksItems;
+    return allTracksItems;
   } catch (error) {
-    console.error(
-      "Erreur lors de la sauvegarde des pistes de la playlist Rap Français:",
-      error
-    );
-    throw new Error(
-      "Échec de la sauvegarde des pistes dans la base de données"
-    );
+    console.error(`Erreur lors de la sauvegarde des pistes de la playlist ${genre}:`, error);
+    throw new Error(`Échec de la sauvegarde des pistes ${genre} dans la base de données`);
   }
+}
+
+// Fonctions spécifiques pour chaque genre
+export async function getListRapFrTracks() {
+  const playlistIds = [
+    "298rv22FYrjBdEuZBB0upz",
+    "1FwqVCZqm8USJuMJqhKq1J",
+    "7e57bVZpqAFyYJHh5eWo7b",
+    "1YrEsksPM1kaUuhKpaW1ip",
+    "2zAmwkFHAxu3MQtvFezJly"
+  ];
+  return getPlaylistTracks(playlistIds, "rap-fr");
 }
 
 export async function getListPopTracks() {
-  const token = await getAccessToken();
-
-  const res = await fetch(
-    "https://api.spotify.com/v1/playlists/1WoRmb6giude5vQ8kIYhQy?si=42215c81d12e4c68/tracks",
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error(
-      "Échec de la récupération des données des pistes de la playlist Pop"
-    );
-  }
-
-  const listTracks = await res.json();
-  console.log(
-    "Données des pistes Spotify de la playlist Pop :",
-    listTracks.tracks.items
-  );
-
-  const tracksItems = listTracks.tracks.items;
-
-  try {
-    await connectDb();
-    console.log("Connexion à la base de données réussie");
-
-    for (const item of tracksItems) {
-      const track = item.track;
-
-      const trackData = {
-        spotifyId: track.id,
-        name: track.name,
-        previewUrl: track.preview_url,
-        artists: track.artists.map((artist: Artist) => ({
-          id: artist.id,
-          name: artist.name,
-        })),
-        album: {
-          id: track.album.id,
-          name: track.album.name,
-          images: track.album.images,
-          share_link: track.album.external_urls.spotify,
-          release_date: track.album.release_date,
-        },
-        popularity: track.popularity,
-        duration_ms: track.duration_ms,
-        genres: ["pop"],
-      };
-
-      // console.log('Mise à jour du track:', trackData);
-
-      await Track.findOneAndUpdate({ spotifyId: track.id }, trackData, {
-        upsert: true,
-        new: true,
-      }).catch((error) => {
-        console.error(
-          "Erreur lors de la mise à jour du track de la playlist Pop :",
-          error
-        );
-      });
-    }
-
-    console.log("Pistes sauvegardées avec succès dans MongoDB");
-
-    return tracksItems;
-  } catch (error) {
-    console.error(
-      "Erreur lors de la sauvegarde des pistes de la playlist Pop :",
-      error
-    );
-    throw new Error(
-      "Échec de la sauvegarde des pistes dans la base de données"
-    );
-  }
+  const playlistIds = [
+    "1WoRmb6giude5vQ8kIYhQy",
+    "3KdNofOL1dMlRM53PWH9AX"
+  ];
+  return getPlaylistTracks(playlistIds, "pop");
 }
 
 export async function getListJazzTracks() {
-  const token = await getAccessToken();
-
-  const res = await fetch(
-    "https://api.spotify.com/v1/playlists/164ve0IOjCP6tkcJzVLD7n?si=1fbfa5e1fdbd43ec/tracks",
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error(
-      "Échec de la récupération des données des pistes de la playlist Jazz"
-    );
-  }
-
-  const listTracks = await res.json();
-  console.log(
-    "Données des pistes Spotify de la playlist Jazz :",
-    listTracks.tracks.items
-  );
-
-  const tracksItems = listTracks.tracks.items;
-
-  try {
-    await connectDb();
-    console.log("Connexion à la base de données réussie");
-
-    for (const item of tracksItems) {
-      const track = item.track;
-
-      const trackData = {
-        spotifyId: track.id,
-        name: track.name,
-        previewUrl: track.preview_url,
-        artists: track.artists.map((artist: Artist) => ({
-          id: artist.id,
-          name: artist.name,
-        })),
-        album: {
-          id: track.album.id,
-          name: track.album.name,
-          images: track.album.images,
-          share_link: track.album.external_urls.spotify,
-          release_date: track.album.release_date,
-        },
-        popularity: track.popularity,
-        duration_ms: track.duration_ms,
-        genres: ["jazz"],
-      };
-
-      // console.log('Mise à jour du track:', trackData);
-
-      await Track.findOneAndUpdate({ spotifyId: track.id }, trackData, {
-        upsert: true,
-        new: true,
-      }).catch((error) => {
-        console.error(
-          "Erreur lors de la mise à jour du track de la playlist Jazz :",
-          error
-        );
-      });
-    }
-    console.log("Pistes sauvegardées avec succès dans MongoDB");
-
-    return tracksItems;
-  } catch (error) {
-    console.error(
-      "Erreur lors de la sauvegarde des pistes de la playlist Jazz :",
-      error
-    );
-    throw new Error(
-      "Échec de la sauvegarde des pistes dans la base de données"
-    );
-  }
+  const playlistIds = [
+    "164ve0IOjCP6tkcJzVLD7n",
+    "7piVTqqLGq7ywSkZp5lyG4"
+  ];
+  return getPlaylistTracks(playlistIds, "jazz");
 }
 
 export async function getListRnBTracks() {
-  const token = await getAccessToken();
-
-  const res = await fetch(
-    "https://api.spotify.com/v1/playlists/3SsPWyQnAh1ccWEXZPYaCY?si=c8c7eb07f4e04c4b/tracks",
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error(
-      "Échec de la récupération des données des pistes de la playlist R&B"
-    );
-  }
-
-  const listTracks = await res.json();
-  console.log(
-    "Données des pistes Spotify de la playlist R&B :",
-    listTracks.tracks.items
-  );
-
-  const tracksItems = listTracks.tracks.items;
-
-  try {
-    await connectDb();
-    console.log("Connexion à la base de données réussie");
-
-    for (const item of tracksItems) {
-      const track = item.track;
-
-      const trackData = {
-        spotifyId: track.id,
-        name: track.name,
-        previewUrl: track.preview_url,
-        artists: track.artists.map((artist: Artist) => ({
-          id: artist.id,
-          name: artist.name,
-        })),
-        album: {
-          id: track.album.id,
-          name: track.album.name,
-          images: track.album.images,
-          share_link: track.album.external_urls.spotify,
-          release_date: track.album.release_date,
-        },
-        popularity: track.popularity,
-        duration_ms: track.duration_ms,
-        genres: ["r&b"],
-      };
-
-      // console.log('Mise à jour du track:', trackData);
-
-      await Track.findOneAndUpdate({ spotifyId: track.id }, trackData, {
-        upsert: true,
-        new: true,
-      }).catch((error) => {
-        console.error(
-          "Erreur lors de la mise à jour du track de la playlist R&B :",
-          error
-        );
-      });
-    }
-    console.log("Pistes sauvegardées avec succès dans MongoDB");
-
-    return tracksItems;
-  } catch (error) {
-    console.error(
-      "Erreur lors de la sauvegarde des pistes de la playlist R&B :",
-      error
-    );
-    throw new Error(
-      "Échec de la sauvegarde des pistes dans la base de données"
-    );
-  }
+  const playlistIds = [
+    "4TyIK0EMh6L4Dn3N3zp5pf",
+    "2loX3fKYzjJ2o5aSHjqhlR"
+  ];
+  return getPlaylistTracks(playlistIds, "r&b");
 }
 
 export async function getListAfroBeatsTracks() {
-  const token = await getAccessToken();
+  const playlistIds = [
+    "4ykrONBhOgPr4sMhAVCoPx",
+    "5myeBzohhCVewaK2Thqmo5"
+  ];
+  return getPlaylistTracks(playlistIds, "afro-beats");
+}
 
-  const res = await fetch(
-    "https://api.spotify.com/v1/playlists/4ykrONBhOgPr4sMhAVCoPx?si=0724b0196ae644b9/tracks",
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+// ///////////////////////////
 
-  if (!res.ok) {
-    throw new Error(
-      "Échec de la récupération des données des pistes de la playlist Afro Beats"
-    );
-  }
+export async function getListRapUsTracks() {
+  const playlistIds = [
+    "5fAhM64rOJprFIQEnmWQd1",
+    "1awYlVqR3LpIS0fkUW3kbw"
+  ];
+  return getPlaylistTracks(playlistIds, "rap-us");
+}
 
-  const listTracks = await res.json();
-  console.log(
-    "Données des pistes Spotify de la playlist Afro Beats :",
-    listTracks.tracks.items
-  );
+export async function getListLatinesTracks() {
+  const playlistIds = [
+    "5oYb3EYc6MNGw0YuhlSDMN",
+    "6R2N9jmZsAaiS54DufhFby"
+  ];
+  return getPlaylistTracks(playlistIds, "latines");
+}
 
-  const tracksItems = listTracks.tracks.items;
+export async function getListRockTracks() {
+  const playlistIds = [
+    "1FIN7khU6KZkops8XJvm7N",
+    "7EKWxCA0Ip1y3mDNycr4Dk"
+  ];
+  return getPlaylistTracks(playlistIds, "rock");
+}
 
-  try {
-    await connectDb();
-    console.log("Connexion à la base de données réussie");
+export async function getListElectroTracks() {
+  const playlistIds = [
+    "33PyRULhtc4SRrUE1wbbmp",
+    "1R2TXxbdL7YJxQvqLn4mXV"
+  ];
+  return getPlaylistTracks(playlistIds, "electro");
+}
 
-    for (const item of tracksItems) {
-      const track = item.track;
-
-      const trackData = {
-        spotifyId: track.id,
-        name: track.name,
-        previewUrl: track.preview_url,
-        artists: track.artists.map((artist: Artist) => ({
-          id: artist.id,
-          name: artist.name,
-        })),
-        album: {
-          id: track.album.id,
-          name: track.album.name,
-          images: track.album.images,
-          share_link: track.album.external_urls.spotify,
-          release_date: track.album.release_date,
-        },
-        popularity: track.popularity,
-        duration_ms: track.duration_ms,
-        genres: ["afro-beats"],
-      };
-
-      console.log("Mise à jour du track:", trackData);
-
-      await Track.findOneAndUpdate({ spotifyId: track.id }, trackData, {
-        upsert: true,
-        new: true,
-      }).catch((error) => {
-        console.error(
-          "Erreur lors de la mise à jour du track de la playlist Afro Beats :",
-          error
-        );
-      });
-    }
-    console.log("Pistes sauvegardées avec succès dans MongoDB");
-
-    return tracksItems;
-  } catch (error) {
-    console.error(
-      "Erreur lors de la sauvegarde des pistes de la playlist Afro Beats :",
-      error
-    );
-    throw new Error(
-      "Échec de la sauvegarde des pistes dans la base de données"
-    );
-  }
+export async function getListKpopTracks() {
+  const playlistIds = [
+    "2EoheVFjqIxgJMb8VnDRtZ",
+    "0VjrAiRMSDDyBgJB8gJJcc"
+  ];
+  return getPlaylistTracks(playlistIds, "kpop");
 }
 
 // Fonction pour récupérer des artistes Rap Français
