@@ -21,6 +21,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
 import { Track } from "../HomePage/MostPopularTracks";
+import { Spiral } from "@phosphor-icons/react";
 
 interface ListTracksRankingProps {
   genre: string;
@@ -49,6 +50,7 @@ export default function ListTracksRanking({
     addVote,
     removeVote
   );
+  const [isLoading, setIsLoading] = useState(true);
 
   // Calcul du nombre total de pages nécessaires
   const totalPages = Math.ceil(tracks.length / tracksPerPage);
@@ -62,6 +64,7 @@ export default function ListTracksRanking({
   // Effect pour initialiser les données au chargement du composant
   useEffect(() => {
     async function initialize() {
+      setIsLoading(true);
       try {
         // Récupération parallèle des pistes et des votes
         const [tracksRes, votesRes] = await Promise.all([
@@ -77,13 +80,17 @@ export default function ListTracksRanking({
         // Simplifions la logique de tri
         if (sortMethodByIncreasingOrDecreasing === "increasing") {
           if (sortMethodByPopularityOrVotes === "popularity") {
-            filteredTracks.sort((a: Track, b: Track) => a.popularity - b.popularity);
+            filteredTracks.sort(
+              (a: Track, b: Track) => a.popularity - b.popularity
+            );
           } else {
             filteredTracks.sort((a: Track, b: Track) => a.votes - b.votes);
           }
         } else {
           if (sortMethodByPopularityOrVotes === "popularity") {
-            filteredTracks.sort((a: Track, b: Track) => b.popularity - a.popularity);
+            filteredTracks.sort(
+              (a: Track, b: Track) => b.popularity - a.popularity
+            );
           } else {
             filteredTracks.sort((a: Track, b: Track) => b.votes - a.votes);
           }
@@ -95,13 +102,18 @@ export default function ListTracksRanking({
           const dateTrack = new Date(track.album.release_date);
           const diffTime = Math.abs(today.getTime() - dateTrack.getTime());
           const diffMonths = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30));
-          
+
           switch (sortMethodByDate) {
-            case "30-last-days": return diffMonths <= 1;
-            case "3-last-months": return diffMonths <= 3;
-            case "6-last-months": return diffMonths <= 6;
-            case "12-last-months": return diffMonths <= 12;
-            default: return true;
+            case "30-last-days":
+              return diffMonths <= 1;
+            case "3-last-months":
+              return diffMonths <= 3;
+            case "6-last-months":
+              return diffMonths <= 6;
+            case "12-last-months":
+              return diffMonths <= 12;
+            default:
+              return true;
           }
         });
 
@@ -114,6 +126,8 @@ export default function ListTracksRanking({
         setTracks(filteredTracks);
       } catch (error) {
         console.error("Erreur lors de l'initialisation:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -191,12 +205,30 @@ export default function ListTracksRanking({
                     height={track.album.images[0].height}
                     onClick={() => handleVote(track._id)}
                     stylesIsVotedButton={`${
-                      isVoted(track._id) ? "border-[3px] border-white" : ""
+                      isVoted(track._id) ? "bg-btnColorIsVoted border-4 border-white overflow-hidden" : ""
                     }`}
-                    stylesIsVotedIcon={isVoted(track._id) ? "fill" : "light"}
+                    stylesIsVotedIcon={
+                      isVoted(track._id)
+                        ? "min-h-32 min-w-32"
+                        : "min-h-12 min-w-12"
+                    }
                     ranking={globalIndex}
                     podium={currentPage === 1 && i === 0 ? true : false}
-                    popularity={track.popularity}
+                    popularity={
+                      track.popularity >= 80
+                        ? "Hit incontournable"
+                        : track.popularity >= 70
+                        ? "Hit du moment"
+                        : track.popularity >= 60
+                        ? "Favori du public"
+                        : track.popularity >= 50
+                        ? "Tendance montante"
+                        : track.popularity >= 30
+                        ? "À découvrir"
+                        : track.popularity >= 10
+                        ? "Note discrète"
+                        : "Inconnu au bataillon"
+                    }
                   />
                 </CarouselItem>
               );
@@ -227,73 +259,99 @@ export default function ListTracksRanking({
   // Rendu du composant
   return (
     <div>
-      {/* Carousels visibles uniquement sur mobile et tablette */}
-      <div className="flex flex-col gap-20 lg:hidden">{renderCarousels()}</div>
+      {isLoading ? (
+        <div className="flex justify-center items-center min-h-[30vh] sm:min-h-[50vh] xl:min-h-[60vh]">
+          <Spiral size={80} className="animate-spin text-greenColorSecondary" />
+        </div>
+      ) : (
+        <>
+          {/* Carousels visibles uniquement sur mobile et tablette */}
+          <div className="flex flex-col gap-20 lg:hidden">{renderCarousels()}</div>
 
-      {/* Grille visible uniquement sur desktop */}
-      <div className="hidden lg:grid lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-5 gap-8 lg:w-[700px] xl:w-[1200px] mx-auto">
-        {getCurrentPageTracks().map((track, index) => {
-          const globalIndex = (currentPage - 1) * tracksPerPage + index + 1;
+          {/* Grille visible uniquement sur desktop */}
+          <div className="hidden lg:grid lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-5 gap-8 lg:w-[700px] xl:w-[1200px] mx-auto">
+            {getCurrentPageTracks().map((track, index) => {
+              const globalIndex = (currentPage - 1) * tracksPerPage + index + 1;
 
-          return (
-            <CardRankingTrack
-              key={`track-grid-${track._id}`}
-              _id={track._id}
-              title={track.name}
-              artist={track.artists[0].name}
-              image={track.album.images[0].url}
-              votes={track.votes}
-              width={track.album.images[0].width}
-              height={track.album.images[0].height}
-              onClick={() => handleVote(track._id)}
-              stylesIsVotedButton={`${
-                isVoted(track._id) ? "border-[3px] border-white" : ""
-              }`}
-              stylesIsVotedIcon={isVoted(track._id) ? "fill" : "light"}
-              ranking={globalIndex}
-              podium={
-                currentPage === 1 &&
-                (windowWidth >= 1280 // 2xl breakpoint
-                  ? globalIndex <= 5
-                  : globalIndex <= 3)
-              }
-              popularity={track.popularity}
-            />
-          );
-        })}
-      </div>
+              return (
+                <CardRankingTrack
+                  key={`track-grid-${track._id}`}
+                  _id={track._id}
+                  title={track.name}
+                  artist={track.artists[0].name}
+                  image={track.album.images[0].url}
+                  votes={track.votes}
+                  width={track.album.images[0].width}
+                  height={track.album.images[0].height}
+                  onClick={() => handleVote(track._id)}
+                  stylesIsVotedButton={`${
+                    isVoted(track._id) ? "bg-btnColorIsVoted border-[3px] border-white overflow-hidden" : ""
+                  }`}
+                  stylesIsVotedIcon={
+                    isVoted(track._id)
+                      ? "min-h-20 min-w-20"
+                      : "min-h-12 min-w-12"
+                  }
+                  ranking={globalIndex}
+                  podium={
+                    currentPage === 1 &&
+                    (windowWidth >= 1280 // 2xl breakpoint
+                      ? globalIndex <= 5
+                      : globalIndex <= 3)
+                  }
+                  popularity={
+                    track.popularity >= 80
+                      ? "Hit incontournable"
+                      : track.popularity >= 70
+                      ? "Hit du moment"
+                      : track.popularity >= 60
+                      ? "Favori du public"
+                      : track.popularity >= 50
+                      ? "Tendance montante"
+                      : track.popularity >= 30
+                      ? "À découvrir"
+                      : track.popularity >= 10
+                      ? "Note discrète"
+                      : "Inconnu au bataillon"
+                  }
+                />
+              );
+            })}
+          </div>
 
-      {/* Pagination */}
-      <Pagination className="mt-20">
-        <PaginationContent>
-          {/* Affichage des numéros de page */}
-          {getPageNumbers().map((pageNum, index, array) => (
-            <React.Fragment key={pageNum}>
-              {/* Affichage des points de suspension si nécessaire */}
-              {index > 0 && array[index - 1] !== pageNum - 1 && (
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-              )}
-              <PaginationItem>
-                <PaginationLink
-                  onClick={() => {
-                    setCurrentPage(pageNum);
-                    window.scrollTo({
-                      top: 0,
-                      behavior: "smooth",
-                    });
-                  }}
-                  isActive={currentPage === pageNum}
-                  className="cursor-pointer"
-                >
-                  {pageNum}
-                </PaginationLink>
-              </PaginationItem>
-            </React.Fragment>
-          ))}
-        </PaginationContent>
-      </Pagination>
+          {/* Pagination */}
+          <Pagination className="mt-20">
+            <PaginationContent>
+              {/* Affichage des numéros de page */}
+              {getPageNumbers().map((pageNum, index, array) => (
+                <React.Fragment key={pageNum}>
+                  {/* Affichage des points de suspension si nécessaire */}
+                  {index > 0 && array[index - 1] !== pageNum - 1 && (
+                    <PaginationItem>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  )}
+                  <PaginationItem>
+                    <PaginationLink
+                      onClick={() => {
+                        setCurrentPage(pageNum);
+                        window.scrollTo({
+                          top: 0,
+                          behavior: "smooth",
+                        });
+                      }}
+                      isActive={currentPage === pageNum}
+                      className="cursor-pointer"
+                    >
+                      {pageNum}
+                    </PaginationLink>
+                  </PaginationItem>
+                </React.Fragment>
+              ))}
+            </PaginationContent>
+          </Pagination>
+        </>
+      )}
     </div>
   );
 }
