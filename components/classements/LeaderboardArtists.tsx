@@ -11,6 +11,7 @@ import {
   PaginationLink,
 } from "../ui/pagination";
 import { Pagination } from "../ui/pagination";
+import { Spiral } from "@phosphor-icons/react";
 
 interface Artist {
   _id: string;
@@ -35,11 +36,14 @@ export default function LeaderboardArtists({
 }: LeaderboardArtistsProps) {
   const [artists, setArtists] = useState<Artist[]>([]);
   const [currentPage, setCurrentPage] = useState(1); // État pour gérer la page courante
+  const [isLoading, setIsLoading] = useState(true);
+
   const artistPerPage = 30; // Nombre de pistes par page
   const artistPerCarousel = 5; // Nombre de pistes par carousel
 
   useEffect(() => {
     async function initialize() {
+      setIsLoading(true);
       const res = await fetch(`/api/artists/get-all-artists/${genre}`);
       const data = await res.json();
       if (sortMethodByIncreasingOrDecreasing === "increasing") {
@@ -60,6 +64,7 @@ export default function LeaderboardArtists({
         }
       }
       setArtists(data);
+      setIsLoading(false);
     }
     initialize();
   }, [
@@ -171,8 +176,14 @@ export default function LeaderboardArtists({
 
   return (
     <div>
-      {/* Carousels visibles uniquement sur mobile et tablette */}
-      <div className="flex flex-col gap-20 lg:hidden">{renderCarousels()}</div>
+      {isLoading ? (
+        <div className="flex justify-center items-center min-h-[30vh] sm:min-h-[50vh] xl:min-h-[60vh]">
+          <Spiral size={80} className="animate-spin text-greenColorSecondary" />
+        </div>
+      ) : (
+        <>
+          {/* Carousels visibles uniquement sur mobile et tablette */}
+          <div className="flex flex-col gap-20 lg:hidden">{renderCarousels()}</div>
 
       {/* Grille visible uniquement sur desktop */}
       <div className="hidden lg:grid lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-5 gap-20 lg:w-[700px] xl:w-[1200px] mx-auto">
@@ -232,7 +243,9 @@ export default function LeaderboardArtists({
             </React.Fragment>
           ))}
         </PaginationContent>
-      </Pagination>
+          </Pagination>
+        </>
+      )}
     </div>
   );
 }

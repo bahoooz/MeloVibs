@@ -98,7 +98,7 @@ export default function Votes() {
               </Button>
               <div className="lg:hidden xl:block">
                 {isLoading ? (
-                  <div className="flex justify-center items-center h-[500px] xl:h-[250px]">
+                  <div className="flex justify-center items-center min-w-full h-[500px] xl:h-[250px]">
                     <Spiral
                       className="animate-spin text-greenColorSecondary"
                       size={80}
@@ -106,11 +106,11 @@ export default function Votes() {
                   </div>
                 ) : (
                   <div
-                    className={`grid grid-cols-3 mx-auto gap-4 sm:gap-6 xl:gap-4 w-full max-h-[500px] ${
+                    className={`grid grid-cols-3 mx-auto gap-4 sm:gap-6 xl:gap-4 min-w-[365.69] max-h-[500px] overflow-y-scroll ${
                       session?.user?.isAdmin
                         ? "xl:max-h-[285px]"
                         : "xl:max-h-[250px]"
-                    } overflow-y-scroll`}
+                    } `}
                   >
                     {votedTracks.map((track: TrackWithId) => (
                       <div

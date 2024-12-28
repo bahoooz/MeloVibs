@@ -52,9 +52,9 @@ export default function Home() {
         // const dataPop = await responsePop.json();
         // console.log('Données des artistes Spotify Pop:', dataPop);
 
-        const responseJazz = await fetch("/api/spotify/get-list-artists/jazz");
-        const dataJazz = await responseJazz.json();
-        console.log('Données des artistes Spotify Jazz:', dataJazz);
+        // const responseJazz = await fetch("/api/spotify/get-list-artists/jazz");
+        // const dataJazz = await responseJazz.json();
+        // console.log('Données des artistes Spotify Jazz:', dataJazz);
 
         // const responseRnB = await fetch("/api/spotify/get-list-artists/r&b");
         // const dataRnB = await responseRnB.json();
@@ -76,9 +76,9 @@ export default function Home() {
         // const dataRock = await responseRock.json();
         // console.log('Données des artistes Spotify Rock:', dataRock);
 
-        const responseElectro = await fetch("/api/spotify/get-list-artists/electro");
-        const dataElectro = await responseElectro.json();
-        console.log('Données des artistes Spotify Electro:', dataElectro);
+        // const responseElectro = await fetch("/api/spotify/get-list-artists/electro");
+        // const dataElectro = await responseElectro.json();
+        // console.log('Données des artistes Spotify Electro:', dataElectro);
 
         // const responseKpop = await fetch("/api/spotify/get-list-artists/kpop");
         // const dataKpop = await responseKpop.json();

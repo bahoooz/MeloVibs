@@ -8,13 +8,14 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function Profil() {
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const router = useRouter();
 
   useEffect(() => {
     if (!session?.user) {
       router.push("/");
     }
+    update();
   }, [session, router]);
 
   if (!session?.user) {
