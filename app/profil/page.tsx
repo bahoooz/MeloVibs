@@ -15,7 +15,9 @@ export default function Profil() {
     if (!session?.user) {
       router.push("/");
     }
-    update();
+    setTimeout(() => {
+      update();
+    }, 30000);
   }, [session, router, update]);
 
   if (!session?.user) {

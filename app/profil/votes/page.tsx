@@ -6,12 +6,12 @@ import { useSession } from "next-auth/react";
 import VotesTimer from "@/components/ProfilePage/VotesTimer";
 import Image from "next/image";
 import { Spiral } from "@phosphor-icons/react";
-import { Button } from "@/components/ui/button";
 import { TrackTypes } from "@/models/track";
 import { Types } from "mongoose";
+import { ModalHistory } from "@/components/ProfilePage/ModalHistory";
 
 // Créer un type qui combine TrackTypes avec l'ID MongoDB
-type TrackWithId = TrackTypes & {
+export type TrackWithId = TrackTypes & {
   _id: Types.ObjectId;
 };
 
@@ -93,9 +93,7 @@ export default function Votes() {
               <h2 className="mb-6 lg:mb-8 uppercase font-semibold text-xl">
                 Historique
               </h2>
-              <Button className="hidden lg:block xl:hidden">
-                Voir l&apos;historique
-              </Button>
+              <ModalHistory className={votedTracks.length > 0 ? "hidden lg:block xl:hidden" : "hidden"} votedTracks={votedTracks} />
               <div className="lg:hidden xl:block">
                 {isLoading ? (
                   <div className="flex justify-center items-center min-w-full h-[500px] xl:h-[250px]">
