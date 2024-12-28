@@ -25,11 +25,13 @@ interface Artist {
 interface LeaderboardArtistsProps {
   sortMethodByPopularityOrVotesOrFollowers: string;
   sortMethodByIncreasingOrDecreasing: string;
+  genre: string;
 }
 
 export default function LeaderboardArtists({
   sortMethodByPopularityOrVotesOrFollowers,
   sortMethodByIncreasingOrDecreasing,
+  genre,
 }: LeaderboardArtistsProps) {
   const [artists, setArtists] = useState<Artist[]>([]);
   const [currentPage, setCurrentPage] = useState(1); // État pour gérer la page courante
@@ -38,7 +40,7 @@ export default function LeaderboardArtists({
 
   useEffect(() => {
     async function initialize() {
-      const res = await fetch("/api/artists/get-all-artists/rap-fr");
+      const res = await fetch(`/api/artists/get-all-artists/${genre}`);
       const data = await res.json();
       if (sortMethodByIncreasingOrDecreasing === "increasing") {
         if (sortMethodByPopularityOrVotesOrFollowers === "popularity") {
@@ -63,6 +65,7 @@ export default function LeaderboardArtists({
   }, [
     sortMethodByPopularityOrVotesOrFollowers,
     sortMethodByIncreasingOrDecreasing,
+    genre,
   ]);
 
   const totalPages = Math.ceil(artists.length / artistPerPage);

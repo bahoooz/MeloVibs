@@ -44,6 +44,15 @@ export default function Home() {
         // const dataKpop = await responseKpop.json();
         // console.log('Données des pistes Spotify Kpop:', dataKpop);
 
+        const responseRapFr = await fetch("/api/spotify/get-list-artists/rap-fr");
+        const dataRapFr = await responseRapFr.json();
+        console.log('Données des artistes Spotify Rap-fr:', dataRapFr);
+
+        const responsePop = await fetch("/api/spotify/get-list-artists/pop");
+        const dataPop = await responsePop.json();
+        console.log('Données des artistes Spotify Pop:', dataPop);
+
+
 
         // if (!response.ok) {
         //   throw new Error("Échec de la mise à jour des pistes");

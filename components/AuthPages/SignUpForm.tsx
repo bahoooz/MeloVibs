@@ -223,6 +223,7 @@ export default function SignUpForm() {
               >
                 S&apos;inscrire avec{" "}
                 <Image
+                  priority
                   src="/FormsMedia/google_logo.png"
                   alt="google"
                   width={20}

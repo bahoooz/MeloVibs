@@ -7,7 +7,7 @@ export async function GET() {
   try {
     await connectDb();
     const artists = await Artist.find({
-      genres: "rap-fr"
+      genres: "pop"
     });
     return NextResponse.json(artists);
   } catch (error) {

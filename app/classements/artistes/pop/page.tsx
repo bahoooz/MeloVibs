@@ -6,7 +6,7 @@ import StatsAboutYou from "@/components/HomePage/StatsAboutYou";
 import { SpeakerHifi } from "@phosphor-icons/react";
 import React, { useState } from "react";
 
-export default function RapFr() {
+export default function Pop() {
   const [
     sortMethodByPopularityOrVotesOrFollowers,
     setSortMethodByPopularityOrVotesOrFollowers,
@@ -52,7 +52,7 @@ export default function RapFr() {
             weight="light"
             className="text-greenColorSecondary"
           />{" "}
-          Rap Français
+          Pop
         </h2>
       <FilterArtists
         toggleSortByPopularityOrVotesOrFollowers={
@@ -70,7 +70,7 @@ export default function RapFr() {
           sortMethodByPopularityOrVotesOrFollowers
         }
         sortMethodByIncreasingOrDecreasing={sortMethodByIncreasingOrDecreasing}
-        genre="rap-fr"
+        genre="pop"
       />
       <StatsAboutYou />
     </div>
