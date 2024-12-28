@@ -54,9 +54,14 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
       // Mettre à jour le Set des votes
       set({ votedTracks: new Set(data.votedTracks) });
       
-      // Mettre à jour le nombre de votes de la track dans l'état actuel
+      // Mettre à jour le nombre de votes dans les deux listes de tracks
       set(state => ({
         tracks: state.tracks.map(track => 
+          track._id === trackId 
+            ? { ...track, votes: track.votes + 1 }
+            : track
+        ),
+        tracksOfMonth: state.tracksOfMonth.map(track => 
           track._id === trackId 
             ? { ...track, votes: track.votes + 1 }
             : track
@@ -90,9 +95,14 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
       // Mettre à jour le Set des votes
       set({ votedTracks: new Set(data.votedTracks) });
       
-      // Mettre à jour le nombre de votes de la track dans l'état actuel
+      // Mettre à jour le nombre de votes dans les deux listes de tracks
       set(state => ({
         tracks: state.tracks.map(track => 
+          track._id === trackId 
+            ? { ...track, votes: track.votes - 1 }
+            : track
+        ),
+        tracksOfMonth: state.tracksOfMonth.map(track => 
           track._id === trackId 
             ? { ...track, votes: track.votes - 1 }
             : track

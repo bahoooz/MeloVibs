@@ -18,7 +18,7 @@ import { useSession } from "next-auth/react";
 import { Spiral } from "@phosphor-icons/react";
 import { formatVoteCount } from "@/lib/formatVoteCount";
 
-export default function ListMostPopularTracksOfMonth() {
+export default function ListMostPopularTracks() {
   const { update } = useSession();
   const { toast } = useToast();
   const { tracksOfMonth, setTracksOfMonth, addVote, removeVote, isVoted } =
