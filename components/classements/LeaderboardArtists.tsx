@@ -43,6 +43,7 @@ export default function LeaderboardArtists({
 
   useEffect(() => {
     async function initialize() {
+      setCurrentPage(1); // Réinitialisation de la page courante
       setIsLoading(true);
       const res = await fetch(`/api/artists/get-all-artists/${genre}`);
       const data = await res.json();
@@ -214,6 +215,7 @@ export default function LeaderboardArtists({
         })}
       </div>
       {/* Pagination */}
+      {totalPages > 1 && (
       <Pagination className="mt-20">
         <PaginationContent>
           {/* Affichage des numéros de page */}
@@ -243,7 +245,8 @@ export default function LeaderboardArtists({
             </React.Fragment>
           ))}
         </PaginationContent>
-          </Pagination>
+            </Pagination>
+          )}
         </>
       )}
     </div>

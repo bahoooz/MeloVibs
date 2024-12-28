@@ -16,7 +16,7 @@ export default function Profil() {
       router.push("/");
     }
     update();
-  }, [session, router]);
+  }, [session, router, update]);
 
   if (!session?.user) {
     return null;

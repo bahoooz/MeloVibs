@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { CardTrackProps } from "../global/CardTrack";
 import { Card, CardFooter, CardHeader } from "../ui/card";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { ArrowCircleUp } from "@phosphor-icons/react";
+import { ArrowCircleUp, Link } from "@phosphor-icons/react";
 import { formatVoteCount } from "@/lib/formatVoteCount";
 
 interface CardRankingTrackProps extends CardTrackProps {
   ranking: number;
   podium: boolean;
   popularity?: string;
+  shareLink: string;
 }
 
 export default function CardRankingTrack({
@@ -25,7 +26,33 @@ export default function CardRankingTrack({
   ranking,
   podium = false,
   popularity,
+  shareLink,
 }: CardRankingTrackProps) {
+  const [isCopied, setIsCopied] = useState(false);
+  const handleImageClick = async () => {
+    try {
+      await navigator.clipboard.writeText(shareLink);
+      setIsCopied(true);
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 500);
+    } catch (err) {
+      // Fallback vers la méthode avec textarea si l'API Clipboard échoue
+      console.log(err);
+      // const textarea = document.createElement("textarea");
+      // textarea.value = shareLink;
+      // textarea.style.position = "fixed";
+      // textarea.style.opacity = "0";
+      // document.body.appendChild(textarea);
+      // textarea.select();
+      // document.execCommand("copy");
+      // document.body.removeChild(textarea);
+      // setIsCopied(true);
+      // setTimeout(() => {
+      //   setIsCopied(false);
+      // }, 500);
+    }
+  };
   return (
     <Card className="h-[390px] lg:h-[335px] w-full max-w-[300px] rounded-3xl bg-[#18181B]/20 flex flex-col justify-between overflow-visible">
       <CardHeader className="relative w-full min-h-[250px] lg:min-h-[200px]">
@@ -46,14 +73,16 @@ export default function CardRankingTrack({
         >
           <span>{ranking}</span>
         </div>
+        {isCopied && <Link size={32} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white z-50" />}
         <Image
-          className="absolute object-cover rounded-3xl min-h-[250px] h-[250px] lg:min-h-[200px] lg:h-[200px] aspect-square"
+          className="absolute object-cover rounded-3xl min-h-[250px] h-[250px] lg:min-h-[200px] lg:h-[200px] aspect-square cursor-pointer"
           src={image}
           alt={title}
           width={width}
           height={height}
+          onClick={handleImageClick}
         />
-        <div className="absolute inset-0 bg-black/20 rounded-3xl" />
+        <div className="absolute inset-0 bg-black/20 rounded-3xl pointer-events-none" />
         <div className="absolute w-full bottom-0 flex justify-between items-center">
           <Button
             onClick={onClick}

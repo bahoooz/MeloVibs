@@ -65,6 +65,7 @@ export default function ListTracksRanking({
   useEffect(() => {
     async function initialize() {
       setIsLoading(true);
+      setCurrentPage(1); // Réinitialisation de la page courante
       try {
         // Récupération parallèle des pistes et des votes
         const [tracksRes, votesRes] = await Promise.all([
@@ -229,6 +230,7 @@ export default function ListTracksRanking({
                         ? "Note discrète"
                         : "Inconnu au bataillon"
                     }
+                    shareLink={track.album.share_link}
                   />
                 </CarouselItem>
               );
@@ -314,42 +316,45 @@ export default function ListTracksRanking({
                       ? "Note discrète"
                       : "Inconnu au bataillon"
                   }
+                  shareLink={track.album.share_link}
                 />
               );
             })}
           </div>
 
           {/* Pagination */}
-          <Pagination className="mt-20">
-            <PaginationContent>
-              {/* Affichage des numéros de page */}
-              {getPageNumbers().map((pageNum, index, array) => (
-                <React.Fragment key={pageNum}>
-                  {/* Affichage des points de suspension si nécessaire */}
-                  {index > 0 && array[index - 1] !== pageNum - 1 && (
+          {totalPages > 1 && (
+            <Pagination className="mt-20">
+              <PaginationContent>
+                {/* Affichage des numéros de page */}
+                {getPageNumbers().map((pageNum, index, array) => (
+                  <React.Fragment key={pageNum}>
+                    {/* Affichage des points de suspension si nécessaire */}
+                    {index > 0 && array[index - 1] !== pageNum - 1 && (
+                      <PaginationItem>
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    )}
                     <PaginationItem>
-                      <PaginationEllipsis />
+                      <PaginationLink
+                        onClick={() => {
+                          setCurrentPage(pageNum);
+                          window.scrollTo({
+                            top: 0,
+                            behavior: "smooth",
+                          });
+                        }}
+                        isActive={currentPage === pageNum}
+                        className="cursor-pointer"
+                      >
+                        {pageNum}
+                      </PaginationLink>
                     </PaginationItem>
-                  )}
-                  <PaginationItem>
-                    <PaginationLink
-                      onClick={() => {
-                        setCurrentPage(pageNum);
-                        window.scrollTo({
-                          top: 0,
-                          behavior: "smooth",
-                        });
-                      }}
-                      isActive={currentPage === pageNum}
-                      className="cursor-pointer"
-                    >
-                      {pageNum}
-                    </PaginationLink>
-                  </PaginationItem>
-                </React.Fragment>
-              ))}
-            </PaginationContent>
-          </Pagination>
+                  </React.Fragment>
+                ))}
+              </PaginationContent>
+            </Pagination>
+          )}
         </>
       )}
     </div>
