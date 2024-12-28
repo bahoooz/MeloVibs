@@ -44,13 +44,49 @@ export default function Home() {
         // const dataKpop = await responseKpop.json();
         // console.log('Données des pistes Spotify Kpop:', dataKpop);
 
-        const responseRapFr = await fetch("/api/spotify/get-list-artists/rap-fr");
-        const dataRapFr = await responseRapFr.json();
-        console.log('Données des artistes Spotify Rap-fr:', dataRapFr);
+        // const responseRapFr = await fetch("/api/spotify/get-list-artists/rap-fr");
+        // const dataRapFr = await responseRapFr.json();
+        // console.log('Données des artistes Spotify Rap-fr:', dataRapFr);
 
-        const responsePop = await fetch("/api/spotify/get-list-artists/pop");
-        const dataPop = await responsePop.json();
-        console.log('Données des artistes Spotify Pop:', dataPop);
+        // const responsePop = await fetch("/api/spotify/get-list-artists/pop");
+        // const dataPop = await responsePop.json();
+        // console.log('Données des artistes Spotify Pop:', dataPop);
+
+        const responseJazz = await fetch("/api/spotify/get-list-artists/jazz");
+        const dataJazz = await responseJazz.json();
+        console.log('Données des artistes Spotify Jazz:', dataJazz);
+
+        // const responseRnB = await fetch("/api/spotify/get-list-artists/r&b");
+        // const dataRnB = await responseRnB.json();
+        // console.log('Données des artistes Spotify R&B:', dataRnB);
+
+        // const responseRapUs = await fetch("/api/spotify/get-list-artists/rap-us");
+        // const dataRapUs = await responseRapUs.json();
+        // console.log('Données des artistes Spotify Rap US:', dataRapUs);
+
+        // const responseLatines = await fetch("/api/spotify/get-list-artists/latines");
+        // const dataLatines = await responseLatines.json();
+        // console.log('Données des artistes Spotify Latines:', dataLatines);
+
+        // const responseAfroBeats = await fetch("/api/spotify/get-list-artists/afro-beats");
+        // const dataAfroBeats = await responseAfroBeats.json();
+        // console.log('Données des artistes Spotify Afro Beats:', dataAfroBeats);
+
+        // const responseRock = await fetch("/api/spotify/get-list-artists/rock");
+        // const dataRock = await responseRock.json();
+        // console.log('Données des artistes Spotify Rock:', dataRock);
+
+        const responseElectro = await fetch("/api/spotify/get-list-artists/electro");
+        const dataElectro = await responseElectro.json();
+        console.log('Données des artistes Spotify Electro:', dataElectro);
+
+        // const responseKpop = await fetch("/api/spotify/get-list-artists/kpop");
+        // const dataKpop = await responseKpop.json();
+        // console.log('Données des artistes Spotify Kpop:', dataKpop);
+        
+
+
+
 
 
 
