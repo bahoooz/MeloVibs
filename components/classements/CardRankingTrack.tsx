@@ -54,12 +54,6 @@ export default function CardRankingTrack({
           height={height}
         />
         <div className="absolute inset-0 bg-black/20 rounded-3xl" />
-        <div className="absolute right-0 lg:-right-1 top-4 lg:top-2">
-          <DotsThreeVertical
-            weight="bold"
-            className="text-greenColorSecondary text-[50px] lg:text-[45px]"
-          />
-        </div>
         <div className="absolute w-full bottom-0 flex justify-between items-center">
           <Button
             onClick={onClick}
