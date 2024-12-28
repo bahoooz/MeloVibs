@@ -19,7 +19,7 @@ export default function Contact() {
             >
               Discord
             </Link>
-            , <br /> ou à <span className="text-greenColorSecondary">l'adresse email suivante</span> :{" "}
+            , <br /> ou à <span className="text-greenColorSecondary">l&apos;adresse email suivante</span> :{" "}
             <Link
               href="mailto:contact@sdm-project.com"
               className="text-blueColorTertiary underline"

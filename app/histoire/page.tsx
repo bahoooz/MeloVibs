@@ -10,16 +10,16 @@ export default function Histoire() {
           <p>
             Cette page abordera{" "}
             <span className="text-greenColorSecondary">
-              l'histoire de la plateforme
+              l&apos;histoire de la plateforme
             </span>
-            , comment son créateur en a eu l'idée, l'a mise en place, mais
+            , comment son créateur en a eu l&apos;idée, l&apos;a mise en place, mais
             surtout la{" "}
             <span className="text-greenColorSecondary">
               vision de la plateforme
             </span>
             ,{" "}
             <span className="text-greenColorSecondary">les idées futures</span>,
-            l'équipe et{" "}
+            l&apos;équipe et{" "}
             <span className="text-greenColorSecondary">
               bien plus encore...
             </span>{" "}

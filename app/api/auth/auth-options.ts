@@ -69,7 +69,7 @@ export const authOptions: AuthOptions = {
                     
                     if (!userExists) {
                         let userName = profile?.name;
-                        let userNameExists = await User.findOne({ name: userName });
+                        const userNameExists = await User.findOne({ name: userName });
                         
                         if (userNameExists) {
                             userName = `${profile?.name}_${Date.now().toString().slice(-4)}`;

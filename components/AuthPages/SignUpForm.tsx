@@ -214,7 +214,7 @@ export default function SignUpForm() {
                   } catch (error) {
                     toast({
                       title: "Erreur",
-                      description: "Une erreur est survenue lors de l'inscription",
+                      description: "Une erreur est survenue lors de l'inscription : " + error,
                       emojis: "❌",
                     });
                   }

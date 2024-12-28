@@ -203,7 +203,7 @@ export default function SignInForm() {
                     toast({
                       title: "Erreur",
                       description:
-                        "Une erreur est survenue lors de la connexion",
+                        "Une erreur est survenue lors de la connexion : " + error,
                       emojis: "❌",
                     });
                   }
