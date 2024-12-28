@@ -3,7 +3,7 @@ import { CardTrackProps } from "../global/CardTrack";
 import { Card, CardFooter, CardHeader } from "../ui/card";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { ArrowCircleUp, DotsThreeVertical } from "@phosphor-icons/react";
+import { ArrowCircleUp } from "@phosphor-icons/react";
 import { formatVoteCount } from "@/lib/formatVoteCount";
 
 interface CardRankingTrackProps extends CardTrackProps {

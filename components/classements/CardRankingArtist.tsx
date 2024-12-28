@@ -41,7 +41,7 @@ export default function CardRankingArtist({
       }, 500);
     } catch (err) {
       // Fallback vers la méthode avec textarea si l'API Clipboard échoue
-      // console.log(err);
+      console.log(err);
       // const textarea = document.createElement("textarea");
       // textarea.value = shareLink;
       // textarea.style.position = "fixed";
