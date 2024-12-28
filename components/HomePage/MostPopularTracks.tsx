@@ -22,6 +22,7 @@ import { Button } from "../ui/button";
 import { createHandleVote } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
+import { formatVoteCount } from "@/lib/formatVoteCount";
 
 export interface Track {
   _id: string;
@@ -166,7 +167,7 @@ export default function MostPopularTracks() {
                         Voter
                       </span>
                     </Button>
-                    <span className="text-xs">{track.votes} votes</span>
+                    <span className="text-xs">{formatVoteCount(track.votes)} votes</span>
                   </div>
                   <CardTitle className="text-center flex flex-col gap-3">
                     <h3 className="font-medium text-2xl truncate max-w-[200px] sm:max-w-[400px] lg:max-w-[500px] xl:max-w-[250px]">

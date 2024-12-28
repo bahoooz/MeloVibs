@@ -11,6 +11,7 @@ body {
 
 .title {
   font-family: "Parkinsans", sans-serif;
+  line-height: 0.8;
 }
 
 .writing-mode-vertical {

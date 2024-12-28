@@ -15,7 +15,7 @@ export interface CardTrackProps {
   image: string;
   title: string;
   artist: string;
-  votes: number;
+  votes: number | string;
   onClick?: () => void;
   stylesIsVotedButton?: string;
   stylesIsVotedIcon?: string;

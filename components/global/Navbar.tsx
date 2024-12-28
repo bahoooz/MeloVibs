@@ -23,6 +23,7 @@ import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
 import BurgerMenu from "./BurgerMenu";
 import UserAvatar from "./UserAvatar";
+import Image from "next/image";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -31,9 +32,16 @@ export default function Navbar() {
   return (
     <NavigationMenu className="mt-12 max-w-full lg:bg-[#252639]/80 lg:rounded-full h-16 lg:w-[95%] xl:w-[1200px] lg:mx-auto fixed top-0 left-0 right-0 px-8 lg:px-0 z-50">
       <ul className="flex justify-between w-full items-center lg:hidden">
-        <li className={session ? "" : "opacity-0"}>
+        <li className={session ? "" : "hidden"}>
           <UserAvatar className="w-12 h-12" />
         </li>
+        <Image
+          src="/Logos/Logo-MeloVib's-256x256.png"
+          alt="logo"
+          width={256}
+          height={256}
+          className={session ? "hidden" : "w-11 h-11"}
+        />
         <li>
           <List
             weight="light"
@@ -121,7 +129,7 @@ export default function Navbar() {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <Link
-            href={"/"}
+            href={"/boutique"}
             className="flex items-center gap-3 group hover:underline"
           >
             <Gift size={24} weight="light" className="group-hover:hidden" />
@@ -133,7 +141,7 @@ export default function Navbar() {
             Boutique
           </Link>
           <Link
-            href={"/"}
+            href={"/histoire"}
             className="flex items-center gap-3 group hover:underline"
           >
             <Question size={24} weight="light" className="group-hover:hidden" />
@@ -145,7 +153,7 @@ export default function Navbar() {
             Qui sommes-nous ?
           </Link>
           <Link
-            href={"/"}
+            href={"/contact"}
             className="flex items-center gap-3 group hover:underline"
           >
             <PaperPlaneRight

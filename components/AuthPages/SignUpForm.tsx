@@ -10,13 +10,14 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
+import { signIn } from "next-auth/react";
 
 // Définir le schéma de validation avec Zod
 const schema = z
   .object({
     name: z
       .string()
-      .min(3, "Le nom doit contenir au moins 3 caractères")
+      .min(2, "Le nom doit contenir au moins 3 caractères")
       .max(30, "Le nom ne doit pas dépasser 30 caractères"),
     email: z
       .string()
@@ -198,7 +199,28 @@ export default function SignUpForm() {
               <span className="uppercase text-greenColorSecondary font-mediumé">
                 ou
               </span>
-              <Button className="bg-white text-black w-full rounded-md px-8">
+              <Button
+                type="button"
+                onClick={async () => {
+                  try {
+                    // Déclencher la connexion Google avec redirection
+                    await signIn("google", {
+                      callbackUrl: "/",  // URL de redirection après succès
+                    });
+                    
+                    // Note: Le code après signIn ne sera pas exécuté immédiatement
+                    // car l'utilisateur sera redirigé vers Google
+                    
+                  } catch (error) {
+                    toast({
+                      title: "Erreur",
+                      description: "Une erreur est survenue lors de l'inscription",
+                      emojis: "❌",
+                    });
+                  }
+                }}
+                className="bg-white text-black w-full rounded-md px-8"
+              >
                 S&apos;inscrire avec{" "}
                 <Image
                   src="/FormsMedia/google_logo.png"

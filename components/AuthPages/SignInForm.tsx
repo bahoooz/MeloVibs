@@ -188,7 +188,28 @@ export default function SignInForm() {
               <span className="uppercase text-greenColorSecondary font-mediumé">
                 ou
               </span>
-              <Button className="bg-white text-black w-full rounded-md px-8">
+              <Button
+                type="button"
+                onClick={async () => {
+                  try {
+                    // Déclencher la connexion Google avec redirection
+                    await signIn("google", {
+                      callbackUrl: "/", // URL de redirection après succès
+                    });
+
+                    // Note: Le code après signIn ne sera pas exécuté immédiatement
+                    // car l'utilisateur sera redirigé vers Google
+                  } catch (error) {
+                    toast({
+                      title: "Erreur",
+                      description:
+                        "Une erreur est survenue lors de la connexion",
+                      emojis: "❌",
+                    });
+                  }
+                }}
+                className="bg-white text-black w-full rounded-md px-8"
+              >
                 Se connecter avec{" "}
                 <Image
                   src="/FormsMedia/google_logo.png"

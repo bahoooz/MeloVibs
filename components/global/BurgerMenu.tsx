@@ -75,12 +75,12 @@ export default function BurgerMenu({
           </li>
           <ul
             className={`ml-9 flex flex-col gap-3 ${
-              isOpenLinks ? "opacity-100 h-fit mt-4" : "opacity-0 max-h-0 w-0"
+              isOpenLinks ? "opacity-100 h-fit mt-4" : "opacity-0 max-h-0 w-0 pointer-events-none"
             }  duration-300`}
           >
             <li>
               <Link
-                href={"/"}
+                href={"/classements/artistes"}
                 onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 group hover:underline"
               >
@@ -97,7 +97,7 @@ export default function BurgerMenu({
             </li>
             <li>
               <Link
-                href={"/classements"}
+                href={"/classements/morceaux"}
                 onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 group hover:underline"
               >
@@ -115,7 +115,7 @@ export default function BurgerMenu({
           </ul>
         </div>
         <Link
-          href={"/"}
+          href={"/boutique"}
           onClick={() => setIsOpen(false)}
           className="flex items-center gap-3 group hover:underline"
         >
@@ -124,7 +124,7 @@ export default function BurgerMenu({
           Boutique
         </Link>
         <Link
-          href={"/"}
+          href={"/histoire"}
           onClick={() => setIsOpen(false)}
           className="flex items-center gap-3 group hover:underline"
         >
@@ -137,7 +137,7 @@ export default function BurgerMenu({
           Qui sommes-nous ?
         </Link>
         <Link
-          href={"/"}
+          href={"/contact"}
           onClick={() => setIsOpen(false)}
           className="flex items-center gap-3 group hover:underline"
         >

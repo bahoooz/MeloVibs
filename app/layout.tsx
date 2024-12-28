@@ -8,6 +8,9 @@ import Footer from "@/components/global/Footer";
 export const metadata: Metadata = {
   title: "MeloVib's - Votez pour vos morceaux préférés",
   description: "MeloVib's - Votez pour vos morceaux préférés",
+  icons: {
+    icon: "/Logos/Icon-MeloVib's-1-128x128.png",
+  },
 };
 
 export default function RootLayout({

@@ -21,6 +21,8 @@ const userSchema = new Schema<UserTypes>(
       type: String,
       required: true,
       unique: true,
+      minlength: 2,
+      maxlength: 30,
     },
     email: {
       type: String,
@@ -30,10 +32,14 @@ const userSchema = new Schema<UserTypes>(
         /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
         "Please use a valid email address",
       ],
+      minlength: 1,
+      maxlength: 96,
     },
     password: {
       type: String,
       required: false,
+      minlength: 8,
+      maxlength: 64,
     },
     votedTracks: {
       type: [String],

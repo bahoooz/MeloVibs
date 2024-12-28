@@ -1,0 +1,47 @@
+import PageNotCreatedYet from "@/components/global/PageNotCreatedYet";
+import Link from "next/link";
+import React from "react";
+
+export default function Histoire() {
+  return (
+    <div>
+      <PageNotCreatedYet
+        note={
+          <p>
+            Cette page abordera{" "}
+            <span className="text-greenColorSecondary">
+              l'histoire de la plateforme
+            </span>
+            , comment son créateur en a eu l'idée, l'a mise en place, mais
+            surtout la{" "}
+            <span className="text-greenColorSecondary">
+              vision de la plateforme
+            </span>
+            ,{" "}
+            <span className="text-greenColorSecondary">les idées futures</span>,
+            l'équipe et{" "}
+            <span className="text-greenColorSecondary">
+              bien plus encore...
+            </span>{" "}
+            <br /> <br />
+            En attendant, nous vous invitons à rejoindre{" "}
+            <Link
+              className="text-blueColorTertiary underline"
+              href={"https://discord.gg/StTxKe7DwY"}
+            >
+              ce Discord
+            </Link>{" "}
+            <span className="text-sm text-gray-400">
+              (lui-même en cours de création)
+            </span>{" "}
+            pour faire partie de la{" "}
+            <span className="text-greenColorSecondary">
+              communauté sur Discord
+            </span>
+            .
+          </p>
+        }
+      />
+    </div>
+  );
+}

@@ -7,7 +7,7 @@ export default function MusicMostPopularByGenre() {
   return (
     <section className="mt-32 lg:mt-44">
       <h2 className="text-5xl mb-20 lg:mb-32 md:w-[600px] md:mx-auto lg:w-[700px] xl:w-[1200px] xl:text-center">
-        Découvrez les morceaux les plus streamées par genre
+        Les plus streamés / votés par genre
       </h2>
       <div className="flex flex-col gap-10 sm:gap-5 xl:gap-10 sm:flex-wrap sm:flex-row md:w-[600px] lg:w-[700px] xl:w-[1200px] md:mx-auto">
         <Link
@@ -15,7 +15,7 @@ export default function MusicMostPopularByGenre() {
           className="group relative rounded-2xl sm:w-[calc(50%-10px)] lg:w-[calc(33.33%-13.33px)] xl:w-[calc(20%-32px)] hover:scale-[1.02] transition-all duration-200"
         >
           <h4 className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 text-greenColorSecondary group-hover:text-violet-500 text-5xl font-bold z-10 text-center transition-colors duration-300">
-            RAP
+            RAP FR
           </h4>
           <Image
             src={"/HomePageMedia/rap_cover.jpg"}
@@ -87,7 +87,7 @@ export default function MusicMostPopularByGenre() {
         </Link>
       </div>
       <div className="mx-auto w-fit mt-10">
-        <Link href="/classements">
+        <Link href="/classements/morceaux">
           <Button>Voir tous les genres</Button>
         </Link>
       </div>

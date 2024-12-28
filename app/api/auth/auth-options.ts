@@ -3,12 +3,17 @@ import connectDb from '@/lib/mongodb';
 import User from '@/models/user';
 import { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import GoogleProvider from 'next-auth/providers/google';
 
 export const authOptions: AuthOptions = {
     session: {
         strategy: "jwt",
     },
     providers: [
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+        }),
         CredentialsProvider({
             name: "credentials",
             credentials: {
@@ -56,6 +61,38 @@ export const authOptions: AuthOptions = {
         })
     ],
     callbacks: {
+        async signIn({ account, profile }) {
+            if (account?.provider === "google") {
+                try {
+                    await connectDb();
+                    const userExists = await User.findOne({ email: profile?.email });
+                    
+                    if (!userExists) {
+                        let userName = profile?.name;
+                        let userNameExists = await User.findOne({ name: userName });
+                        
+                        if (userNameExists) {
+                            userName = `${profile?.name}_${Date.now().toString().slice(-4)}`;
+                        }
+
+                        await User.create({
+                            email: profile?.email,
+                            name: userName,
+                            remainingVotes: 5,
+                            lastVoteRefresh: new Date(),
+                            createdAt: new Date(),
+                            votedTracks: [],
+                            isEmailVerified: true
+                        });
+                    }
+                    return true;
+                } catch (error) {
+                    console.error("Erreur lors de la connexion Google:", error);
+                    return false;
+                }
+            }
+            return true;
+        },
         async jwt({ token, user, trigger }) {
             if (user) {
                 token.name = user.name;
@@ -108,8 +145,14 @@ export const authOptions: AuthOptions = {
             return session;
         }
     },
+    events: {
+        async signIn({ user }) {
+            console.log("Connexion réussie pour:", user.email);
+        }
+    },
     pages: {
         signIn: "/connexion",
+        error: "/auth/error",
     },
     secret: process.env.NEXTAUTH_SECRET,
 }; 

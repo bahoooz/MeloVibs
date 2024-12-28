@@ -4,6 +4,7 @@ import { Card, CardFooter, CardHeader } from "../ui/card";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { ArrowCircleUp, DotsThreeVertical } from "@phosphor-icons/react";
+import { formatVoteCount } from "@/lib/formatVoteCount";
 
 interface CardRankingTrackProps extends CardTrackProps {
   ranking: number;
@@ -70,7 +71,7 @@ export default function CardRankingTrack({
             />
           </Button>
           <div className="w-20 lg:w-14 h-20 lg:h-14 bg-btnColorSecondary bg-opacity-70 rounded-[23px] lg:rounded-[20px] flex items-center justify-center">
-            <p className="text-3xl font-bold">{votes}</p>
+            <p className="text-3xl font-bold">{formatVoteCount(votes as number)}</p>
           </div>
         </div>
       </CardHeader>

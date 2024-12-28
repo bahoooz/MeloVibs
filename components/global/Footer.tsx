@@ -20,13 +20,13 @@ export default function Footer() {
               <Link href={"/"}>Accueil</Link>
             </li>
             <li>
-              <Link href={"/"}>Boutique</Link>
+              <Link href={"/boutique"}>Boutique</Link>
             </li>
             <li>
-              <Link href={"/"}>Qui sommes-nous ?</Link>
+              <Link href={"/histoire"}>Qui sommes-nous ?</Link>
             </li>
             <li>
-              <Link href={"/"}>Nous contacter</Link>
+              <Link href={"/contact"}>Nous contacter</Link>
             </li>
           </ul>
         </div>
@@ -36,29 +36,55 @@ export default function Footer() {
           </h3>
           <ul className="flex flex-col gap-5">
             <li>
-              <Link href={"/"}>Classement par artiste</Link>
+              <Link href={"/classements/artistes"}>
+                Classement des artistes
+              </Link>
             </li>
             <li>
-              <Link href={"/"}>Classement du mois par musique</Link>
-            </li>
-            <li>
-              <Link href={"/"}>Classement par musique les plus votées</Link>
+              <Link href={"/classements/morceaux"}>
+                Classement des musiques
+              </Link>
             </li>
             <hr className="w-[305px] mx-auto" />
             <li>
-              <Link href={"/"}>Classement RAP</Link>
+              <Link href={"/classements/morceaux/rap-fr"}>
+                Classement RAP FR
+              </Link>
             </li>
             <li>
-              <Link href={"/"}>Classement POP</Link>
+              <Link href={"/classements/morceaux/pop"}>Classement POP</Link>
             </li>
             <li>
-              <Link href={"/"}>Classement JAZZ</Link>
+              <Link href={"/classements/morceaux/jazz"}>Classement JAZZ</Link>
             </li>
             <li>
-              <Link href={"/"}>Classement R&B</Link>
+              <Link href={"/classements/morceaux/r&b"}>Classement R&B</Link>
             </li>
             <li>
-              <Link href={"/"}>Classement AFRO BEATS</Link>
+              <Link href={"/classements/morceaux/rap-us"}>
+                Classement RAP US
+              </Link>
+            </li>
+            <li>
+              <Link href={"/classements/morceaux/afro-beats"}>
+                Classement AFRO BEATS
+              </Link>
+            </li>
+            <li>
+              <Link href={"/classements/morceaux/latines"}>
+                Classement LATINES
+              </Link>
+            </li>
+            <li>
+              <Link href={"/classements/morceaux/rock"}>Classement ROCK</Link>
+            </li>
+            <li>
+              <Link href={"/classements/morceaux/electro"}>
+                Classement ELECTRO
+              </Link>
+            </li>
+            <li>
+              <Link href={"/classements/morceaux/kpop"}>Classement K-POP</Link>
             </li>
           </ul>
         </div>
@@ -101,6 +127,9 @@ export default function Footer() {
           <ul className="flex flex-col gap-5">
             <li>Copyright © Melovib’s - Tout droits réservés</li>
             <li>Mentions légales</li>
+            <li className="text-sm text-gray-400">
+              (cette partie est en cours de développement)
+            </li>
           </ul>
         </div>
       </div>

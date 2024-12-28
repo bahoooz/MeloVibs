@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
 import { Spiral } from "@phosphor-icons/react";
+import { formatVoteCount } from "@/lib/formatVoteCount";
 
 export default function ListMostPopularTracksOfMonth() {
   const { update } = useSession();
@@ -91,7 +92,7 @@ export default function ListMostPopularTracksOfMonth() {
   return (
     <section className="mt-32 lg:mt-44">
       <h2 className="text-5xl mb-20 lg:mb-32 md:w-[600px] md:mx-auto lg:w-[700px] xl:w-[1200px] xl:text-center">
-        Les musiques les plus streamées du mois
+        Les plus streamés de l'année, tout genre confondu
       </h2>
 
       {/* Carousel pour mobile et tablette */}
@@ -104,7 +105,7 @@ export default function ListMostPopularTracksOfMonth() {
                   image={track.album.images[0].url}
                   title={track.name}
                   artist={track.artists[0].name}
-                  votes={track.votes}
+                  votes={formatVoteCount(track.votes)}
                   onClick={() => handleVote(track._id)}
                   stylesIsVotedButton={`${
                     isVoted(track._id) ? "bg-btnColorIsVoted" : ""

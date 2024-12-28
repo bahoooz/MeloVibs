@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import MeloVibsTitle from "../global/MeloVibsTitle";
+import Image from "next/image";
 
 export default function GlobalStats() {
   const [totalVotes, setTotalVotes] = useState(0);
@@ -28,19 +29,28 @@ export default function GlobalStats() {
       <h2 className="text-5xl mb-20 lg:mb-32 md:w-[600px] md:mx-auto lg:w-[700px] xl:w-[1200px] xl:text-center">
         <MeloVibsTitle />, c&apos;est :
       </h2>
-      <div className="mx-auto w-fit flex flex-col gap-8 font-semibold text-lg lg:textx-xl xl:text-center">
-        <p>
-          Nombre de votes par les utilisateurs :{" "}
-          <span className="text-greenColorSecondary">{totalVotes}</span>
-        </p>
-        <p>
-          Membre(s) de l&apos;équipe :{" "}
-          <span className="text-greenColorSecondary">1</span>
-        </p>
-        <p>
-          Lancement le :{" "}
-          <span className="text-greenColorSecondary">01/01/2025</span>
-        </p>
+      <div className="flex flex-col md:flex-row md:items-center xl:justify-center gap-20 lg:gap-24 mx-auto w-fit md:w-[600px] lg:w-[700px] xl:w-[1200px]">
+        <div className="flex flex-col gap-8 font-semibold text-lg lg:textx-xl">
+          <p>
+            Nombre de votes par les utilisateurs :{" "}
+            <span className="text-greenColorSecondary">{totalVotes}</span>
+          </p>
+          <p>
+            Membre(s) de l&apos;équipe :{" "}
+            <span className="text-greenColorSecondary">1</span>
+          </p>
+          <p>
+            Lancement le :{" "}
+            <span className="text-greenColorSecondary">01/01/2025</span>
+          </p>
+        </div>
+        <Image
+          src="/Logos/Logo-MeloVib's-1-1024x1024.png"
+          alt="MeloVib's"
+          width={1024}
+          height={1024}
+          className="w-[250px] md:w-[180px] lg:w-[220px] xl:w-[250px] h-[250px] md:h-[180px] lg:h-[220px] xl:h-[250px]"
+        />
       </div>
     </section>
   );

@@ -3,15 +3,26 @@ import { Button } from "../ui/button";
 import MostPopularTracks from "./MostPopularTracks";
 import Link from "next/link";
 import MeloVibsTitle from "../global/MeloVibsTitle";
+import Image from "next/image";
 
 export default function Header() {
   return (
     <header className="mt-48 lg:mt-52 xl:mt-56">
       <div className="flex flex-col items-center xl:items-start gap-20 xl:gap-40 xl:flex-row xl:justify-between xl:max-w-[1200px] xl:mx-auto">
         <div className="flex flex-col gap-10 sm:w-[600px] lg:w-[700px] xl:w-[500px] xl:mt-12">
-          <h1 className="font-[500] text-5xl title">
-            <MeloVibsTitle />
-          </h1>
+          <div className="flex items-end gap-5">
+            <Image
+              priority
+              src="/Logos/Logo-MeloVib's-1-1024x1024.png"
+              alt="MeloVib's"
+              width={1024}
+              height={1024}
+              className="w-[50px] h-[50px]"
+            />
+            <h1 className="font-[500] text-5xl title">
+              <MeloVibsTitle />
+            </h1>
+          </div>
           <div className="flex flex-col gap-5 sm:text-justify xl:text-lg">
             <p>
               La plateforme musicale{" "}
@@ -35,16 +46,15 @@ export default function Header() {
               <span className="text-greenColorSecondary">
                 propulser tes artistes favoris
               </span>{" "}
-              au sommet de MeloVib&apos;s et de participer à cette aventure musicale
-              avec des votes qui{" "}
+              au sommet de MeloVib&apos;s et de participer à cette aventure
+              musicale avec des votes qui{" "}
               <span className="text-greenColorSecondary">
-                 soutiennent tes artistes préférés
+                soutiennent tes artistes préférés
               </span>{" "}
               ! 🎤✨
             </p>{" "}
             <p>
-              Chaque mois, explore les classements et ajoute tes votes dans
-              un{" "}
+              Chaque mois, explore les classements et ajoute tes votes dans un{" "}
               <span className="text-greenColorSecondary">
                 univers musical interactif et dynamique
               </span>
