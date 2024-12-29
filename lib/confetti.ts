@@ -19,8 +19,12 @@ export const launchConfetti = () => {
   const randomX = 0.2 + Math.random() * 0.3;
   const randomY = 0.3 + Math.random() * 0.4;
 
+  // Vérifier si l'écran est en mode mobile ou desktop
+  const isLargeScreen = window.innerWidth >= 1024; // 1024px est le breakpoint lg standard
+  const particleCount = isLargeScreen ? 500 : 250;
+
   confetti({
-    particleCount: 500,
+    particleCount,
     spread: 360,
     origin: { x: randomX, y: randomY },
     shapes: [noteMusique1, noteMusique2],

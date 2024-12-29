@@ -125,8 +125,11 @@ export default function Footer() {
         <div className="flex flex-col gap-10">
           <h3 className="uppercase text-xl text-greenColorSecondary">Légal</h3>
           <ul className="flex flex-col gap-5">
-            <li>Copyright © Melovib’s - Tout droits réservés</li>
             <li>Mentions légales</li>
+            <li>Politique de confidentialité</li>
+            <li>Conditions générales d&apos;utilisation</li>
+            <li>Politique des cookies</li>
+            <li>Copyright © Melovib’s - Tout droits réservés</li>
             <li className="text-sm text-gray-400">
               (cette partie est en cours de développement)
             </li>
