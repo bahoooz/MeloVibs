@@ -34,6 +34,7 @@ export default function ModalBeta() {
           </AlertDialogHeader>
           <div className="flex flex-col lg:flex-row-reverse justify-center items-center gap-8 lg:gap-20 xl:gap-32 mb-8 lg:mb-10 xl:mb-12">
             <Image
+              priority
               src={"/HomePageMedia/modal-img.jpg"}
               alt="image modal"
               width={2048}
