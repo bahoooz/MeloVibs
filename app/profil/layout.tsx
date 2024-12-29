@@ -1,9 +1,14 @@
-import type { Metadata } from "next";
+import { generateMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-  title: "MeloVib's - Votez pour vos morceaux préférés",
-  description: "MeloVib's - Votez pour vos morceaux préférés",
-};
+export const metadata = generateMetadata(
+  "Profil",
+  "Gérez votre compte - Votre profil MeloVib's",
+  [
+    "profil",
+    "melovib's",
+    "best music tracks"
+  ],
+);
 
 export default function ProfilLayout({
   children,

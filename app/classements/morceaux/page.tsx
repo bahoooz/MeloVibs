@@ -1,5 +1,32 @@
 import ListGenres from "@/components/classements/ListGenres";
+import { generateMetadata } from "@/lib/metadata";
 import React from "react";
+
+export const metadata = generateMetadata(
+  "Classements des morceaux",
+  "Explorez les classements des morceaux dans tous les genres musicaux : Rap FR, Pop, Jazz, Rap US, R&B, Musiques Latines, Rock, Electro, K-pop et Afrobeats. Votez et découvrez les tendances !",
+  [
+    "classement musique",
+    "top musique",
+    "meilleurs morceaux",
+    "rap français",
+    "pop",
+    "jazz",
+    "rap américain",
+    "r&b",
+    "musiques latines",
+    "rock",
+    "electro",
+    "k-pop",
+    "afrobeats",
+    "vote musique",
+    "charts musicaux",
+    "best tracks",
+    "melovib's",
+    "best music tracks"
+  ],
+  "/Logos/Logo-MeloVib's-1-1024x1024.png"
+);
 
 export default function ClassementsMorceaux() {
   return (

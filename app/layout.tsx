@@ -1,17 +1,9 @@
-import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/global/Navbar";
 import SessionProvider from "@/components/global/SessionProvider";
 import { Toaster } from "@/components/ui/toaster";
 import Footer from "@/components/global/Footer";
 
-export const metadata: Metadata = {
-  title: "MeloVib's - Votez pour vos morceaux préférés",
-  description: "MeloVib's - Votez pour vos morceaux préférés",
-  icons: {
-    icon: "/Logos/Icon-MeloVib's-1-128x128.png",
-  },
-};
 
 export default function RootLayout({
   children,

@@ -1,6 +1,19 @@
 import PageNotCreatedYet from "@/components/global/PageNotCreatedYet";
 import Link from "next/link";
 import React from "react";
+import { generateMetadata } from "@/lib/metadata";
+
+export const metadata = generateMetadata(
+  "Contact",
+  "Contactez-nous pour toute demande ou pour nous faire part de vos suggestions.",
+  [
+    "contact",
+    "contactez-nous",
+    "formulaire de contact",
+    "suggestions",
+    "demandes"
+  ],
+);
 
 export default function Contact() {
   return (

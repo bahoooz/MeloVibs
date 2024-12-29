@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import Image from "next/image";
-import { ArrowCircleUp, Play, SpeakerHigh } from "@phosphor-icons/react";
+import { ArrowCircleUp, Play, SpeakerHigh, Stop } from "@phosphor-icons/react";
 import { Skeleton } from "../ui/skeleton";
 import { useTrackStore } from "@/store/useTrackStore";
 import { Button } from "../ui/button";
@@ -53,6 +53,8 @@ export default function MostPopularTracks() {
   const { tracks, setTracks, addVote, removeVote, isVoted, setCurrentGenre } =
     useTrackStore();
   const [isLoading, setIsLoading] = useState(true);
+  const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const handleVote = useMemo(() => {
     if (!session?.user) {
@@ -66,6 +68,39 @@ export default function MostPopularTracks() {
     }
     return createHandleVote(toast, isVoted, addVote, removeVote);
   }, [session, toast, isVoted, addVote, removeVote]);
+
+  const handlePlayPreview = useCallback((trackId: string, previewUrl: string | null) => {
+    if (!previewUrl) {
+      toast({
+        title: "Aperçu non disponible",
+        description: "Désolé, l'aperçu n'est pas disponible pour cette piste",
+        emojis: "🔇",
+      });
+      return;
+    }
+
+    if (currentlyPlaying === trackId) {
+      audioRef.current?.pause();
+      setCurrentlyPlaying(null);
+    } else {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      audioRef.current = new Audio(previewUrl);
+      audioRef.current.play();
+      audioRef.current.onended = () => setCurrentlyPlaying(null);
+      setCurrentlyPlaying(trackId);
+    }
+  }, [currentlyPlaying, toast]);
+
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     async function initialize() {
@@ -184,7 +219,16 @@ export default function MostPopularTracks() {
                     </h4>
                   </CardTitle>
                   <div className="flex flex-col gap-3 sm:flex-row sm:gap-5">
-                    <Play size={32} weight="light" />
+                    <button
+                      onClick={() => handlePlayPreview(track._id, track.previewUrl)}
+                      className="hover:text-greenColorSecondary transition-colors"
+                    >
+                      {currentlyPlaying === track._id ? (
+                        <Stop size={32} weight="light" />
+                      ) : (
+                        <Play size={32} weight="light" />
+                      )}
+                    </button>
                     <SpeakerHigh size={32} weight="light" />
                   </div>
                 </CardFooter>

@@ -1,6 +1,25 @@
 import PageNotCreatedYet from "@/components/global/PageNotCreatedYet";
 import Link from "next/link";
 import React from "react";
+import { generateMetadata } from "@/lib/metadata";
+
+export const metadata = generateMetadata(
+  "Qui sommes-nous ?",
+  "Découvrez l'histoire de MeloVib's. La vision de la plateforme, les idées futures, l'équipe et bien plus encore...",
+  [
+    "histoire",
+    "melovib's",
+    "création",
+    "plateforme",
+    "idée",
+    "mise en place",
+    "vision",
+    "idées futures",
+    "équipe",
+    "communauté",
+    "discord"
+  ],
+);
 
 export default function Histoire() {
   return (
