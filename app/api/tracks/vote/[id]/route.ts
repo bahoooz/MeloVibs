@@ -33,12 +33,16 @@ export async function POST(request: NextRequest, props: { params: Promise<{ id: 
     }
 
     await connectDb();
-    const user = await User.findOne({ email: session.user.email }) as UserDocument | null;
+
+    const user = await User.findOne({
+      email: session.user.email,
+      votedTracks: { $nin: [trackId] }
+    }) as UserDocument | null;
 
     if (!user) {
       return NextResponse.json(
-        { error: "Utilisateur non trouvé" },
-        { status: 404 }
+        { error: "Utilisateur non trouvé ou vote déjà effectué" },
+        { status: 400 }
       );
     }
 
@@ -49,41 +53,33 @@ export async function POST(request: NextRequest, props: { params: Promise<{ id: 
       );
     }
 
-    if (user.votedTracks.includes(trackId)) {
-      return NextResponse.json(
-        { error: "Vous avez déjà voté pour ce track" },
-        { status: 400 }
-      );
-    }
+    const track = await Track.findOneAndUpdate(
+      { _id: trackId },
+      { $inc: { votes: 1 } },
+      { new: true, select: 'artists' }
+    );
 
-    const track = await Track.findById(trackId);
     if (!track) {
       return NextResponse.json({ error: "Track non trouvé" }, { status: 404 });
     }
 
-    const artistUpdatePromises = track.artists.map((artist: Artist) => 
-      Artist.findOneAndUpdate(
-        { spotifyId: artist.id },
-        { $inc: { votes: 1 } },
-        { new: true }
-      )
-    );
-
-    const [updatedTrack, updatedUser] = await Promise.all([
-      Track.findByIdAndUpdate(trackId, { $inc: { votes: 1 } }, { new: true }),
+    const [updatedUser] = await Promise.all([
       User.findOneAndUpdate(
-        { email: session?.user?.email },
+        { email: session.user.email },
         { 
           $push: { votedTracks: trackId },
           $inc: { remainingVotes: -1 }
         },
         { new: true }
       ),
-      ...artistUpdatePromises
+      Artist.updateMany(
+        { spotifyId: { $in: track.artists.map((artist: Artist) => artist.id) } },
+        { $inc: { votes: 1 } }
+      )
     ]);
 
     return NextResponse.json({
-      track: updatedTrack,
+      track,
       votedTracks: updatedUser?.votedTracks,
       remainingVotes: updatedUser?.remainingVotes
     });
