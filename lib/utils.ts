@@ -1,5 +1,4 @@
 import { clsx, type ClassValue } from "clsx"
-import { Session } from "next-auth";
 import { twMerge } from "tailwind-merge"
 import { ToastActionElement } from "@/components/ui/toast"
 import { UserTypes } from "@/models/user";
@@ -22,31 +21,17 @@ export function cn(...inputs: ClassValue[]) {
 
 export const createHandleVote = (
   toast: (props: ToastProps) => void,
-  update: () => Promise<Session | null>,
   isVoted: (trackId: string) => boolean,
   addVote: (trackId: string) => Promise<void>,
   removeVote: (trackId: string) => Promise<void>,
 ) => {
   return async (trackId: string) => {
     try {
-      // Vérifier si l'utilisateur est connecté en vérifiant la session
-      const session = await update();
-      if (!session?.user) {
-        toast({
-          title: "Connexion requise",
-          description: "Veuillez vous connecter pour voter",
-          emojis: "🔒",
-        });
-        return;
-      }
-
       if (isVoted(trackId)) {
         await removeVote(trackId);
-        await update();
       } else {
         try {
           await addVote(trackId);
-          await update();
         } catch (error: unknown) {
           const voteError = error as VoteError;
           toast({

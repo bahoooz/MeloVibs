@@ -2,7 +2,7 @@
 
 import { createHandleVote } from "@/lib/utils";
 import { useTrackStore } from "@/store/useTrackStore";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import CardRankingTrack from "./CardRankingTrack";
 import {
   Carousel,
@@ -37,19 +37,12 @@ export default function ListTracksRanking({
   sortMethodByIncreasingOrDecreasing,
 }: ListTracksRankingProps) {
   const { toast } = useToast();
-  const { update } = useSession();
+  const { data: session } = useSession();
   // Initialisation des états et des fonctions du store
   const { tracks, setTracks, addVote, removeVote, isVoted } = useTrackStore();
   const [currentPage, setCurrentPage] = useState(1); // État pour gérer la page courante
   const tracksPerPage = 30; // Nombre de pistes par page
   const tracksPerCarousel = 5; // Nombre de pistes par carousel
-  const handleVote = createHandleVote(
-    toast,
-    update,
-    isVoted,
-    addVote,
-    removeVote
-  );
   const [isLoading, setIsLoading] = useState(true);
 
   // Calcul du nombre total de pages nécessaires
@@ -60,6 +53,19 @@ export default function ListTracksRanking({
     const startIndex = (currentPage - 1) * tracksPerPage;
     return tracks.slice(startIndex, startIndex + tracksPerPage);
   };
+
+  const handleVote = useMemo(() => {
+    if (!session?.user) {
+      return () => {
+        toast({
+          title: "Connexion requise",
+          description: "Veuillez vous connecter pour voter",
+          emojis: "🔒",
+        });
+      };
+    }
+    return createHandleVote(toast, isVoted, addVote, removeVote);
+  }, [session, toast, isVoted, addVote, removeVote]);
 
   // Effect pour initialiser les données au chargement du composant
   useEffect(() => {

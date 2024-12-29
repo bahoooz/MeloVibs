@@ -37,20 +37,7 @@ export default function CardRankingTrack({
         setIsCopied(false);
       }, 500);
     } catch (err) {
-      // Fallback vers la méthode avec textarea si l'API Clipboard échoue
       console.log(err);
-      // const textarea = document.createElement("textarea");
-      // textarea.value = shareLink;
-      // textarea.style.position = "fixed";
-      // textarea.style.opacity = "0";
-      // document.body.appendChild(textarea);
-      // textarea.select();
-      // document.execCommand("copy");
-      // document.body.removeChild(textarea);
-      // setIsCopied(true);
-      // setTimeout(() => {
-      //   setIsCopied(false);
-      // }, 500);
     }
   };
   return (

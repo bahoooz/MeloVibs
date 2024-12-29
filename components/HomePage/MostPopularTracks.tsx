@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -49,17 +49,23 @@ export interface Track {
 
 export default function MostPopularTracks() {
   const { toast } = useToast();
-  const { update } = useSession();
+  const { data: session } = useSession();
   const { tracks, setTracks, addVote, removeVote, isVoted, setCurrentGenre } =
     useTrackStore();
   const [isLoading, setIsLoading] = useState(true);
-  const handleVote = createHandleVote(
-    toast,
-    update,
-    isVoted,
-    addVote,
-    removeVote
-  );
+
+  const handleVote = useMemo(() => {
+    if (!session?.user) {
+      return () => {
+        toast({
+          title: "Connexion requise",
+          description: "Veuillez vous connecter pour voter",
+          emojis: "🔒",
+        });
+      };
+    }
+    return createHandleVote(toast, isVoted, addVote, removeVote);
+  }, [session, toast, isVoted, addVote, removeVote]);
 
   useEffect(() => {
     async function initialize() {

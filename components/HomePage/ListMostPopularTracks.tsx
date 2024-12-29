@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -19,18 +19,25 @@ import { Spiral } from "@phosphor-icons/react";
 import { formatVoteCount } from "@/lib/formatVoteCount";
 
 export default function ListMostPopularTracks() {
-  const { update } = useSession();
+  const { data: session } = useSession();
   const { toast } = useToast();
   const { tracksOfMonth, setTracksOfMonth, addVote, removeVote, isVoted } =
     useTrackStore();
   const [isLoading, setIsLoading] = useState(true);
-  const handleVote = createHandleVote(
-    toast,
-    update,
-    isVoted,
-    addVote,
-    removeVote
-  );
+
+  // Création du handleVote avec vérification de session
+  const handleVote = useMemo(() => {
+    if (!session?.user) {
+      return () => {
+        toast({
+          title: "Connexion requise",
+          description: "Veuillez vous connecter pour voter",
+          emojis: "🔒",
+        });
+      };
+    }
+    return createHandleVote(toast, isVoted, addVote, removeVote);
+  }, [session, toast, isVoted, addVote, removeVote]);
 
   useEffect(() => {
     async function fetchTracks() {
@@ -42,7 +49,6 @@ export default function ListMostPopularTracks() {
 
         const tracksData = await tracksRes.json();
         const votesData = await votesRes.json();
-
 
         setTracksOfMonth(tracksData.tracks);
         if (votesData.votedTracks) {

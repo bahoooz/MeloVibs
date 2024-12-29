@@ -40,12 +40,11 @@ export default function CardTrack({
   preview_url,
   share_link,
 }: CardTrackProps) {
-
   const [isCopied, setIsCopied] = useState(false);
 
   const handleShare = async () => {
     if (!share_link) return;
-    
+
     try {
       // Essayer d'abord avec l'API Clipboard moderne
       if (navigator.clipboard && window.isSecureContext) {
@@ -56,32 +55,8 @@ export default function CardTrack({
         }, 500);
         return;
       }
-
-      // Méthode de secours avec execCommand
-      const textArea = document.createElement("textarea");
-      textArea.value = share_link;
-      
-      // Éviter le défilement
-      textArea.style.position = "fixed";
-      textArea.style.left = "-999999px";
-      textArea.style.top = "-999999px";
-      
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-
-      try {
-        document.execCommand('copy');
-        textArea.remove();
-        setIsCopied(true);
-        setTimeout(() => {
-          setIsCopied(false);
-        }, 500);
-      } catch (err) {
-        console.error("Erreur lors de la copie du lien (fallback):", err);
-      }
     } catch (err) {
-      console.error("Erreur lors de la copie du lien:", err);
+      console.error("Erreur lors de la copie du lien (fallback):", err);
     }
   };
 
@@ -130,12 +105,17 @@ export default function CardTrack({
             <Play size={16} className="min-h-6 min-w-6" weight={"light"} />
           </Button>
         )}
-        <Button 
+        <Button
           onClick={handleShare}
           className={`bg-blueColorTertiary w-12 md:w-10 h-12 md:h-10 rounded-full sm:flex items-center justify-center transition-colors p-0`}
         >
           {isCopied ? (
-            <Check size={16} className="min-h-6 min-w-6" weight={"light"} color="white" />
+            <Check
+              size={16}
+              className="min-h-6 min-w-6"
+              weight={"light"}
+              color="white"
+            />
           ) : (
             <ShareFat
               size={16}
