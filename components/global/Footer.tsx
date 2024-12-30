@@ -125,13 +125,16 @@ export default function Footer() {
         <div className="flex flex-col gap-10">
           <h3 className="uppercase text-xl text-greenColorSecondary">Légal</h3>
           <ul className="flex flex-col gap-5">
-            <li>Mentions légales</li>
-            <li>Politique de confidentialité</li>
-            <li>Conditions générales d&apos;utilisation</li>
-            <li>Politique des cookies</li>
-            <li>Copyright © Melovib’s - Tout droits réservés</li>
+            <Link href={"/legal/mentions-legales"}>Mentions légales</Link>
+            <Link href={"/legal/politique-de-confidentialite"}>
+              Politique de confidentialité
+            </Link>
+            <Link href={"/legal/conditions-generales-utilisation"}>
+              Conditions générales d&apos;utilisation
+            </Link>
+            <Link href={"/legal/politique-des-cookies"}>Politique des cookies</Link>
             <li className="text-sm text-gray-400">
-              (cette partie est en cours de développement)
+              Copyright © Melovib’s - Tout droits réservés
             </li>
           </ul>
         </div>

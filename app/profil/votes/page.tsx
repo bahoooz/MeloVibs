@@ -9,6 +9,7 @@ import { Spiral } from "@phosphor-icons/react";
 import { TrackTypes } from "@/models/track";
 import { Types } from "mongoose";
 import { ModalHistory } from "@/components/ProfilePage/ModalHistory";
+import { useRouter } from "next/navigation";
 
 // Créer un type qui combine TrackTypes avec l'ID MongoDB
 export type TrackWithId = TrackTypes & {
@@ -17,10 +18,14 @@ export type TrackWithId = TrackTypes & {
 
 export default function Votes() {
   const { data: session } = useSession();
+  const router = useRouter();
   const [votedTracks, setVotedTracks] = useState<TrackWithId[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (!session?.user) {
+      router.push("/");
+    }
     const fetchVotedTracks = async () => {
       if (session?.user?.votedTracks) {
         try {
@@ -41,7 +46,7 @@ export default function Votes() {
     };
 
     fetchVotedTracks();
-  }, [session]);
+  }, [session, router]);
 
   return (
     <ProfileContainer>
