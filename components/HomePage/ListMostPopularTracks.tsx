@@ -24,8 +24,8 @@ export default function ListMostPopularTracks() {
   const { tracksOfMonth, setTracksOfMonth, addVote, removeVote, isVoted } =
     useTrackStore();
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingTrackId, setLoadingTrackId] = useState<string | null>(null);
 
-  // Création du handleVote avec vérification de session
   const handleVote = useMemo(() => {
     if (!session?.user) {
       return () => {
@@ -36,7 +36,14 @@ export default function ListMostPopularTracks() {
         });
       };
     }
-    return createHandleVote(toast, isVoted, addVote, removeVote);
+    return async (trackId: string) => {
+      setLoadingTrackId(trackId);
+      try {
+        await createHandleVote(toast, isVoted, addVote, removeVote)(trackId);
+      } finally {
+        setLoadingTrackId(null);
+      }
+    };
   }, [session, toast, isVoted, addVote, removeVote]);
 
   useEffect(() => {
@@ -112,6 +119,7 @@ export default function ListMostPopularTracks() {
                   title={track.name}
                   artist={track.artists[0].name}
                   votes={formatVoteCount(track.votes)}
+                  isLoading={loadingTrackId === track._id}
                   onClick={() => handleVote(track._id)}
                   stylesIsVotedButton={`${
                     isVoted(track._id) ? "bg-btnColorIsVoted" : ""
@@ -158,6 +166,7 @@ export default function ListMostPopularTracks() {
               title={track.name}
               artist={track.artists[0].name}
               votes={track.votes}
+              isLoading={loadingTrackId === track._id}
               onClick={() => handleVote(track._id)}
               stylesIsVotedButton={`${
                 isVoted(track._id) ? "bg-btnColorIsVoted" : ""

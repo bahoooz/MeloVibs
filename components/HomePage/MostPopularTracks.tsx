@@ -55,6 +55,7 @@ export default function MostPopularTracks() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [loadingTrackId, setLoadingTrackId] = useState<string | null>(null);
 
   const handleVote = useMemo(() => {
     if (!session?.user) {
@@ -66,7 +67,14 @@ export default function MostPopularTracks() {
         });
       };
     }
-    return createHandleVote(toast, isVoted, addVote, removeVote);
+    return async (trackId: string) => {
+      setLoadingTrackId(trackId);
+      try {
+        await createHandleVote(toast, isVoted, addVote, removeVote)(trackId);
+      } finally {
+        setLoadingTrackId(null);
+      }
+    };
   }, [session, toast, isVoted, addVote, removeVote]);
 
   const handlePlayPreview = useCallback((trackId: string, previewUrl: string | null) => {
@@ -184,6 +192,7 @@ export default function MostPopularTracks() {
                   <div className="flex flex-col gap-2 xl:items-center">
                     <Button
                       onClick={() => handleVote(track._id)}
+                      disabled={loadingTrackId === track._id}
                       className={`bg-[#0F172A] h-12 xl:h-10 w-12 rounded-full flex items-center transition-all duration-300 ease-in-out p-0 hover:bg-btnColorIsVoted ${
                         isVoted(track._id)
                           ? "bg-btnColorIsVoted xl:min-w-[92.3px] relative"

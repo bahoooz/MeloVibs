@@ -11,6 +11,7 @@ interface CardRankingTrackProps extends CardTrackProps {
   podium: boolean;
   popularity?: string;
   shareLink: string;
+  isLoading?: boolean;
 }
 
 export default function CardRankingTrack({
@@ -27,6 +28,7 @@ export default function CardRankingTrack({
   podium = false,
   popularity,
   shareLink,
+  isLoading,
 }: CardRankingTrackProps) {
   const [isCopied, setIsCopied] = useState(false);
   const handleImageClick = async () => {
@@ -73,7 +75,10 @@ export default function CardRankingTrack({
         <div className="absolute w-full bottom-0 flex justify-between items-center">
           <Button
             onClick={onClick}
-            className={`w-20 lg:w-14 h-20 lg:h-14 rounded-[23px] lg:rounded-[20px] ${stylesIsVotedButton} bg-opacity-70`}
+            disabled={isLoading}
+            className={`w-20 lg:w-14 h-20 lg:h-14 rounded-[23px] lg:rounded-[20px] ${stylesIsVotedButton} bg-opacity-70 ${
+              isLoading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
             <ArrowCircleUp
               className={`transition-all duration-300 ${stylesIsVotedIcon}`}

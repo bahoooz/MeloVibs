@@ -24,6 +24,7 @@ export interface CardTrackProps {
   height?: number;
   preview_url?: string | null;
   share_link?: string;
+  isLoading?: boolean;
 }
 
 export default function CardTrack({
@@ -39,6 +40,7 @@ export default function CardTrack({
   height,
   preview_url,
   share_link,
+  isLoading,
 }: CardTrackProps) {
   const [isCopied, setIsCopied] = useState(false);
 
@@ -90,6 +92,7 @@ export default function CardTrack({
       >
         <Button
           onClick={onClick}
+          disabled={isLoading}
           className={`bg-greenColorSecondary hover:bg-btnColorIsVoted w-12 md:w-10 h-12 md:h-10 rounded-full flex items-center justify-center transition-colors p-0 ${stylesIsVotedButton}`}
         >
           <ArrowCircleUp

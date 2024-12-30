@@ -44,6 +44,7 @@ export default function ListTracksRanking({
   const tracksPerPage = 30; // Nombre de pistes par page
   const tracksPerCarousel = 5; // Nombre de pistes par carousel
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingTrackId, setLoadingTrackId] = useState<string | null>(null);
 
   // Calcul du nombre total de pages nécessaires
   const totalPages = Math.ceil(tracks.length / tracksPerPage);
@@ -64,7 +65,14 @@ export default function ListTracksRanking({
         });
       };
     }
-    return createHandleVote(toast, isVoted, addVote, removeVote);
+    return async (trackId: string) => {
+      setLoadingTrackId(trackId);
+      try {
+        await createHandleVote(toast, isVoted, addVote, removeVote)(trackId);
+      } finally {
+        setLoadingTrackId(null);
+      }
+    };
   }, [session, toast, isVoted, addVote, removeVote]);
 
   // Effect pour initialiser les données au chargement du composant
@@ -210,6 +218,7 @@ export default function ListTracksRanking({
                     votes={track.votes}
                     width={track.album.images[0].width}
                     height={track.album.images[0].height}
+                    isLoading={loadingTrackId === track._id}
                     onClick={() => handleVote(track._id)}
                     stylesIsVotedButton={`${
                       isVoted(track._id) ? "bg-btnColorIsVoted border-4 border-white overflow-hidden" : ""
@@ -291,6 +300,7 @@ export default function ListTracksRanking({
                   votes={track.votes}
                   width={track.album.images[0].width}
                   height={track.album.images[0].height}
+                  isLoading={loadingTrackId === track._id}
                   onClick={() => handleVote(track._id)}
                   stylesIsVotedButton={`${
                     isVoted(track._id) ? "bg-btnColorIsVoted border-[3px] border-white overflow-hidden" : ""
