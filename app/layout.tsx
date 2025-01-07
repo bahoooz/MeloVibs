@@ -3,6 +3,7 @@ import Navbar from "@/components/global/Navbar";
 import SessionProvider from "@/components/global/SessionProvider";
 import { Toaster } from "@/components/ui/toaster";
 import Footer from "@/components/global/Footer";
+import { Analytics } from "@vercel/analytics/react"
 
 
 export default function RootLayout({
@@ -20,6 +21,7 @@ export default function RootLayout({
           {children}
           <Toaster />
           <Footer />
+          <Analytics />
         </SessionProvider>
       </body>
     </html>

@@ -19,7 +19,7 @@ import { Spiral } from "@phosphor-icons/react";
 import { formatVoteCount } from "@/lib/formatVoteCount";
 
 export default function ListMostPopularTracks() {
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const { toast } = useToast();
   const { tracksOfMonth, setTracksOfMonth, addVote, removeVote, isVoted } =
     useTrackStore();
@@ -39,12 +39,27 @@ export default function ListMostPopularTracks() {
     return async (trackId: string) => {
       setLoadingTrackId(trackId);
       try {
-        await createHandleVote(toast, isVoted, addVote, removeVote)(trackId);
+        await createHandleVote(
+          toast, 
+          isVoted,
+          async (id) => {
+            await addVote(id, async () => {
+              await update();
+              return;
+            });
+          }, 
+          async (id) => {
+            await removeVote(id, async () => {
+              await update();
+              return;
+            });
+          }
+        )(trackId);
       } finally {
         setLoadingTrackId(null);
       }
     };
-  }, [session, toast, isVoted, addVote, removeVote]);
+  }, [session, toast, isVoted, addVote, removeVote, update]);
 
   useEffect(() => {
     async function fetchTracks() {

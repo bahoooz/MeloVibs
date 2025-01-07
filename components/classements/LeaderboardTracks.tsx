@@ -37,7 +37,7 @@ export default function ListTracksRanking({
   sortMethodByIncreasingOrDecreasing,
 }: ListTracksRankingProps) {
   const { toast } = useToast();
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   // Initialisation des états et des fonctions du store
   const { tracks, setTracks, addVote, removeVote, isVoted } = useTrackStore();
   const [currentPage, setCurrentPage] = useState(1); // État pour gérer la page courante
@@ -68,12 +68,27 @@ export default function ListTracksRanking({
     return async (trackId: string) => {
       setLoadingTrackId(trackId);
       try {
-        await createHandleVote(toast, isVoted, addVote, removeVote)(trackId);
+        await createHandleVote(
+          toast, 
+          isVoted,
+          async (id) => {
+            await addVote(id, async () => {
+              await update();
+              return;
+            });
+          }, 
+          async (id) => {
+            await removeVote(id, async () => {
+              await update();
+              return;
+            });
+          }
+        )(trackId);
       } finally {
         setLoadingTrackId(null);
       }
     };
-  }, [session, toast, isVoted, addVote, removeVote]);
+  }, [session, toast, isVoted, addVote, removeVote, update]);
 
   // Effect pour initialiser les données au chargement du composant
   useEffect(() => {
@@ -280,6 +295,10 @@ export default function ListTracksRanking({
         <div className="flex justify-center items-center min-h-[30vh] sm:min-h-[50vh] xl:min-h-[60vh]">
           <Spiral size={80} className="animate-spin text-greenColorSecondary" />
         </div>
+      ) : tracks.length === 0 ? (
+        <p className="text-center text-gray-500 py-10">
+          Aucun morceau disponible
+        </p>
       ) : (
         <>
           {/* Carousels visibles uniquement sur mobile et tablette */}

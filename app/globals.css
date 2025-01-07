@@ -27,3 +27,35 @@ body {
     transform: rotate(0deg);
   }
 }
+
+.infobulle::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #252639;
+}
+
+/* Personnalisation de la barre de défilement */
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #252639;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #28CB62;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1c9747;
+}
+
+.history-container::-webkit-scrollbar {
+  display: none;
+}

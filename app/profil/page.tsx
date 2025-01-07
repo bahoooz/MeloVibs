@@ -8,17 +8,14 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function Profil() {
-  const { data: session, update } = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
 
   useEffect(() => {
     if (!session?.user) {
       router.push("/");
     }
-    setTimeout(() => {
-      update();
-    }, 30000);
-  }, [session, router, update]);
+  }, [session, router]);
 
   if (!session?.user) {
     return null;

@@ -10,6 +10,8 @@ import {
 import {
   Gift,
   HouseSimple,
+  LetterCircleV,
+  Lightbulb,
   List,
   MicrophoneStage,
   MusicNote,
@@ -33,7 +35,38 @@ export default function Navbar() {
     <NavigationMenu className="mt-12 max-w-full lg:bg-[#252639]/80 lg:rounded-full h-16 lg:w-[95%] xl:w-[1200px] lg:mx-auto fixed top-0 left-0 right-0 px-8 lg:px-0 z-50">
       <ul className="flex justify-between w-full items-center lg:hidden">
         <li className={session ? "" : "hidden"}>
-          <UserAvatar className="w-12 h-12" />
+          <div className="flex items-center gap-4 relative">
+            <UserAvatar className="w-12 h-12" />
+            <div className="relative group">
+              <p
+                className={`flex items-center gap-[6px] text-2xl font-medium cursor-pointer ${
+                  (session?.user?.remainingVotes as number) > 7
+                    ? "text-green-600"
+                    : (session?.user?.remainingVotes as number) > 3
+                    ? "text-greenColorSecondary"
+                    : (session?.user?.remainingVotes as number) > 2
+                    ? "text-yellow-400"
+                    : "text-red-500"
+                }`}
+              >
+                {session?.user?.remainingVotes}{" "}
+                <LetterCircleV className="min-w-8 min-h-8" weight="duotone" />
+              </p>
+              <div className="opacity-0 group-hover:opacity-100 group-hover:-bottom-4 transition-all duration-300 absolute -bottom-0 translate-y-full left-1/2 -translate-x-1/2 bg-[#252639] text-xs w-44 p-2 rounded-lg pointer-events-none -z-10 infobulle">
+                <p>
+                  Votre nombre de votes disponibles. Vous gagnez 2 votes toutes
+                  les 3 heures.
+                </p>
+                <div className="absolute top-1 right-1 bg-[#252639] rounded-full p-2 translate-x-1/2 -translate-y-1/2">
+                  <Lightbulb
+                    size={20}
+                    weight="duotone"
+                    className=" text-yellow-300"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </li>
         <Image
           src="/Logos/Logo-MeloVib's-256x256.png"
@@ -170,7 +203,41 @@ export default function Navbar() {
           </Link>
         </ul>
         {session ? (
-          <UserAvatar className="hover:scale-105 transition-all duration-200" />
+          <div className="flex items-center gap-[1.5vw] xl:gap-6">
+            <div className="relative group">
+              <p
+                className={`flex items-center gap-1 xl:gap-2 font-medium xl:text-xl cursor-pointer ${
+                  (session?.user?.remainingVotes as number) > 7
+                    ? "text-green-600"
+                    : (session?.user?.remainingVotes as number) > 3
+                    ? "text-greenColorSecondary"
+                    : (session?.user?.remainingVotes as number) > 2
+                    ? "text-yellow-400"
+                    : "text-red-500"
+                }`}
+              >
+                {session?.user?.remainingVotes}{" "}
+                <LetterCircleV
+                  className="min-w-7 xl:min-w-8 min-h-7 xl:min-h-8"
+                  weight="duotone"
+                />
+              </p>
+              <div className="opacity-0 group-hover:opacity-100 group-hover:-bottom-10 xl:group-hover:-bottom-8 transition-all duration-300 absolute -bottom-0 translate-y-full left-1/2 -translate-x-1/2 bg-[#252639] text-sm w-52 p-2 rounded-lg pointer-events-none -z-10 infobulle">
+                <p>
+                  Votre nombre de votes disponibles. Vous gagnez 2 votes toutes
+                  les 3 heures.
+                </p>
+                <div className="absolute top-1 right-1 bg-[#252639] rounded-full p-2 translate-x-1/2 -translate-y-1/2">
+                  <Lightbulb
+                    size={20}
+                    weight="duotone"
+                    className=" text-yellow-300"
+                  />
+                </div>
+              </div>
+            </div>
+            <UserAvatar className="hover:scale-105 transition-all duration-200" />
+          </div>
         ) : (
           <Link href={"/connexion"}>
             <Button className="xl:hidden">

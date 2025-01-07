@@ -19,8 +19,8 @@ interface TrackStore {
   // Méthodes pour mettre à jour l'état
   setTracks: (tracks: Track[]) => void;
   setTracksOfMonth: (tracks: Track[]) => void;
-  addVote: (trackId: string) => Promise<void>;
-  removeVote: (trackId: string) => Promise<void>;
+  addVote: (trackId: string, updateSession?: () => Promise<void>) => Promise<void>;
+  removeVote: (trackId: string, updateSession?: () => Promise<void>) => Promise<void>;
   isVoted: (trackId: string) => boolean;
   setCurrentGenre: (genre: string) => void;
 }
@@ -38,7 +38,7 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
   setTracksOfMonth: (tracks) => set({ tracksOfMonth: tracks }),
 
   // Méthode pour ajouter un vote
-  addVote: async (trackId: string) => {
+  addVote: async (trackId: string, updateSession?: () => Promise<void>) => {
     try {
       const response = await fetch(`/api/tracks/vote/${trackId}`, {
         method: 'POST',
@@ -76,13 +76,18 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
       launchConfetti();
       playSound("/Sounds/upvote-sound.mp3");
 
+      // Mettre à jour la session si la fonction est fournie
+      if (updateSession) {
+        await updateSession();
+      }
+
     } catch (error) {
       throw error;
     }
   },
 
   // Méthode pour supprimer un vote
-  removeVote: async (trackId: string) => {
+  removeVote: async (trackId: string, updateSession?: () => Promise<void>) => {
     try {
       const response = await fetch(`/api/tracks/vote/${trackId}`, {
         method: 'DELETE',
@@ -115,6 +120,11 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
         emojis: "✖️",
       });
       playSound("/Sounds/downvote-sound.wav");
+      
+      // Mettre à jour la session si la fonction est fournie
+      if (updateSession) {
+        await updateSession();
+      }
       
     } catch (error) {
       console.error('Erreur lors de la suppression du vote:', error);

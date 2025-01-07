@@ -49,7 +49,7 @@ export interface Track {
 
 export default function MostPopularTracks() {
   const { toast } = useToast();
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const { tracks, setTracks, addVote, removeVote, isVoted, setCurrentGenre } =
     useTrackStore();
   const [isLoading, setIsLoading] = useState(true);
@@ -70,12 +70,27 @@ export default function MostPopularTracks() {
     return async (trackId: string) => {
       setLoadingTrackId(trackId);
       try {
-        await createHandleVote(toast, isVoted, addVote, removeVote)(trackId);
+        await createHandleVote(
+          toast, 
+          isVoted,
+          async (id) => {
+            await addVote(id, async () => {
+              await update();
+              return;
+            });
+          }, 
+          async (id) => {
+            await removeVote(id, async () => {
+              await update();
+              return;
+            });
+          }
+        )(trackId);
       } finally {
         setLoadingTrackId(null);
       }
     };
-  }, [session, toast, isVoted, addVote, removeVote]);
+  }, [session, toast, isVoted, addVote, removeVote, update]);
 
   const handlePlayPreview = useCallback((trackId: string, previewUrl: string | null) => {
     if (!previewUrl) {

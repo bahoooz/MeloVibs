@@ -49,7 +49,7 @@ export function ModalHistory({ className, votedTracks }: { className: string, vo
             </div>
           ) : (
             <div
-              className={`grid grid-cols-3 mx-auto gap-4 sm:gap-6 xl:gap-4 min-w-[365.69] max-h-[500px] overflow-y-scroll ${
+              className={`grid grid-cols-3 mx-auto gap-4 sm:gap-6 xl:gap-4 min-w-[365.69] max-h-[500px] overflow-y-scroll history-container ${
                 session?.user?.isAdmin ? "xl:max-h-[285px]" : "xl:max-h-[250px]"
               } `}
             >
