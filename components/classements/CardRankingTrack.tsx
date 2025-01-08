@@ -71,6 +71,9 @@ export default function CardRankingTrack({
           height={height}
           style={{ color: 'transparent' }}
           onClick={handleImageClick}
+          onError={(e) => {
+            console.error('Erreur de chargement image:', e.currentTarget.src);
+          }}
         />
         <div className="absolute inset-0 bg-black/20 rounded-3xl pointer-events-none" />
         <div className="absolute w-full bottom-0 flex justify-between items-center">

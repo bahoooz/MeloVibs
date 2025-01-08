@@ -70,6 +70,9 @@ export default function CardRankingArtist({
           height={height}
           className="w-[200px] lg:w-full h-[200px] lg:h-full lg:aspect-square rounded-full object-cover"
           style={{ cursor: "pointer", color: 'transparent' }}
+          onError={(e) => {
+            console.error('Erreur de chargement image:', e.currentTarget.src);
+          }}
         />
         <div
           className={` ${
