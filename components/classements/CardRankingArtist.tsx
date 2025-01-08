@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { Card } from "../ui/card";
-import Image from "next/image";
 import { Link } from "@phosphor-icons/react";
 
 export interface CardRankingArtistProps {
@@ -63,13 +62,14 @@ export default function CardRankingArtist({
         >
           <span>{ranking}</span>
         </div>
-        <Image
+        <img
           src={image}
           alt={name}
           width={width}
           height={height}
           className="w-[200px] lg:w-full h-[200px] lg:h-full lg:aspect-square rounded-full object-cover"
-          style={{ cursor: "pointer", color: 'transparent' }}
+          style={{ cursor: "pointer" }}
+          loading="lazy"
           onError={(e) => {
             console.error('Erreur de chargement image:', e.currentTarget.src);
           }}
