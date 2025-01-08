@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { z } from "zod";
 import { Button } from "../ui/button";
@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { signIn } from "next-auth/react";
+import { CircleNotch } from "@phosphor-icons/react";
 
 // Définir le schéma de validation avec Zod
 const schema = z
@@ -43,6 +44,7 @@ const schema = z
 type FormData = z.infer<typeof schema>;
 
 export default function SignUpForm() {
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const {
     register,
@@ -55,6 +57,7 @@ export default function SignUpForm() {
   const router = useRouter();
 
   const onSubmit = async (formData: FormData) => {
+    setIsLoading(true);
     if (formData.password !== formData.confirmPassword) {
       return;
     }
@@ -67,6 +70,7 @@ export default function SignUpForm() {
     const responseData = await res.json();
 
     if (res.ok) {
+      setIsLoading(false);
       toast({
         title: "Inscription réussie",
         description: "Votre compte a été créé avec succès",
@@ -76,6 +80,7 @@ export default function SignUpForm() {
       console.log(responseData);
       router.push("/connexion");
     } else if (res.status === 400) {
+      setIsLoading(false);
       toast({
         title: "Erreur",
         description: responseData.error,
@@ -83,6 +88,7 @@ export default function SignUpForm() {
       });
       console.log("Inscription échouée :", responseData.error);
     } else if (res.status === 500) {
+      setIsLoading(false);
       toast({
         title: "Erreur",
         description: "Erreur interne du serveur",
@@ -193,8 +199,8 @@ export default function SignUpForm() {
 
           <div className="flex flex-col items-center gap-5">
             <div className="flex flex-col sm:flex-row gap-5 w-full items-center">
-              <Button type="submit" className="rounded-md text-white w-full">
-                S&apos;inscrire
+              <Button type="submit" className="rounded-md text-white w-full lg:min-w-[81.578px]" disabled={isLoading}>
+                {isLoading ? <CircleNotch className="animate-spin" /> : "S'inscrire"}
               </Button>
               <span className="uppercase text-greenColorSecondary font-mediumé">
                 ou

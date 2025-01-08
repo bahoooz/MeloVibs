@@ -12,7 +12,9 @@ export interface UserTypes extends Document {
   remainingVotes: number;
   lastVoteRefresh: Date;
   points: number;
-  verificationToken: string | undefined;
+  verificationToken?: string;
+  resetPasswordToken?: string;
+  resetPasswordExpires?: Date;
 }
 
 const userSchema = new Schema<UserTypes>(
@@ -75,6 +77,12 @@ const userSchema = new Schema<UserTypes>(
       required: true,
       default: 0,
       min: 0,
+    },
+    resetPasswordToken: {
+      type: String,
+    },
+    resetPasswordExpires: {
+      type: Date,
     }
   },
   {

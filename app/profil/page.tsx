@@ -25,7 +25,14 @@ export default function Profil() {
     <ProfileContainer className="xl:relative">
       <div className="lg:py-12 xl:py-16 lg:px-12 xl:px-24">
         <h1 className="font-medium text-2xl text-greenColorSecondary mb-12 lg:truncate lg:max-w-[365px] xl:max-w-full">
-          Gérez votre compte - {session?.user?.name}
+          Gérez votre compte - {session?.user?.name}{" "}
+          <span
+            className={`${
+              !session?.user?.isEmailVerified ? "text-gray-500 text-base" : "hidden"
+            }`}
+          >
+            (votre email n’a pas encore été vérifiée)
+          </span>
         </h1>
         <Image
           src="/FormsMedia/profile-image.jpg"

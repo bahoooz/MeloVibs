@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
+import { CircleNotch } from "@phosphor-icons/react";
 
 const schema = z.object({
   email: z
@@ -24,12 +25,12 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function SignInForm() {
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    getValues,
+    formState: { errors }
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
@@ -37,7 +38,6 @@ export default function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const verified = searchParams.get("verified");
-  const [isResending, setIsResending] = useState(false);
 
   useEffect(() => {
     if (verified) {
@@ -50,6 +50,7 @@ export default function SignInForm() {
   }, [verified, toast]);
 
   const onSubmit = async (data: FormData) => {
+    setIsLoading(true);
     try {
       const result = await signIn("credentials", {
         email: data.email,
@@ -63,6 +64,7 @@ export default function SignInForm() {
           description: "Email ou mot de passe incorrect",
           emojis: "❌",
         });
+        setIsLoading(false);
         return;
       }
 
@@ -77,50 +79,14 @@ export default function SignInForm() {
       } else {
         router.push("/");
       }
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       toast({
         title: "Erreur",
         description: "Une erreur est survenue : " + error,
         emojis: "❌",
       });
-    }
-  };
-
-  const handleResendVerification = async (email: string) => {
-    try {
-      setIsResending(true);
-      const response = await fetch("/api/auth/resend-verification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        toast({
-          title: "Erreur",
-          description: data.error,
-          emojis: "❌",
-        });
-        return;
-      }
-
-      toast({
-        title: "Email envoyé !",
-        description: "Vérifiez votre boîte de réception",
-        emojis: "✔️",
-      });
-    } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue : " + error,
-        emojis: "❌",
-      });
-    } finally {
-      setIsResending(false);
     }
   };
 
@@ -182,8 +148,8 @@ export default function SignInForm() {
           <hr className="my-8 border-greenColorSecondary" />
           <div className="flex flex-col items-center gap-10">
             <div className="flex flex-col sm:flex-row gap-5 w-full items-center">
-              <Button type="submit" className="rounded-md text-white w-full">
-                Se connecter
+              <Button type="submit" className="rounded-md text-white w-full lg:min-w-[136.578px]" disabled={isLoading}>
+                {isLoading ? <CircleNotch className="animate-spin" /> : "Se connecter"}
               </Button>
               <span className="uppercase text-greenColorSecondary font-mediumé">
                 ou
@@ -226,16 +192,12 @@ export default function SignInForm() {
               >
                 Pas de compte ? En créer un
               </Link>
-              <button
-                type="button"
-                onClick={() => handleResendVerification(getValues("email"))}
-                disabled={isResending}
+              <Link
+                href="/reinitialisation-mot-de-passe"
                 className="text-greenColorSecondary mb-9 lg:mb-0 text-sm underline lg:w-fit lg:min-w-[201.33px] text-start"
               >
-                {isResending
-                  ? "Envoi en cours..."
-                  : "Renvoyer l'email de vérification"}
-              </button>
+                Mot de passe oublié ?
+              </Link>
             </div>
           </div>
         </div>
