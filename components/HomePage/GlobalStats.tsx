@@ -32,7 +32,7 @@ export default function GlobalStats() {
       <div className="flex flex-col md:flex-row md:items-center xl:justify-center gap-20 lg:gap-24 mx-auto w-fit md:w-[600px] lg:w-[700px] xl:w-[1200px]">
         <div className="flex flex-col gap-8 font-semibold text-lg lg:textx-xl">
           <p>
-            Nombre de votes par les utilisateurs :{" "}
+            Nombre des votes utilisateurs :{" "}
             <span className="text-greenColorSecondary">{totalVotes}</span>
           </p>
           <p>
@@ -43,13 +43,17 @@ export default function GlobalStats() {
             Lancement le :{" "}
             <span className="text-greenColorSecondary">01/01/2025</span>
           </p>
+          <p>
+            Version actuelle :{" "}
+            <span className="text-greenColorSecondary">1.0.1</span>
+          </p>
         </div>
         <Image
           src="/Logos/Logo-MeloVib's-1-1024x1024.png"
           alt="MeloVib's"
           width={1024}
           height={1024}
-          className="w-[250px] md:w-[180px] lg:w-[220px] xl:w-[250px] h-[250px] md:h-[180px] lg:h-[220px] xl:h-[250px]"
+          className="w-[250px] md:w-[200px] lg:w-[240px] xl:w-[260px] h-[250px] md:h-[200px] lg:h-[240px] xl:h-[260px]"
         />
       </div>
     </section>
