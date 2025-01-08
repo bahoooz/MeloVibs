@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
         hostname: 'i.scdn.co',
         port: '',
         pathname: '/image/**',
-      },
+      }
     ],
   },
   /* autres options de configuration ici */

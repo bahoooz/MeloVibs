@@ -69,7 +69,7 @@ export default function CardRankingArtist({
           width={width}
           height={height}
           className="w-[200px] lg:w-full h-[200px] lg:h-full lg:aspect-square rounded-full object-cover"
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", color: 'transparent' }}
         />
         <div
           className={` ${

@@ -69,6 +69,7 @@ export default function CardRankingTrack({
           alt={title}
           width={width}
           height={height}
+          style={{ color: 'transparent' }}
           onClick={handleImageClick}
         />
         <div className="absolute inset-0 bg-black/20 rounded-3xl pointer-events-none" />
