@@ -4,6 +4,7 @@ import { Card, CardFooter, CardHeader } from "../ui/card";
 import { Button } from "../ui/button";
 import { ArrowCircleUp, Link } from "@phosphor-icons/react";
 import { formatVoteCount } from "@/lib/formatVoteCount";
+import Image from "next/image";
 
 interface CardRankingTrackProps extends CardTrackProps {
   ranking: number;
@@ -62,7 +63,7 @@ export default function CardRankingTrack({
           <span>{ranking}</span>
         </div>
         {isCopied && <Link size={32} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white z-50" />}
-        <img
+        <Image
           className="absolute object-cover rounded-3xl min-h-[250px] h-[250px] lg:min-h-[200px] lg:h-[200px] aspect-square cursor-pointer"
           src={image}
           alt={title}
@@ -70,7 +71,7 @@ export default function CardRankingTrack({
           height={height}
           style={{ color: 'transparent' }}
           onClick={handleImageClick}
-          loading="lazy"
+          unoptimized={true}
           onError={(e) => {
             console.error('Erreur de chargement image:', e.currentTarget.src);
           }}
