@@ -93,7 +93,7 @@ export default function Sidebar() {
           {session?.user?.isAdmin && (
             <li className="h-12 w-full bg-blueColorTertiary rounded-lg lg:rounded-xl lg:w-full overflow-hidden ">
               <Link
-                href="/profil/dashboard"
+                href="/profil/dashboard-admin"
                 className="w-full h-full flex justify-center items-center lg:gap-3 lg:px-8"
               >
                 <FadersHorizontal className="min-w-8 min-h-8" />

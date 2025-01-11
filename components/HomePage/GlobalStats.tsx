@@ -45,7 +45,7 @@ export default function GlobalStats() {
           </p>
           <p>
             Version actuelle :{" "}
-            <span className="text-greenColorSecondary">1.0.1</span>
+            <span className="text-greenColorSecondary">1.1.0</span>
           </p>
         </div>
         <Image
