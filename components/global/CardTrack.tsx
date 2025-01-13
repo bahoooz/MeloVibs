@@ -71,6 +71,7 @@ export default function CardTrack({
           width={width}
           height={height}
           className="w-full"
+          unoptimized={true}
         />
       </CardHeader>
       <CardContent className="px-4 my-4 font-medium">
