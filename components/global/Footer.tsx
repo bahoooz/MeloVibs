@@ -134,7 +134,7 @@ export default function Footer() {
             </Link>
             <Link href={"/legal/politique-des-cookies"}>Politique des cookies</Link>
             <li className="text-sm text-gray-400">
-              Copyright © Melovib’s - Tout droits réservés
+              © 2025 Melovib’s - Tout droits réservés
             </li>
           </ul>
         </div>
