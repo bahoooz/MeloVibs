@@ -25,13 +25,6 @@ export async function POST(request: NextRequest, props: { params: Promise<{ id: 
     const session = await getServerSession(authOptions) as Session;
     const { id: trackId } = await props.params;
 
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: "Non authentifié" },
-        { status: 401 }
-      );
-    }
-
     await connectDb();
 
     const user = await User.findOne({
@@ -56,7 +49,7 @@ export async function POST(request: NextRequest, props: { params: Promise<{ id: 
     const track = await Track.findOneAndUpdate(
       { _id: trackId },
       { $inc: { votes: 1 } },
-      { new: true, select: 'artists' }
+      { new: true, select: 'artists votes' }
     );
 
     if (!track) {
@@ -94,13 +87,6 @@ export async function DELETE(request: NextRequest, props: { params: Promise<{ id
   try {
     const trackId = params.id;
     const session = (await getServerSession(authOptions)) as Session | null;
-
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: "Vous devez être connecté pour retirer votre vote" },
-        { status: 401 }
-      );
-    }
 
     await connectDb();
 
