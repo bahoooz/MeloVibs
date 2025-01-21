@@ -10,18 +10,32 @@ export default function PolitiqueDeConfidentialite() {
           que vous nous confiez.
         </p>
         <p>
-          <span className="font-bold">Données collectées :</span> Nous collectons
-          les informations suivantes :
+          <span className="font-bold">Données collectées :</span> Nous
+          collectons les informations suivantes :
         </p>{" "}
         <ul className="list-disc flex flex-col gap-5">
           <li>Adresse email</li>
           <li>Nom d&apos;utilisateur (ou pseudonyme)</li>
-          <li>Données liées à l&apos;utilisation du site (votes, votes restants)</li>
+          <li>
+            Données liées à l&apos;utilisation du site (votes, votes restants)
+          </li>
+          <li>
+            Données analytiques anonymes via Google Analytics (pages visitées,
+            temps passé sur le site, pays d&apos;origine, etc.)
+          </li>
         </ul>
         <p>
+          <span className="font-bold">Analyse et mesures d&apos;audience :</span>{" "}
+          Nous utilisons Google Analytics pour analyser l&apos;utilisation du site.
+          Ces données sont collectées de manière anonyme et nous permettent
+          d&apos;améliorer votre expérience utilisateur. Vous pouvez désactiver
+          Google Analytics en utilisant un bloqueur de scripts ou en installant
+          l&apos;extension de navigateur appropriée.
+        </p>
+        <p>
           Ces données sont uniquement utilisées dans le cadre des
-          fonctionnalités de MeloVib&apos;s. Elles ne sont ni vendues ni partagées
-          avec des tiers. Le responsable de ces données est Bahoz.
+          fonctionnalités de MeloVib&apos;s. Elles ne sont ni vendues ni
+          partagées avec des tiers. Le responsable de ces données est Bahoz.
         </p>
         <p>
           <span className="font-bold">Durée de conservation :</span> Vos données
@@ -45,7 +59,7 @@ export default function PolitiqueDeConfidentialite() {
           <span className="font-bold">noreply@melovibs.com</span>.
         </p>
         <p>
-          Nous prévoyons d’introduire un système de points et une boutique
+          Nous prévoyons d&apos;introduire un système de points et une boutique
           prochainement. Ces fonctionnalités ne sont pas encore disponibles. Une
           mise à jour de la politique de confidentialité sera effectuée à leur
           introduction.
