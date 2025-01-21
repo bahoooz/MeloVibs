@@ -92,7 +92,7 @@ export default function ListMostPopularTracks() {
     return (
       <section className="mt-32 lg:mt-44">
         <h2 className="text-5xl mb-20 lg:mb-32 md:w-[600px] md:mx-auto lg:w-[700px] xl:w-[1200px] xl:text-center">
-          Les musiques les plus streamées du mois
+        Les plus streamés du moment, tout genre confondu
         </h2>
 
         {/* Squelette mobile et tablette */}
