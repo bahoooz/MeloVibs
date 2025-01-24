@@ -97,12 +97,12 @@ export default function CardRankingTrack({
       </CardHeader>
       <CardFooter className="flex justify-between h-3/4 lg:h-full px-8 lg:px-4 items-center">
         <div className={`flex flex-col gap-3 ${
-          podium ? 'w-full' : 'w-[90%] lg:w-[80%] max-w-[90%] lg:max-w-[80%]'
+          podium ? 'w-full' : 'w-[90%] lg:w-[80%] max-w-[80%] lg:max-w-[70%]'
         }`}>
           <h4 className="text-xl text-blueColorTertiary font-medium min-w-full truncate">
             {artist}
           </h4>
-          <h4 className="font-medium truncate w-[98%] max-w-[99%]">{title}</h4>
+          <h4 className="font-medium truncate max-w-[90%]">{title}</h4>
           <p className="text-sm text-blueColorTertiary font-medium truncate w-[98%] max-w-[99%]">{popularity}</p>
         </div>
         <div className={podium ? "hidden" : "block"}>

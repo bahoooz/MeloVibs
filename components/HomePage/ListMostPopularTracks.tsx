@@ -157,7 +157,7 @@ export default function ListMostPopularTracks() {
                       ? "À découvrir"
                       : track.popularity >= 10
                       ? "Note discrète"
-                      : "Inconnu au bataillon"
+                      : "Nouveau"
                   }
                   width={track.album.images[0].width}
                   height={track.album.images[0].height}

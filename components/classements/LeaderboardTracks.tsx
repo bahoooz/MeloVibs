@@ -258,7 +258,7 @@ export default function ListTracksRanking({
                         ? "À découvrir"
                         : track.popularity >= 10
                         ? "Note discrète"
-                        : "Inconnu au bataillon"
+                        : "Nouveau"
                     }
                     shareLink={track.album.share_link}
                   />
@@ -349,7 +349,7 @@ export default function ListTracksRanking({
                       ? "À découvrir"
                       : track.popularity >= 10
                       ? "Note discrète"
-                      : "Inconnu au bataillon"
+                      : "Nouveau"
                   }
                   shareLink={track.album.share_link}
                 />
