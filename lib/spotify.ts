@@ -356,6 +356,7 @@ export async function getListRapFrArtists() {
     "2kIs76sEGiulKeqetZq6ua",
     "3MNnSV5hDd2UzZzgqD8xlU",
     "6Mm2g25BTeJ6BICPFWGkPg",
+    "3xEJ7cDz5rdg6VM8E6Mqhf",
   ];
   return getListArtists(playlistIds, "rap-fr");
 }
