@@ -130,6 +130,7 @@ export async function getListRapFrTracks() {
     "298rv22FYrjBdEuZBB0upz",
     "1FwqVCZqm8USJuMJqhKq1J",
     "7e57bVZpqAFyYJHh5eWo7b",
+    "4L1diBH1WJ2J9QxCGy7EMd"
   ];
   return getPlaylistTracks(playlistIds, "rap-fr");
 }
