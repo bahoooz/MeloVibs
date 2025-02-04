@@ -12,16 +12,6 @@ export const transporter = nodemailer.createTransport({
   }
 });
 
-transporter.verify((err, _success) => {
-  if (err) {
-    console.log("Erreur de connexion SMTP :", err);
-    console.log(process.env.EMAIL_USER, process.env.EMAIL_PASSWORD);
-  } else {
-    console.log("Connexion SMTP réussie !");
-    console.log(process.env.EMAIL_USER, process.env.EMAIL_PASSWORD);
-  }
-});
-
 export const sendVerificationEmail = async (email: string, token: string) => {
   const verificationLink = `${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${token}`;
 

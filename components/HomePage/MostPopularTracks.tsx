@@ -63,7 +63,7 @@ export default function MostPopularTracks() {
     useTrackStore();
   const [isLoading, setIsLoading] = useState(true);
   const [loadingTrackId, setLoadingTrackId] = useState<string | null>(null);
-  const [_isCopied, setIsCopied] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
   const handleShare = async (share_link: string) => {
     if (!share_link) return;
@@ -81,6 +81,8 @@ export default function MostPopularTracks() {
         setTimeout(() => {
           setIsCopied(false);
         }, 500);
+        console.log("Lien copié !", isCopied);
+        
         return;
       }
     } catch (err) {
