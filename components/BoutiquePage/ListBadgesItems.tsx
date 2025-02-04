@@ -103,6 +103,9 @@ export default function ListBadgesItems() {
                           condition={item.metadata?.condition_text as string}
                           onClick={() => handlePurchase(item._id as string)}
                           type={item.type}
+                          userHasItem={
+                            item.type === "badge" && hasItem(item._id as string)
+                          }
                         />
                       </div>
                     </CarouselItem>
@@ -135,6 +138,9 @@ export default function ListBadgesItems() {
                           condition={item.metadata?.condition_text as string}
                           onClick={() => handlePurchase(item._id as string)}
                           type={item.type}
+                          userHasItem={
+                            item.type === "badge" && hasItem(item._id as string)
+                          }
                         />
                       </div>
                     </CarouselItem>
