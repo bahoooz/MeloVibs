@@ -46,7 +46,7 @@ export default function ListBadgesItems() {
   };
 
   return (
-    <div className="mt-40 sm:max-w-[600px] lg:max-w-fit lg:w-[700px] xl:w-[1200px] sm:mx-auto">
+    <div id="badges" className="mt-40 sm:max-w-[600px] lg:max-w-fit lg:w-[700px] xl:w-[1200px] sm:mx-auto">
       <div className="flex items-center gap-8 mb-20 xl:mb-32">
         <h2 className="text-xl text-greenColorSecondary shrink-0">badges</h2>
         <div className="bg-greenColorSecondary flex-1 lg:min-w-[608.45px] xl:min-w-[1026.09px] h-[3px] rounded-full"></div>

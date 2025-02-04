@@ -49,7 +49,7 @@ export default function Header() {
               <span className="text-greenColorSecondary">offrir</span> !
             </p>
           </div>
-          <Link href={"/inscription"} className="sm:w-fit">
+          <Link href={"/badges"} className="sm:w-fit">
             <Button className="w-full">Découvrir la boutique</Button>
           </Link>
         </div>
