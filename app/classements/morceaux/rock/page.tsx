@@ -2,7 +2,7 @@ import RockContent from "@/components/classements/ContentForTracks/RockContent";
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Classement morceaux Rock",
+  "Morceaux Rock",
   "Découvrez les meilleurs morceaux Rock. Votez pour vos morceaux préférés et suivez les tendances de la musique rock.",
   [
     "rock",

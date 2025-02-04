@@ -2,7 +2,7 @@ import ElectroContent from "@/components/classements/ContentForArtists/ElectroCo
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Classement artistes Electro",
+  "Artistes Electro",
   "Découvrez les meilleurs artistes Electro. Votez pour vos artistes préférés et suivez les tendances de la musique électro.",
   [
     "electro",

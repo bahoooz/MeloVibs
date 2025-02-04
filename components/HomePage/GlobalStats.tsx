@@ -45,7 +45,7 @@ export default function GlobalStats() {
           </p>
           <p>
             Version actuelle :{" "}
-            <span className="text-greenColorSecondary">1.1.0</span>
+            <span className="text-greenColorSecondary">1.2.0</span>
           </p>
         </div>
         <Image
@@ -53,7 +53,7 @@ export default function GlobalStats() {
           alt="MeloVib's"
           width={1024}
           height={1024}
-          className="w-[250px] md:w-[200px] lg:w-[240px] xl:w-[260px] h-[250px] md:h-[200px] lg:h-[240px] xl:h-[260px]"
+          className="w-[250px] md:w-[200px] lg:w-[240px] xl:w-[260px] h-[250px] md:h-[200px] lg:h-[240px] xl:h-[260px] animate-bounce-perso"
         />
       </div>
     </section>

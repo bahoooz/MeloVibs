@@ -20,6 +20,7 @@ export default {
         },
         greenColorSecondary: "#28CB62",
         blueColorTertiary: "#6077D7",
+        yellowColorOthers: "#E7D940",
         btnColorSecondary: "#0F172A",
         bgColorTransparent: "rgba(24, 24, 27, 0.2)",
         btnColorIsVoted: "#7B3AC1",

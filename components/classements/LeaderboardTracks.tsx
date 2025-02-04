@@ -337,7 +337,9 @@ export default function ListTracksRanking({
                       : globalIndex <= 3)
                   }
                   popularity={
-                    track.popularity >= 80
+                    track.popularity >= 95
+                      ? "Phénomène mondial"
+                      : track.popularity >= 80
                       ? "Hit incontournable"
                       : track.popularity >= 70
                       ? "Hit du moment"

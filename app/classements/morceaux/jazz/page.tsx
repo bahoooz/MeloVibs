@@ -2,7 +2,7 @@ import JazzContent from "@/components/classements/ContentForTracks/JazzContent";
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Classement morceaux Jazz",
+  "Morceaux Jazz",
   "Découvrez les meilleurs morceaux Jazz. Votez pour vos morceaux préférés et suivez les tendances de la musique jazz.",
   [
     "jazz",

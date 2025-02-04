@@ -25,6 +25,41 @@ interface SpotifyArtist {
   };
 }
 
+interface PlaylistTrack {
+  track: {
+    id: string;
+    name: string;
+    preview_url: string | null;
+    artists: Artist[];
+    album: {
+      id: string;
+      name: string;
+      images: {
+        url: string;
+        height: number;
+        width: number;
+      }[];
+      external_urls: {
+        spotify: string;
+      };
+      release_date: string;
+    };
+    popularity: number;
+    duration_ms: number;
+  };
+}
+
+interface PlaylistResponse {
+  items: PlaylistTrack[];
+  total: number;
+}
+
+interface PlaylistData {
+  tracks: {
+    items: PlaylistTrack[];
+  };
+}
+
 export async function getAccessToken(): Promise<string> {
   const client_id = process.env.SPOTIFY_CLIENT_ID as string;
   const client_secret = process.env.SPOTIFY_CLIENT_SECRET as string;
@@ -47,28 +82,47 @@ export async function getAccessToken(): Promise<string> {
 }
 
 // Fonction générique pour récupérer les tracks d'une playlist
-async function getPlaylistTracks(playlistIds: string[], genre: string) {
+async function getPlaylistTracks(playlistIds: string[], genre: string): Promise<PlaylistTrack[]> {
   const token = await getAccessToken();
+  const limit = 100; // Nombre maximum d'items par requête
 
   try {
-    const playlistsData = await Promise.all(
-      playlistIds.map((id) =>
-        fetch(`https://api.spotify.com/v1/playlists/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }).then((res) => {
-          if (!res.ok) {
+    const playlistsData: PlaylistData[] = await Promise.all(
+      playlistIds.map(async (id) => {
+        let allTracks: PlaylistTrack[] = [];
+        let offset = 0;
+        let total = 1; // Valeur initiale pour entrer dans la boucle
+
+        // Boucle pour récupérer toutes les pistes avec pagination
+        while (offset < total) {
+          const response = await fetch(
+            `https://api.spotify.com/v1/playlists/${id}/tracks?limit=${limit}&offset=${offset}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (!response.ok) {
             throw new Error(`Échec de la récupération de la playlist ${id}`);
           }
-          return res.json();
-        })
-      )
+
+          const data: PlaylistResponse = await response.json();
+          total = data.total;
+          allTracks = [...allTracks, ...data.items];
+          offset += limit;
+        }
+
+        return {
+          tracks: { items: allTracks }
+        };
+      })
     );
 
     const allTracksItems = playlistsData
       .flatMap((playlist) => playlist.tracks.items)
-      .filter((item) => item && item.track);
+      .filter((item): item is PlaylistTrack => Boolean(item && item.track));
 
     await connectDb();
     console.log(`Connexion à la base de données réussie pour ${genre}`);
@@ -98,10 +152,31 @@ async function getPlaylistTracks(playlistIds: string[], genre: string) {
           genres: [genre],
         };
 
-        await Track.findOneAndUpdate({ spotifyId: track.id }, trackData, {
-          upsert: true,
-          new: true,
+        // Vérifier si une piste avec le même nom et les mêmes artistes existe déjà
+        const existingTrack = await Track.findOne({
+          name: track.name,
+          'artists.name': { 
+            $all: track.artists.map((artist: Artist) => artist.name) 
+          }
         });
+
+        if (existingTrack) {
+          // Si la piste existe déjà, mettre à jour uniquement si nécessaire
+          if (existingTrack.spotifyId !== track.id) {
+            console.log(`Piste existante trouvée pour "${track.name}" par ${track.artists.map((a: Artist) => a.name).join(', ')}`);
+          }
+          continue; // Passer à la piste suivante
+        }
+
+        // Si la piste n'existe pas, l'ajouter
+        await Track.findOneAndUpdate(
+          { spotifyId: track.id }, 
+          trackData,
+          {
+            upsert: true,
+            new: true,
+          }
+        );
       } catch (error) {
         console.error(
           `Erreur lors du traitement du track ${genre}:`,

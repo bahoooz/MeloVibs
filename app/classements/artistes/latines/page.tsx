@@ -2,7 +2,7 @@ import LatinesContent from "@/components/classements/ContentForArtists/LatinesCo
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Classement artistes Latines",
+  "Artistes Latines",
   "Découvrez les meilleurs artistes Latines. Votez pour vos artistes préférés et suivez les tendances de la musique latine.",
   [
     "latines",

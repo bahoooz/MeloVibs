@@ -4,7 +4,7 @@ import React from "react";
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Qui sommes-nous ?",
+  "Qui sommes-nous",
   "Découvrez l'histoire de MeloVib's. La vision de la plateforme, les idées futures, l'équipe et bien plus encore...",
   [
     "histoire",

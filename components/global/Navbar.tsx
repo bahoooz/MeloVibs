@@ -8,6 +8,7 @@ import {
   NavigationMenuContent,
 } from "../ui/navigation-menu";
 import {
+  Coins,
   Gift,
   HouseSimple,
   LetterCircleV,
@@ -19,6 +20,7 @@ import {
   Question,
   Ranking,
   User,
+  UsersThree,
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import { Button } from "../ui/button";
@@ -30,14 +32,16 @@ import Image from "next/image";
 export default function Navbar() {
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
+  console.log(session);
+  
 
   return (
     <NavigationMenu className="mt-12 max-w-full lg:bg-[#252639]/80 lg:rounded-full h-16 lg:w-[95%] xl:w-[1200px] lg:mx-auto fixed top-0 left-0 right-0 px-8 lg:px-0 z-50">
       <ul className="flex justify-between w-full items-center lg:hidden">
         <li className={session ? "" : "hidden"}>
           <div className="flex items-center gap-4 relative">
-            <UserAvatar className="w-12 h-12" />
-            <div className="relative group">
+            <UserAvatar className="w-12 h-12" menuMargin="ml-[30px]" />
+            <div className="relative group flex items-center gap-3">
               <p
                 className={`flex items-center gap-[6px] text-2xl font-medium cursor-pointer ${
                   (session?.user?.remainingVotes as number) > 7
@@ -51,6 +55,14 @@ export default function Navbar() {
               >
                 {session?.user?.remainingVotes}{" "}
                 <LetterCircleV className="min-w-8 min-h-8" weight="duotone" />
+              </p>
+              <p className="text-yellowColorOthers flex items-center gap-[6px] text-2xl">
+                {session?.user?.points && session.user.points >= 1000 
+                  ? `${(session.user.points % 1000 === 0 
+                      ? Math.floor(session.user.points / 1000) 
+                      : (session.user.points / 1000).toFixed(1))}k` 
+                  : session?.user?.points}{" "}
+                <Coins className="min-w-8 min-h-8" weight="duotone" />
               </p>
               <div className="opacity-0 group-hover:opacity-100 group-hover:-bottom-4 transition-all duration-300 absolute -bottom-0 translate-y-full left-1/2 -translate-x-1/2 bg-[#252639] text-xs w-44 p-2 rounded-lg pointer-events-none -z-10 infobulle">
                 <p>
@@ -123,6 +135,24 @@ export default function Navbar() {
                 <ul className="flex flex-col gap-6">
                   <li>
                     <Link
+                      href={"/classements/morceaux"}
+                      className="flex gap-4 group hover:underline"
+                    >
+                      <MusicNote
+                        size={24}
+                        weight="light"
+                        className="group-hover:hidden"
+                      />
+                      <MusicNote
+                        size={24}
+                        weight="fill"
+                        className="hidden group-hover:block"
+                      />{" "}
+                      Classement des morceaux
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
                       href={"/classements/artistes"}
                       className="flex gap-4 group hover:underline"
                     >
@@ -141,20 +171,20 @@ export default function Navbar() {
                   </li>
                   <li>
                     <Link
-                      href={"/classements/morceaux"}
+                      href={"/classements/utilisateurs"}
                       className="flex gap-4 group hover:underline"
                     >
-                      <MusicNote
+                      <UsersThree
                         size={24}
                         weight="light"
                         className="group-hover:hidden"
                       />
-                      <MusicNote
+                      <UsersThree
                         size={24}
                         weight="fill"
                         className="hidden group-hover:block"
                       />{" "}
-                      Classement des musiques
+                      Classement des utilisateurs
                     </Link>
                   </li>
                 </ul>
@@ -204,9 +234,9 @@ export default function Navbar() {
         </ul>
         {session ? (
           <div className="flex items-center gap-[1.5vw] xl:gap-6">
-            <div className="relative group">
+            <div className="relative group hidden xl:flex gap-6">
               <p
-                className={`flex items-center gap-1 xl:gap-2 font-medium xl:text-xl cursor-pointer ${
+                className={`flex items-center gap-2 font-medium text-xl cursor-pointer ${
                   (session?.user?.remainingVotes as number) > 7
                     ? "text-green-600"
                     : (session?.user?.remainingVotes as number) > 3
@@ -218,9 +248,17 @@ export default function Navbar() {
               >
                 {session?.user?.remainingVotes}{" "}
                 <LetterCircleV
-                  className="min-w-7 xl:min-w-8 min-h-7 xl:min-h-8"
+                  className="min-w-8 min-h-8"
                   weight="duotone"
                 />
+              </p>
+              <p className="flex items-center gap-2 font-medium text-xl cursor-pointer text-yellowColorOthers">
+                {session?.user?.points && session.user.points >= 1000 
+                  ? `${(session.user.points % 1000 === 0 
+                      ? Math.floor(session.user.points / 1000) 
+                      : (session.user.points / 1000).toFixed(1))}k` 
+                  : session?.user?.points}{" "}
+                <Coins className="min-w-[30px] min-h-[30px]" weight="duotone" />
               </p>
               <div className="opacity-0 group-hover:opacity-100 group-hover:-bottom-10 xl:group-hover:-bottom-8 transition-all duration-300 absolute -bottom-0 translate-y-full left-1/2 -translate-x-1/2 bg-[#252639] text-sm w-52 p-2 rounded-lg pointer-events-none -z-10 infobulle">
                 <p>
@@ -236,7 +274,7 @@ export default function Navbar() {
                 </div>
               </div>
             </div>
-            <UserAvatar className="hover:scale-105 transition-all duration-200" />
+            <UserAvatar className="hover:scale-105 transition-all duration-200" menuMargin="mr-[30px] xl:absolute xl:w-[189.98px] xl:-right-16" />
           </div>
         ) : (
           <Link href={"/connexion"}>

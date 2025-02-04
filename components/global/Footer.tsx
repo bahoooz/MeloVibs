@@ -36,13 +36,18 @@ export default function Footer() {
           </h3>
           <ul className="flex flex-col gap-5">
             <li>
+              <Link href={"/classements/morceaux"}>
+                Classement des morceaux
+              </Link>
+            </li>
+            <li>
               <Link href={"/classements/artistes"}>
                 Classement des artistes
               </Link>
             </li>
             <li>
-              <Link href={"/classements/morceaux"}>
-                Classement des musiques
+              <Link href={"/classements/utilisateurs"}>
+                Classement des utilisateurs
               </Link>
             </li>
             <hr className="w-[305px] mx-auto" />

@@ -2,7 +2,7 @@ import PopContent from "@/components/classements/ContentForArtists/PopContent";
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Classement artistes Pop",
+  "Artistes Pop",
   "Découvrez les meilleurs artistes Pop. Votez pour vos artistes préférés et suivez les tendances de la musique pop.",
   [
     "pop",

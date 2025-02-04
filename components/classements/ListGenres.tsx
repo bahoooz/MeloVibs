@@ -3,7 +3,7 @@ import Link from "next/link";
 import React from "react";
 
 interface ListMusicGenresProps {
-  title: string,
+  title: string;
   imageRapFr: string;
   imagePop: string;
   imageJazz: string;

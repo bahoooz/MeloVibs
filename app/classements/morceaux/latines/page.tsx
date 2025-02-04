@@ -2,7 +2,7 @@ import LatinesContent from "@/components/classements/ContentForTracks/LatinesCon
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Classement morceaux Latines",
+  "Morceaux Latines",
   "Découvrez les meilleurs morceaux Latines. Votez pour vos morceaux préférés et suivez les tendances de la musique latine.",
   [
     "latines",

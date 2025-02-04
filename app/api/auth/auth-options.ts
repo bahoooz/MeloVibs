@@ -51,7 +51,9 @@ export const authOptions: AuthOptions = {
                         createdAt: user.createdAt,
                         remainingVotes: user.remainingVotes,
                         lastVoteRefresh: user.lastVoteRefresh,
-                        isEmailVerified: user.isEmailVerified
+                        isEmailVerified: user.isEmailVerified,
+                        points: user.points,
+                        inventory: user.inventory
                     };
                 } catch (error) {
                     console.error("Erreur d'authentification:", error);
@@ -65,26 +67,36 @@ export const authOptions: AuthOptions = {
             if (account?.provider === "google") {
                 try {
                     await connectDb();
-                    const userExists = await User.findOne({ email: profile?.email });
+                    const existingUser = await User.findOne({ email: profile?.email });
                     
-                    if (!userExists) {
-                        let userName = profile?.name;
-                        const userNameExists = await User.findOne({ name: userName });
-                        
-                        if (userNameExists) {
-                            userName = `${profile?.name}_${Date.now().toString().slice(-4)}`;
+                    if (existingUser) {
+                        if (!existingUser.isEmailVerified) {
+                            await User.updateOne(
+                                { email: profile?.email },
+                                { $set: { isEmailVerified: true } }
+                            );
                         }
-
-                        await User.create({
-                            email: profile?.email,
-                            name: userName,
-                            remainingVotes: 5,
-                            lastVoteRefresh: new Date(),
-                            createdAt: new Date(),
-                            votedTracks: [],
-                            isEmailVerified: true
-                        });
+                        return true;
                     }
+
+                    let userName = profile?.name;
+                    const userNameExists = await User.findOne({ name: userName });
+                    
+                    if (userNameExists) {
+                        userName = `${profile?.name}_${Date.now().toString().slice(-4)}`;
+                    }
+
+                    await User.create({
+                        email: profile?.email,
+                        name: userName,
+                        remainingVotes: 5,
+                        lastVoteRefresh: new Date(),
+                        createdAt: new Date(),
+                        votedTracks: [],
+                        isEmailVerified: true,
+                        points: 0,
+                        inventory: []
+                    });
                     return true;
                 } catch (error) {
                     console.error("Erreur lors de la connexion Google:", error);
@@ -105,6 +117,8 @@ export const authOptions: AuthOptions = {
                 token.remainingVotes = user.remainingVotes;
                 token.lastVoteRefresh = user.lastVoteRefresh;
                 token.isEmailVerified = user.isEmailVerified;
+                token.points = user.points;
+                token.inventory = user.inventory;
             }
 
             if (trigger === "signIn" || trigger === "update") {
@@ -121,6 +135,8 @@ export const authOptions: AuthOptions = {
                         token.remainingVotes = dbUser.remainingVotes;
                         token.lastVoteRefresh = dbUser.lastVoteRefresh;
                         token.isEmailVerified = dbUser.isEmailVerified;
+                        token.points = dbUser.points;
+                        token.inventory = dbUser.inventory;
                     }
                 } catch (error) {
                     console.error("Erreur lors de la mise à jour du token:", error);
@@ -140,6 +156,8 @@ export const authOptions: AuthOptions = {
                     remainingVotes: token.remainingVotes,
                     lastVoteRefresh: token.lastVoteRefresh,
                     isEmailVerified: token.isEmailVerified,
+                    points: token.points,
+                    inventory: token.inventory
                 }
             }
             return session;

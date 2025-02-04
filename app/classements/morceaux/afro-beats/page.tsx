@@ -2,7 +2,7 @@ import { generateMetadata } from "@/lib/metadata";
 import AfroBeatsContent from "@/components/classements/ContentForTracks/AfroBeatsContent";
 
 export const metadata = generateMetadata(
-  "Classement morceaux Afrobeats",
+  "Morceaux Afrobeats",
   "Découvrez les meilleurs morceaux Afrobeats. Votez pour vos morceaux préférés et suivez les tendances de la musique africaine moderne.",
   [
     "afrobeats",

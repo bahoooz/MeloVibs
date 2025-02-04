@@ -1,3 +1,16 @@
+import { generateMetadata } from "@/lib/metadata";
+
+export const metadata = generateMetadata(
+  "Mentions Légales",
+  "Consultez les mentions légales de MeloVib's.",
+  [
+    "mentions légales",
+    "ml melovib's",
+    "melovib's",
+    "ml"
+  ],
+);
+
 export default function MentionsLegales() {
   return (
     <div className="min-h-screen px-8 mt-48 lg:mt-52 xl:mt-56 sm:mx-auto sm:max-w-[550px] lg:max-w-[700px]">
@@ -8,7 +21,7 @@ export default function MentionsLegales() {
           MeloVib&apos;s Team <br />
           <span className="font-bold">Hébergeur :</span> Vercel, 340 S Lemon Ave
           #4133, Walnut, CA 91789, États-Unis <br />
-          <span className="font-bold">Contact :</span> noreply@melovibs.com
+          <span className="font-bold">Contact :</span> contact@melovibs.com
         </li>
         <li>
           <span className="font-bold">Propriété intellectuelle :</span> Le

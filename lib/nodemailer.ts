@@ -1,12 +1,24 @@
 import nodemailer from 'nodemailer';
+import fs from 'fs';
+import path from 'path';
 
 export const transporter = nodemailer.createTransport({
-  host: 'smtp.ionos.fr',
-  port: 587,
-  secure: false,
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD
+  }
+});
+
+transporter.verify((err, _success) => {
+  if (err) {
+    console.log("Erreur de connexion SMTP :", err);
+    console.log(process.env.EMAIL_USER, process.env.EMAIL_PASSWORD);
+  } else {
+    console.log("Connexion SMTP réussie !");
+    console.log(process.env.EMAIL_USER, process.env.EMAIL_PASSWORD);
   }
 });
 
@@ -14,7 +26,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
   const verificationLink = `${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${token}`;
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: "noreply@melovibs.com",
     to: email,
     subject: 'Vérification de votre adresse email',
     html: `
@@ -37,7 +49,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
   const resetLink = `${process.env.NEXTAUTH_URL}/nouveau-mot-de-passe?token=${token}`;
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: "noreply@melovibs.com",
     to: email,
     subject: 'Réinitialisation de votre mot de passe',
     html: `
@@ -54,4 +66,27 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
   };
 
   await transporter.sendMail(mailOptions);
+  
+};
+
+export const sendNewsletterTest = async () => {
+  try {
+    // Lire le template HTML
+    const templatePath = path.join(process.cwd(), 'lib', 'newsletter-template.html');
+    const template = fs.readFileSync(templatePath, 'utf-8');
+
+    const mailOptions = {
+      from: "noreply@melovibs.com",
+      to: "Phantomz53530@gmail.com",
+      subject: 'Test Newsletter MeloVibs v1.2',
+      html: template
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log("Newsletter de test envoyée avec succès !");
+    
+  } catch (error) {
+    console.error("Erreur lors de l'envoi de la newsletter de test:", error);
+    throw error;
+  }
 };

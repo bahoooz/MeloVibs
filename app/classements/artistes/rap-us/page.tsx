@@ -2,7 +2,7 @@ import RapUsContent from "@/components/classements/ContentForArtists/RapUsConten
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Classement artistes Rap US",
+  "Artistes Rap US",
   "Découvrez les meilleurs artistes Rap US. Votez pour vos artistes préférés et suivez les tendances de la musique Rap US.",
   [
     "rap us",

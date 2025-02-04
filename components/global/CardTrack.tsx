@@ -9,6 +9,8 @@ import {
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { ArrowCircleUp, Check, Play, ShareFat } from "@phosphor-icons/react";
+import Link from "next/link";
+import { toast } from '@/hooks/use-toast'
 
 export interface CardTrackProps {
   _id?: string;
@@ -52,6 +54,11 @@ export default function CardTrack({
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(share_link);
         setIsCopied(true);
+        toast({
+          title: "Lien copié !",
+          description: "Vous pouvez maintenant partager cette musique",
+          emojis: "🔗",
+        })
         setTimeout(() => {
           setIsCopied(false);
         }, 500);
@@ -102,30 +109,30 @@ export default function CardTrack({
             weight={"light"}
           />
         </Button>
-        {preview_url && (
-          <Button
-            className={`bg-blueColorTertiary w-12 md:w-10 h-12 md:h-10 rounded-full hidden sm:flex items-center justify-center transition-colors p-0`}
+          <Link
+            href={share_link || ""}
+            target="_blank"
+            className={`bg-blueColorTertiary w-12 md:w-10 h-12 md:h-10 rounded-full hidden sm:flex items-center justify-center transition-colors p-0 hover:opacity-90 hover:scale-[102%]`}
           >
             <Play size={16} className="min-h-6 min-w-6" weight={"light"} />
-          </Button>
-        )}
+          </Link>
         <Button
           onClick={handleShare}
-          className={`bg-blueColorTertiary w-12 md:w-10 h-12 md:h-10 rounded-full sm:flex items-center justify-center transition-colors p-0`}
+          className={`bg-white w-12 md:w-10 h-12 md:h-10 rounded-full sm:flex items-center justify-center transition-colors p-0`}
         >
           {isCopied ? (
             <Check
               size={16}
               className="min-h-6 min-w-6"
               weight={"light"}
-              color="white"
+              color="black"
             />
           ) : (
             <ShareFat
               size={16}
               className="min-h-6 min-w-6"
               weight={"light"}
-              color="white"
+              color="black"
             />
           )}
         </Button>

@@ -70,7 +70,7 @@ export const useTrackStore = create<TrackStore>((set, get) => ({
 
       toast({
         title: "Vote ajouté",
-        description: "Votre vote a été ajouté avec succès",
+        description: "Votre vote a été ajouté avec succès (+10 points)",
         emojis: "🎵",
       });
       launchConfetti();

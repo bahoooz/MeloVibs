@@ -1,3 +1,16 @@
+import { generateMetadata } from "@/lib/metadata";
+
+export const metadata = generateMetadata(
+  "Conditions Générales d'Utilisation",
+  "Consultez les conditions générales d'utilisation de MeloVib's.",
+  [
+    "conditions générales d'utilisation",
+    "cgu melovib's",
+    "melovib's",
+    "cgu"
+  ],
+);
+
 export default function ConditionsGeneralesUtilisation() {
   return (
     <div className="min-h-screen px-8 mt-48 lg:mt-52 xl:mt-56 sm:mx-auto sm:max-w-[550px] lg:max-w-[700px]">

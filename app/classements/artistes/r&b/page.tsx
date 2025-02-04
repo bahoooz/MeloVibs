@@ -2,7 +2,7 @@ import RnBContent from "@/components/classements/ContentForArtists/R&BContent";
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Classement artistes R&B",
+  "Artistes R&B",
   "Découvrez les meilleurs artistes R&B. Votez pour vos artistes préférés et suivez les tendances de la musique R&B.",
   [
     "r&b",

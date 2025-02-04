@@ -1,5 +1,12 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
+export interface InventoryItem {
+  itemId: mongoose.Types.ObjectId;
+  acquiredAt: Date;
+  type: string;
+  name: string;
+}
+
 export interface UserTypes extends Document {
   _id: string;
   name: string;
@@ -15,6 +22,7 @@ export interface UserTypes extends Document {
   verificationToken?: string;
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
+  inventory: InventoryItem[];
 }
 
 const userSchema = new Schema<UserTypes>(
@@ -83,13 +91,30 @@ const userSchema = new Schema<UserTypes>(
     },
     resetPasswordExpires: {
       type: Date,
-    }
+    },
+    inventory: [{
+      itemId: {
+        type: Schema.Types.ObjectId,
+        ref: 'ShopItem',
+        required: true
+      },
+      acquiredAt: {
+        type: Date,
+        default: Date.now,
+      },
+      usedAt: Date,
+      expiresAt: Date,
+      code: String,
+    }],
   },
   {
     timestamps: true,
     collection: "users", // Spécifie explicitement la collection
   }
 );
+
+// Ajouter un index pour optimiser les recherches
+userSchema.index({ 'inventory.itemId': 1 });
 
 const User: Model<UserTypes> =
   mongoose.models.User || mongoose.model<UserTypes>("User", userSchema);

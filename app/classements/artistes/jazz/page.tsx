@@ -2,7 +2,7 @@ import JazzContent from "@/components/classements/ContentForArtists/JazzContent"
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Classement artistes Jazz",
+  "Artistes Jazz",
   "Découvrez les meilleurs artistes Jazz. Votez pour vos artistes préférés et suivez les tendances de la musique jazz.",
   [
     "jazz",

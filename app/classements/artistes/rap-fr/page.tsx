@@ -2,7 +2,7 @@ import RapFrContent from "@/components/classements/ContentForArtists/RapFrConten
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Classement artistes Rap Français",
+  "Artistes Rap Français",
   "Découvrez les meilleurs artistes Rap Français. Votez pour vos artistes préférés et suivez les tendances de la musique Rap Français.",
   [
     "rap français",

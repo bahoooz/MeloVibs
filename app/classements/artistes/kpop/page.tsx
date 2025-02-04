@@ -2,7 +2,7 @@ import KpopContent from "@/components/classements/ContentForArtists/KpopContent"
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Classement artistes Kpop",
+  "Artistes Kpop",
   "Découvrez les meilleurs artistes Kpop. Votez pour vos artistes préférés et suivez les tendances de la musique kpop.",
   [
     "jazz",

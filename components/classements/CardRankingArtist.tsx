@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Card } from "../ui/card";
 import { Link } from "@phosphor-icons/react";
 import Image from "next/image";
+import { toast } from '@/hooks/use-toast'
 
 export interface CardRankingArtistProps {
   _id?: string;
@@ -35,6 +36,11 @@ export default function CardRankingArtist({
   const handleImageClick = async () => {
     await navigator.clipboard.writeText(shareLink);
     setIsCopied(true);
+    toast({
+      title: "Lien copié !",
+      description: "Vous pouvez maintenant partager cette musique",
+      emojis: "🔗",
+    })
     setTimeout(() => {
       setIsCopied(false);
     }, 500);

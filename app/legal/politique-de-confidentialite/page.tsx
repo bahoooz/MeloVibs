@@ -1,3 +1,16 @@
+import { generateMetadata } from "@/lib/metadata";
+
+export const metadata = generateMetadata(
+  "Politique de Confidentialité",
+  "Consultez la politique de confidentialité de MeloVib's.",
+  [
+    "politique de confidentialité",
+    "pc melovib's",
+    "melovib's",
+    "pc"
+  ],
+);
+
 export default function PolitiqueDeConfidentialite() {
   return (
     <div className="min-h-screen px-8 mt-48 lg:mt-52 xl:mt-56 sm:mx-auto sm:max-w-[550px] lg:max-w-[700px]">

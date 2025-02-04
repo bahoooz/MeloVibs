@@ -8,6 +8,7 @@ import {
   Question,
   PaperPlaneRight,
   CaretRight,
+  UsersThree,
 } from "@phosphor-icons/react";
 import React, { useState } from "react";
 import { NavigationMenu } from "../ui/navigation-menu";
@@ -80,6 +81,23 @@ export default function BurgerMenu({
           >
             <li>
               <Link
+                href={"/classements/morceaux"}
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-3 group hover:underline"
+              >
+                <MusicNote
+                  className="min-h-6 min-w-6 group-hover:hidden"
+                  weight="light"
+                />
+                <MusicNote
+                  className="min-h-6 min-w-6 hidden group-hover:block"
+                  weight="fill"
+                />
+                Classement des morceaux
+              </Link>
+            </li>
+            <li>
+              <Link
                 href={"/classements/artistes"}
                 onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 group hover:underline"
@@ -97,19 +115,19 @@ export default function BurgerMenu({
             </li>
             <li>
               <Link
-                href={"/classements/morceaux"}
+                href={"/classements/utilisateurs"}
                 onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 group hover:underline"
               >
-                <MusicNote
+                <UsersThree
                   className="min-h-6 min-w-6 group-hover:hidden"
                   weight="light"
                 />
-                <MusicNote
+                <UsersThree
                   className="min-h-6 min-w-6 hidden group-hover:block"
                   weight="fill"
                 />
-                Classement des musiques
+                Classement des utilisateurs
               </Link>
             </li>
           </ul>

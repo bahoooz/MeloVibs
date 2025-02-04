@@ -2,7 +2,7 @@ import RapFrContent from "@/components/classements/ContentForTracks/RapFrContent
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Classement morceaux Rap Français",
+  "Morceaux Rap Français",
   "Découvrez les meilleurs morceaux Rap Français. Votez pour vos morceaux préférés et suivez les tendances de la musique rap français.",
   [
     "rap fr",

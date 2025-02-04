@@ -2,7 +2,7 @@ import PopContent from "@/components/classements/ContentForTracks/PopContent";
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Classement morceaux Pop",
+  "Morceaux Pop",
   "Découvrez les meilleurs morceaux Pop. Votez pour vos morceaux préférés et suivez les tendances de la musique pop.",
   [
     "pop",

@@ -59,7 +59,9 @@ export async function POST(request: NextRequest) {
         createdAt: new Date(),
         votedTracks: [],
         verificationToken,
-        isEmailVerified: false
+        isEmailVerified: false,
+        points: 0,
+        inventory: []
       });
   
       await newUser.save();

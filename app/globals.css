@@ -39,6 +39,32 @@ body {
   border-bottom: 8px solid #252639;
 }
 
+@media (max-width: 1280px) {
+  .filtrage::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -12px;
+  transform: translateY(-50%);
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-right: 12px solid rgb(37, 38, 57, 0.40);
+}
+}
+
+@media (min-width: 1280px) {
+  .filtrage::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -12px;
+  transform: translateY(-50%);
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 12px solid rgb(37, 38, 57, 0.40);
+}
+}
+
 /* Personnalisation de la barre de défilement */
 body::-webkit-scrollbar {
   width: 10px;
@@ -58,4 +84,27 @@ body::-webkit-scrollbar {
 
 .history-container::-webkit-scrollbar {
   display: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.glasses {
+  transform: rotateX(-30deg) rotateY(-20deg) rotateZ(0deg);
+}
+
+@keyframes bounce-perso {
+  0%, 100% {
+      transform: translateY(-10%);
+      animation-timing-function: cubic-bezier(0.8,0,1,1);
+  }
+  50% {
+      transform: none;
+      animation-timing-function: cubic-bezier(0,0,0.2,1);
+  }
+}
+
+.animate-bounce-perso {
+  animation: bounce-perso 1.5s infinite;
 }

@@ -2,7 +2,7 @@ import RapUsContent from "@/components/classements/ContentForTracks/RapUsContent
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Classement morceaux Rap US",
+  "Morceaux Rap US",
   "Découvrez les meilleurs morceaux Rap US. Votez pour vos morceaux préférés et suivez les tendances de la musique rap us.",
   [
     "rap us",

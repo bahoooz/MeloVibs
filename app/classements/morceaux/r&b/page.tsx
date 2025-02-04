@@ -2,7 +2,7 @@ import RnBContent from "@/components/classements/ContentForTracks/R&BContent";
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Classement morceaux R&B",
+  "Morceaux R&B",
   "Découvrez les meilleurs morceaux R&B. Votez pour vos morceaux préférés et suivez les tendances de la musique r&b.",
   [
     "r&b",

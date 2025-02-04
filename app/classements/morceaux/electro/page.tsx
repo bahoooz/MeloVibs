@@ -2,7 +2,7 @@ import ElectroContent from "@/components/classements/ContentForTracks/ElectroCon
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Classement morceaux Electro",
+  "Morceaux Electro",
   "Découvrez les meilleurs morceaux Electro. Votez pour vos morceaux préférés et suivez les tendances de la musique électronique.",
   [
     "electro",

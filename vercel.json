@@ -1,7 +1,14 @@
 {
+    "crons": [{
+      "path": "/api/cron",
+      "schedule": "0 0 * * *"
+    }],
     "functions": {
       "app/api/spotify/**/*": {
         "maxDuration": 30
+      },
+      "app/api/cron/**": {
+        "maxDuration": 300
       }
     }
   }

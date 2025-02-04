@@ -1,12 +1,9 @@
 export interface Track {
   _id: string;
-  spotifyId: string;
   name: string;
-  previewUrl: string | null;
   artists: {
     id: string;
     name: string;
-    _id: string;
   }[];
   album: {
     id: string;
@@ -15,14 +12,13 @@ export interface Track {
       url: string;
       height: number;
       width: number;
-      _id: string;
     }[];
     release_date: string;
     share_link: string;
   };
-  popularity: number;
   duration_ms: number;
   genres: string[];
+  popularity: number;
   votes: number;
   createdAt: string;
   updatedAt: string;

@@ -59,9 +59,9 @@ export async function POST(request: NextRequest, props: { params: Promise<{ id: 
     const [updatedUser] = await Promise.all([
       User.findOneAndUpdate(
         { email: session.user.email },
-        { 
+        { 	
           $push: { votedTracks: trackId },
-          $inc: { remainingVotes: -1 }
+          $inc: { remainingVotes: -1, points: 10 }
         },
         { new: true }
       ),

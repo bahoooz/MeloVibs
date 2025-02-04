@@ -2,7 +2,7 @@ import AfroBeatsContent from "@/components/classements/ContentForArtists/AfroBea
 import { generateMetadata } from "@/lib/metadata";
 
 export const metadata = generateMetadata(
-  "Classement artistes Afrobeats",
+  "Artistes Afrobeats",
   "Découvrez les meilleurs artistes Afrobeats. Votez pour vos artistes préférés et suivez les tendances de la musique africaine moderne.",
   [
     "afrobeats",

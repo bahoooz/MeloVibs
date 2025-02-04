@@ -40,14 +40,14 @@ export default function ListMostPopularTracks() {
       setLoadingTrackId(trackId);
       try {
         await createHandleVote(
-          toast, 
+          toast,
           isVoted,
           async (id) => {
             await addVote(id, async () => {
               await update();
               return;
             });
-          }, 
+          },
           async (id) => {
             await removeVote(id, async () => {
               await update();
@@ -92,7 +92,7 @@ export default function ListMostPopularTracks() {
     return (
       <section className="mt-32 lg:mt-44">
         <h2 className="text-5xl mb-20 lg:mb-32 md:w-[600px] md:mx-auto lg:w-[700px] xl:w-[1200px] xl:text-center">
-        Les plus streamés du moment, tout genre confondu
+          Les plus streamés du moment, tout genre confondu
         </h2>
 
         {/* Squelette mobile et tablette */}
@@ -107,12 +107,8 @@ export default function ListMostPopularTracks() {
 
         {/* Squelette desktop */}
         <div className="hidden lg:flex justify-center items-center flex-wrap gap-4 xl:gap-10 w-[700px] h-[400px] xl:w-[1200px] mx-auto">
-        <Spiral
-              className="animate-spin text-greenColorSecondary"
-              size={80}
-            />
+          <Spiral className="animate-spin text-greenColorSecondary" size={80} />
         </div>
-
       </section>
     );
   }
@@ -161,7 +157,7 @@ export default function ListMostPopularTracks() {
                   }
                   width={track.album.images[0].width}
                   height={track.album.images[0].height}
-                  preview_url={track.previewUrl}
+                  preview_url={track.album.share_link}
                   share_link={track.album.share_link}
                 />
               </CarouselItem>
@@ -190,7 +186,9 @@ export default function ListMostPopularTracks() {
                 isVoted(track._id) ? "min-h-14 min-w-14" : "min-h-8 min-w-8"
               }
               popularity_track={
-                track.popularity >= 80
+                track.popularity >= 95
+                  ? "Phénomène mondial"
+                  : track.popularity >= 80
                   ? "Hit incontournable"
                   : track.popularity >= 70
                   ? "Hit du moment"

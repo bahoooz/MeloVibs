@@ -82,8 +82,7 @@ export default function Votes() {
             </div>
           </div>
           <div>
-            {!session?.user?.isAdmin && (
-              <div className="flex justify-center items-end text-blueColorTertiary text-3xl font-semibold gap-2 mt-16 xl:mt-0 xl:w-fit">
+              <div className="flex flex-col sm:flex-row justify-center items-center text-blueColorTertiary text-3xl font-semibold gap-2 mt-16 xl:mt-0 xl:w-fit">
                 {session?.user?.lastVoteRefresh ? (
                   <VotesTimer lastVoteRefresh={session.user.lastVoteRefresh} />
                 ) : (
@@ -93,7 +92,6 @@ export default function Votes() {
                   + 2 votes (10 max)
                 </span>
               </div>
-            )}
             <div className="mt-16">
               <h2 className="mb-6 lg:mb-8 uppercase font-semibold text-xl">
                 Historique

@@ -59,9 +59,12 @@ export default function DashboardAdmin() {
         </h1>
         <div className="flex flex-col gap-8 mt-12">
           <div className="flex items-center gap-4">
-            <p>Récupérer les <span className="underline">derniers morceaux des playlists</span></p>
-            <Button 
-              onClick={handleUpdateTracks} 
+            <p>
+              Récupérer les{" "}
+              <span className="underline">derniers morceaux des playlists</span>
+            </p>
+            <Button
+              onClick={handleUpdateTracks}
               disabled={isLoadingTracks}
               className="rounded-lg min-w-[48px] min-h-[48px]"
             >
@@ -76,9 +79,12 @@ export default function DashboardAdmin() {
             )}
           </div>
           <div className="flex items-center gap-4">
-            <p>Récupérer les <span className="underline">dernières données des artistes</span></p>
-            <Button 
-              onClick={handleUpdateArtists} 
+            <p>
+              Récupérer les{" "}
+              <span className="underline">dernières données des artistes</span>
+            </p>
+            <Button
+              onClick={handleUpdateArtists}
               disabled={isLoadingArtists}
               className="rounded-lg min-w-[48px] min-h-[48px]"
             >
@@ -91,6 +97,27 @@ export default function DashboardAdmin() {
             {updateArtistsSuccess && (
               <p className="text-greenColorSecondary">Mise à jour réussie !</p>
             )}
+          </div>
+          <div className="flex items-center gap-4">
+            <p>
+              Envoyer un <span className="underline">test de newsletter</span>
+            </p>
+            <Button
+              onClick={async () => {
+                try {
+                  await fetch("/api/newsletter/test", {
+                    method: "POST",
+                  });
+                  alert("Newsletter de test envoyée !");
+                } catch (error) {
+                  alert("Erreur lors de l'envoi de la newsletter");
+                  console.error(error);
+                }
+              }}
+              className="rounded-lg min-w-[48px] min-h-[48px]"
+            >
+              <Target className="min-w-7 min-h-7" />
+            </Button>
           </div>
         </div>
       </div>

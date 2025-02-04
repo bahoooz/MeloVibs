@@ -1,6 +1,7 @@
 import "next-auth";
 import { JWT } from "next-auth/jwt";
 import { DefaultSession } from "next-auth";
+import { InventoryItem } from "@/models/user";
 
 declare module "next-auth" {
     export interface User {
@@ -14,6 +15,8 @@ declare module "next-auth" {
         remainingVotes: number;
         lastVoteRefresh: Date;
         isEmailVerified: boolean;
+        points: number;
+        inventory: InventoryItem[];
     }
 
     export interface Session extends DefaultSession {
@@ -28,6 +31,8 @@ declare module "next-auth" {
             remainingVotes: number;
             lastVoteRefresh: Date;
             isEmailVerified: boolean;
+            points: number;
+            inventory: InventoryItem[];
         }
     }
 }
@@ -44,5 +49,7 @@ declare module "next-auth/jwt" {
         remainingVotes: number;
         lastVoteRefresh: Date;
         isEmailVerified: boolean;
+        points: number;
+        inventory: InventoryItem[];
     }
 } 
