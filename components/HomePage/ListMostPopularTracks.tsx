@@ -141,19 +141,21 @@ export default function ListMostPopularTracks() {
                       : "min-h-8 min-w-8"
                   }
                   popularity_track={
-                    track.popularity >= 80
-                      ? "Hit incontournable"
-                      : track.popularity >= 70
-                      ? "Hit du moment"
-                      : track.popularity >= 60
-                      ? "Favori du public"
-                      : track.popularity >= 50
-                      ? "Tendance montante"
-                      : track.popularity >= 30
-                      ? "À découvrir"
-                      : track.popularity >= 10
-                      ? "Note discrète"
-                      : "Nouveau"
+                    track.popularity >= 95
+                  ? "Phénomène mondial"
+                  : track.popularity >= 80
+                  ? "Hit incontournable"
+                  : track.popularity >= 70
+                  ? "Hit du moment"
+                  : track.popularity >= 60
+                  ? "Favori du public"
+                  : track.popularity >= 50
+                  ? "Tendance montante"
+                  : track.popularity >= 30
+                  ? "À découvrir"
+                  : track.popularity >= 10
+                  ? "Note discrète"
+                  : "Inconnu au bataillon"
                   }
                   width={track.album.images[0].width}
                   height={track.album.images[0].height}

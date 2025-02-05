@@ -112,13 +112,13 @@ export default function CardTrack({
           <Link
             href={share_link || ""}
             target="_blank"
-            className={`bg-blueColorTertiary w-12 md:w-10 h-12 md:h-10 rounded-full hidden sm:flex items-center justify-center transition-colors p-0 hover:opacity-90 hover:scale-[102%]`}
+            className={`bg-blueColorTertiary w-12 md:w-10 h-12 md:h-10 rounded-full flex items-center justify-center transition-colors p-0 hover:opacity-90 hover:scale-[102%]`}
           >
             <Play size={16} className="min-h-6 min-w-6" weight={"light"} />
           </Link>
         <Button
           onClick={handleShare}
-          className={`bg-white w-12 md:w-10 h-12 md:h-10 rounded-full sm:flex items-center justify-center transition-colors p-0`}
+          className={`bg-white w-12 md:w-10 h-12 md:h-10 rounded-full hidden sm:flex items-center justify-center transition-colors p-0`}
         >
           {isCopied ? (
             <Check
