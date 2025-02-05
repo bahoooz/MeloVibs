@@ -1,6 +1,9 @@
 import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
+import connectDb from './mongodb';
+import User from '../models/user';
+import crypto from 'crypto';
 
 export const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -61,22 +64,104 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
 
 export const sendNewsletterTest = async () => {
   try {
-    // Lire le template HTML
+    // Connexion à la base de données et récupération de l'utilisateur
+    await connectDb();
+    const user = await User.findOne({ 
+      email: "bahoz.coding@gmail.com",
+      isSubscribedToNewsletter: true 
+    });
+    
+    // Si l'utilisateur n'est pas abonné, on arrête l'envoi
+    if (!user) {
+      console.log("L'utilisateur n'est pas abonné à la newsletter ou n'existe pas");
+      return;
+    }
+
     const templatePath = path.join(process.cwd(), 'lib', 'newsletter-template.html');
-    const template = fs.readFileSync(templatePath, 'utf-8');
+    let template = fs.readFileSync(templatePath, 'utf-8');
+    
+    // Créer un vrai token de désabonnement
+    const unsubscribeToken = crypto.randomBytes(32).toString('hex');
+    const unsubscribeLink = `${process.env.NEXTAUTH_URL}/api/newsletter/unsubscribe?token=${unsubscribeToken}&email=bahoz.coding@gmail.com`;
+    
+    template = template
+      .replace('[Prénom]', user?.name || 'there')
+      .replace('Se désabonner de la newsletter', `<a href="${unsubscribeLink}" style="color: #333333; text-decoration: underline;">Se désabonner de la newsletter</a>`);
 
     const mailOptions = {
       from: "noreply@melovibs.com",
-      to: "Phantomz53530@gmail.com",
+      to: "bahoz.coding@gmail.com",
       subject: 'Test Newsletter MeloVibs v1.2',
       html: template
     };
+
+    // Sauvegarder le token dans la base de données
+    await User.findByIdAndUpdate(user._id, {
+      newsletterUnsubscribeToken: unsubscribeToken
+    });
 
     await transporter.sendMail(mailOptions);
     console.log("Newsletter de test envoyée avec succès !");
     
   } catch (error) {
     console.error("Erreur lors de l'envoi de la newsletter de test:", error);
+    throw error;
+  }
+};
+
+export const sendNewsletterToAllUsers = async () => {
+  try {
+    await connectDb();
+    const users = await User.find({ 
+      isEmailVerified: true,
+      isSubscribedToNewsletter: true 
+    }, 'email name');
+    
+    // Lire le template HTML
+    const templatePath = path.join(process.cwd(), 'lib', 'newsletter-template.html');
+    const templateBase = fs.readFileSync(templatePath, 'utf-8');
+
+    // Envoyer l'email à chaque utilisateur
+    const results = await Promise.allSettled(
+      users.map(async (user) => {
+        // Créer le lien de désabonnement unique
+        const unsubscribeToken = crypto.randomBytes(32).toString('hex');
+        const unsubscribeLink = `${process.env.NEXTAUTH_URL}/api/newsletter/unsubscribe?token=${unsubscribeToken}&email=${encodeURIComponent(user.email)}`;
+        
+        // Personnaliser le template pour chaque utilisateur
+        const template = templateBase
+          .replace('[Prénom]', user.name || 'there')
+          .replace('Se désabonner de la newsletter', `<a href="${unsubscribeLink}" style="color: #333333; text-decoration: underline;">Se désabonner de la newsletter</a>`);
+
+        const mailOptions = {
+          from: "noreply@melovibs.com",
+          to: user.email,
+          subject: 'MeloVibs v1.2 est disponible ! 🎵',
+          html: template
+        };
+
+        // Sauvegarder le token de désabonnement dans la base de données
+        await User.findByIdAndUpdate(user._id, {
+          newsletterUnsubscribeToken: unsubscribeToken
+        });
+
+        return transporter.sendMail(mailOptions);
+      })
+    );
+
+    // Analyser les résultats
+    const successful = results.filter(r => r.status === 'fulfilled').length;
+    const failed = results.filter(r => r.status === 'rejected').length;
+
+    console.log(`Newsletter envoyée avec succès à ${successful} utilisateurs`);
+    if (failed > 0) {
+      console.log(`Échec de l'envoi pour ${failed} utilisateurs`);
+    }
+
+    return { successful, failed };
+    
+  } catch (error) {
+    console.error("Erreur lors de l'envoi de la newsletter:", error);
     throw error;
   }
 };

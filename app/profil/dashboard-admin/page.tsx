@@ -119,6 +119,54 @@ export default function DashboardAdmin() {
               <Target className="min-w-7 min-h-7" />
             </Button>
           </div>
+          <div className="flex items-center gap-4">
+            <p>
+              Envoyer la newsletter à <span className="underline">tous les utilisateurs</span>
+            </p>
+            <Button
+              onClick={async () => {
+                if (window.confirm("Êtes-vous sûr de vouloir envoyer la newsletter à tous les utilisateurs ?")) {
+                  try {
+                    const response = await fetch("/api/newsletter/send-all", {
+                      method: "POST",
+                    });
+                    const data = await response.json();
+                    alert(`Newsletter envoyée avec succès à ${data.successful} utilisateurs\n${data.failed} échecs`);
+                  } catch (error) {
+                    alert("Erreur lors de l'envoi de la newsletter");
+                    console.error(error);
+                  }
+                }
+              }}
+              className="rounded-lg min-w-[48px] min-h-[48px]"
+            >
+              <Target className="min-w-7 min-h-7" />
+            </Button>
+          </div>
+          <div className="flex items-center gap-4">
+            <p>
+              Lancer la <span className="underline">migration newsletter</span>
+            </p>
+            <Button
+              onClick={async () => {
+                if (window.confirm("Êtes-vous sûr de vouloir lancer la migration ?")) {
+                  try {
+                    const response = await fetch("/api/admin/run-migration", {
+                      method: "POST",
+                    });
+                    const data = await response.json();
+                    alert(`Migration terminée avec succès!\n${data.result.modifiedCount} utilisateurs mis à jour`);
+                  } catch (error) {
+                    alert("Erreur lors de la migration");
+                    console.error(error);
+                  }
+                }
+              }}
+              className="rounded-lg min-w-[48px] min-h-[48px]"
+            >
+              <Target className="min-w-7 min-h-7" />
+            </Button>
+          </div>
         </div>
       </div>
     </ProfileContainer>

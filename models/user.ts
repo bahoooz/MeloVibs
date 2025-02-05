@@ -23,6 +23,11 @@ export interface UserTypes extends Document {
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
   inventory: InventoryItem[];
+  newsletterUnsubscribeToken: String;
+  isSubscribedToNewsletter: {
+    type: Boolean,
+    default: true
+  };
 }
 
 const userSchema = new Schema<UserTypes>(
@@ -106,6 +111,11 @@ const userSchema = new Schema<UserTypes>(
       expiresAt: Date,
       code: String,
     }],
+    newsletterUnsubscribeToken: String,
+    isSubscribedToNewsletter: {
+      type: Boolean,
+      default: true
+    },
   },
   {
     timestamps: true,
