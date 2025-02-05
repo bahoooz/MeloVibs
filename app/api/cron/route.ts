@@ -4,8 +4,13 @@ import { updateAllArtists } from "@/lib/updateAllArtists";
 
 export async function GET(request: Request) {
   try {
-    // Vérifier que la requête vient bien de Vercel Cron
-    if (request.headers.get('x-vercel-cron') !== 'true') {
+    // Vérifier tous les en-têtes possibles de Vercel Cron
+    const isVercelCron = 
+      request.headers.get('x-vercel-cron') === 'true' || 
+      request.headers.get('User-Agent')?.includes('vercel-cron');
+
+    if (!isVercelCron) {
+      console.log("En-têtes reçus:", Object.fromEntries(request.headers.entries()));
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
 
