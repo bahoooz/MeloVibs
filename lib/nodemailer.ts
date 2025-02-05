@@ -130,7 +130,7 @@ export const sendNewsletterToAllUsers = async () => {
         
         // Personnaliser le template pour chaque utilisateur
         const template = templateBase
-          .replace('[Prénom]', user.name || 'there')
+          .replace('[Prénom]', user.name || '')
           .replace('Se désabonner de la newsletter', `<a href="${unsubscribeLink}" style="color: #333333; text-decoration: underline;">Se désabonner de la newsletter</a>`);
 
         const mailOptions = {
