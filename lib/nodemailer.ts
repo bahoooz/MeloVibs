@@ -113,7 +113,6 @@ export const sendNewsletterToAllUsers = async () => {
   try {
     await connectDb();
     const users = await User.find({ 
-      isEmailVerified: true,
       isSubscribedToNewsletter: true 
     }, 'email name');
     
