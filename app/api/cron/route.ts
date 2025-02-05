@@ -4,10 +4,8 @@ import { updateAllArtists } from "@/lib/updateAllArtists";
 
 export async function GET(request: Request) {
   try {
-    const authHeader = request.headers.get("authorization");
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET_KEY}`) {
-      console.log("Authorization header reçu :", request.headers.get("authorization"));
-      console.log("CRON_SECRET_KEY :", process.env.CRON_SECRET_KEY);
+    // Vérifier que la requête vient bien de Vercel Cron
+    if (request.headers.get('x-vercel-cron') !== 'true') {
       return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
     }
 

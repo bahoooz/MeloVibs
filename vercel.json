@@ -1,10 +1,7 @@
 {
     "crons": [{
       "path": "/api/cron",
-      "schedule": "0 0 * * *",
-      "headers": {
-        "authorization": "Bearer VXYUwo01Kzh3iNGIwg3HB8qJgjxKv8TM"
-      }
+      "schedule": "0 0 * * *"
     }],
     "functions": {
       "app/api/spotify/**/*": {
