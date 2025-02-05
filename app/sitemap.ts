@@ -150,7 +150,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: "https://melovibs.com/boutique",
       lastModified: new Date(),
       changeFrequency: "weekly",
-      priority: 0.7,
+      priority: 0.9,
+    },
+    {
+      url: "https://melovibs.com/conditions-generales-utilisation",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.3,
+    },
+    {
+      url: "https://melovibs.com/legal/mentions-legales",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.3,
+    },
+    {
+      url: "https://melovibs.com/legal/politique-de-confidentialite",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.3,
+    },
+    {
+      url: "https://melovibs.com/legal/politique-des-cookies",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.3,
     },
   ];
 }

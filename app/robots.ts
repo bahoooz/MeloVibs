@@ -11,7 +11,8 @@ export default function robots(): MetadataRoute.Robots {
       '/inscription',
       '/profil',
       '/verification-reussie',
-      '/verification-echec'
+      '/verification-echec',
+      "/newsletter/"
       ],
     },
     sitemap: "https://melovibs.com/sitemap.xml",
