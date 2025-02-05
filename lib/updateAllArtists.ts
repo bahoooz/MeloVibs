@@ -4,19 +4,23 @@ export async function updateAllArtists() {
     'rap-us', 'latines', 'rock', 'electro', 'kpop'
   ];
 
+  const baseUrl = typeof window === 'undefined' 
+    ? process.env.NEXT_PUBLIC_APP_URL 
+    : '';
+
   try {
     for (const genre of genres) {
       try {
-        const response = await fetch(`/api/spotify/get-list-artists/${genre}`);
+        const response = await fetch(`${baseUrl}/api/spotify/get-list-artists/${genre}`);
         if (!response.ok) {
           console.error(`Erreur pour ${genre}: ${response.statusText}`);
-          continue; // Continue avec le prochain genre même en cas d'erreur
+          continue;
         }
         const data = await response.json();
         console.log(`Données des artistes Spotify ${genre} mises à jour :`, data);
       } catch (error) {
         console.error(`Erreur pour ${genre}:`, error);
-        continue; // Continue avec le prochain genre même en cas d'erreur
+        continue;
       }
     }
     console.log("Mise à jour de tous les artistes terminée");

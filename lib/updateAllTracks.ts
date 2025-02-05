@@ -4,10 +4,14 @@ export async function updateAllTracks() {
     'rap-us', 'latines', 'rock', 'electro', 'kpop'
   ];
 
+  const baseUrl = typeof window === 'undefined' 
+    ? process.env.NEXT_PUBLIC_APP_URL 
+    : '';
+
   try {
     for (const genre of genres) {
       try {
-        const response = await fetch(`/api/spotify/get-list-tracks/${genre}`);
+        const response = await fetch(`${baseUrl}/api/spotify/get-list-tracks/${genre}`);
         if (!response.ok) {
           console.error(`Erreur pour ${genre}: ${response.statusText}`);
           continue; // Continue avec le prochain genre même en cas d'erreur
