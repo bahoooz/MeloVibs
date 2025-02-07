@@ -85,7 +85,7 @@ export const sendNewsletterTest = async () => {
     const unsubscribeLink = `${process.env.NEXTAUTH_URL}/api/newsletter/unsubscribe?token=${unsubscribeToken}&email=bahoz.coding@gmail.com`;
     
     template = template
-      .replace('[Prénom]', user?.name || 'there')
+      .replace('[Prénom]', user?.name || '')
       .replace('Se désabonner de la newsletter', `<a href="${unsubscribeLink}" style="color: #333333; text-decoration: underline;">Se désabonner de la newsletter</a>`);
 
     const mailOptions = {
@@ -109,6 +109,9 @@ export const sendNewsletterTest = async () => {
   }
 };
 
+// Ajouter un délai entre chaque envoi
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 export const sendNewsletterToAllUsers = async () => {
   try {
     await connectDb();
@@ -123,41 +126,52 @@ export const sendNewsletterToAllUsers = async () => {
     // Envoyer l'email à chaque utilisateur
     const results = await Promise.allSettled(
       users.map(async (user) => {
-        // Créer le lien de désabonnement unique
-        const unsubscribeToken = crypto.randomBytes(32).toString('hex');
-        const unsubscribeLink = `${process.env.NEXTAUTH_URL}/api/newsletter/unsubscribe?token=${unsubscribeToken}&email=${encodeURIComponent(user.email)}`;
-        
-        // Personnaliser le template pour chaque utilisateur
-        const template = templateBase
-          .replace('[Prénom]', user.name || '')
-          .replace('Se désabonner de la newsletter', `<a href="${unsubscribeLink}" style="color: #333333; text-decoration: underline;">Se désabonner de la newsletter</a>`);
+        try {
+          const unsubscribeToken = crypto.randomBytes(32).toString('hex');
+          const unsubscribeLink = `${process.env.NEXTAUTH_URL}/api/newsletter/unsubscribe?token=${unsubscribeToken}&email=${encodeURIComponent(user.email)}`;
+          
+          const template = templateBase
+            .replace('[Prénom]', user.name || '')
+            .replace('Se désabonner de la newsletter', `<a href="${unsubscribeLink}" style="color: #333333; text-decoration: underline;">Se désabonner de la newsletter</a>`);
 
-        const mailOptions = {
-          from: "noreply@melovibs.com",
-          to: user.email,
-          subject: 'MeloVibs v1.2 est disponible ! 🎵',
-          html: template
-        };
+          const mailOptions = {
+            from: "noreply@melovibs.com",
+            to: user.email,
+            subject: 'MeloVibs v1.2 est disponible ! 🎵',
+            html: template
+          };
 
-        // Sauvegarder le token de désabonnement dans la base de données
-        await User.findByIdAndUpdate(user._id, {
-          newsletterUnsubscribeToken: unsubscribeToken
-        });
+          await User.findByIdAndUpdate(user._id, {
+            newsletterUnsubscribeToken: unsubscribeToken
+          });
 
-        return transporter.sendMail(mailOptions);
+          await delay(1000); // Attendre 1 seconde entre chaque envoi
+
+          return await transporter.sendMail(mailOptions);
+        } catch (error) {
+          console.error(`Échec d'envoi pour ${user.email}:`, error);
+          throw error;
+        }
       })
     );
 
-    // Analyser les résultats
-    const successful = results.filter(r => r.status === 'fulfilled').length;
-    const failed = results.filter(r => r.status === 'rejected').length;
+    // Analyser les résultats avec plus de détails
+    const successfulResults = results.filter(r => r.status === 'fulfilled');
+    const failedResults = results.filter(r => r.status === 'rejected');
 
-    console.log(`Newsletter envoyée avec succès à ${successful} utilisateurs`);
-    if (failed > 0) {
-      console.log(`Échec de l'envoi pour ${failed} utilisateurs`);
+    console.log(`Newsletter envoyée avec succès à ${successfulResults.length} utilisateurs`);
+    if (failedResults.length > 0) {
+      console.log(`Détails des échecs (${failedResults.length} utilisateurs):`);
+      failedResults.forEach((result: any) => {
+        console.error(result.reason);
+      });
     }
 
-    return { successful, failed };
+    return { 
+      successful: successfulResults.length, 
+      failed: failedResults.length,
+      failedDetails: failedResults.map((r: any) => r.reason)
+    };
     
   } catch (error) {
     console.error("Erreur lors de l'envoi de la newsletter:", error);

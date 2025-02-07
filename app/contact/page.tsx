@@ -34,10 +34,10 @@ export default function Contact() {
             </Link>
             , <br /> ou à <span className="text-greenColorSecondary">l&apos;adresse email suivante</span> :{" "}
             <Link
-              href="mailto:contact@sdm-project.com"
+              href="mailto:contact@melovibs.com"
               className="text-blueColorTertiary underline"
             >
-              noreply@melovibs.com
+              contact@melovibs.com
             </Link>
             .
           </p>
