@@ -162,7 +162,7 @@ export const sendNewsletterToAllUsers = async () => {
     console.log(`Newsletter envoyée avec succès à ${successfulResults.length} utilisateurs`);
     if (failedResults.length > 0) {
       console.log(`Détails des échecs (${failedResults.length} utilisateurs):`);
-      failedResults.forEach((result: any) => {
+      failedResults.forEach((result: PromiseRejectedResult) => {
         console.error(result.reason);
       });
     }
@@ -170,7 +170,7 @@ export const sendNewsletterToAllUsers = async () => {
     return { 
       successful: successfulResults.length, 
       failed: failedResults.length,
-      failedDetails: failedResults.map((r: any) => r.reason)
+      failedDetails: failedResults.map((r: PromiseRejectedResult) => r.reason)
     };
     
   } catch (error) {
