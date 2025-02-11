@@ -212,7 +212,7 @@ export default function ListMostPopularTracks() {
         ))}
       </div>
       <div className="w-fit mx-auto mt-10 lg:mt-16 xl:mt-20">
-        <Link href={"/"}>
+        <Link href={"/classements/morceaux"}>
           <Button className="mx-auto">Découvrir le classement</Button>
         </Link>
       </div>
