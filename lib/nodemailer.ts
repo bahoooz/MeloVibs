@@ -77,7 +77,7 @@ export const sendNewsletterTest = async () => {
       return;
     }
 
-    const templatePath = path.join(process.cwd(), 'lib', 'newsletter-template.html');
+    const templatePath = path.join(process.cwd(), 'lib', 'newsletter-rappel-vote.html');
     let template = fs.readFileSync(templatePath, 'utf-8');
     
     // Créer un vrai token de désabonnement
@@ -91,7 +91,7 @@ export const sendNewsletterTest = async () => {
     const mailOptions = {
       from: "noreply@melovibs.com",
       to: "bahoz.coding@gmail.com",
-      subject: 'Test Newsletter MeloVibs v1.2',
+      subject: 'N\'oublie pas de voter - TheWeeknd, Lacrim et Alonzo ont sorti leur album ! 🎉',
       html: template
     };
 
@@ -119,16 +119,32 @@ export const sendNewsletterToAllUsers = async () => {
       isSubscribedToNewsletter: true 
     }, 'email name');
     
-    // Lire le template HTML
-    const templatePath = path.join(process.cwd(), 'lib', 'newsletter-template.html');
-    const templateBase = fs.readFileSync(templatePath, 'utf-8');
+    const DELAY_BETWEEN_EMAILS = 2000; // 2 secondes entre chaque envoi
+    const BATCH_SIZE = 50; // Nombre d'emails par lot
+    const DELAY_BETWEEN_BATCHES = 60000; // 1 minute de pause entre les lots
 
-    // Envoyer l'email à chaque utilisateur
-    const results = await Promise.allSettled(
-      users.map(async (user) => {
+    // Diviser les utilisateurs en lots
+    const batches = [];
+    for (let i = 0; i < users.length; i += BATCH_SIZE) {
+      batches.push(users.slice(i, i + BATCH_SIZE));
+    }
+
+    let totalSuccessful = 0;
+    let totalFailed = 0;
+    const failedEmails = [];
+
+    // Traiter chaque lot
+    for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+      const batch = batches[batchIndex];
+      
+      // Traiter chaque utilisateur dans le lot
+      for (const user of batch) {
         try {
           const unsubscribeToken = crypto.randomBytes(32).toString('hex');
           const unsubscribeLink = `${process.env.NEXTAUTH_URL}/api/newsletter/unsubscribe?token=${unsubscribeToken}&email=${encodeURIComponent(user.email)}`;
+          
+          const templatePath = path.join(process.cwd(), 'lib', 'newsletter-rappel-vote.html');
+          const templateBase = fs.readFileSync(templatePath, 'utf-8');
           
           const template = templateBase
             .replace('[Prénom]', user.name || '')
@@ -137,7 +153,7 @@ export const sendNewsletterToAllUsers = async () => {
           const mailOptions = {
             from: "noreply@melovibs.com",
             to: user.email,
-            subject: 'MeloVibs v1.2 est disponible ! 🎵',
+            subject: 'N\'oublie pas de voter - TheWeeknd, Lacrim et Alonzo ont sorti leur album ! 🎉',
             html: template
           };
 
@@ -145,32 +161,31 @@ export const sendNewsletterToAllUsers = async () => {
             newsletterUnsubscribeToken: unsubscribeToken
           });
 
-          await delay(1000); // Attendre 1 seconde entre chaque envoi
-
-          return await transporter.sendMail(mailOptions);
+          await transporter.sendMail(mailOptions);
+          totalSuccessful++;
+          
+          // Attendre entre chaque email
+          await delay(DELAY_BETWEEN_EMAILS);
+          
         } catch (error) {
           console.error(`Échec d'envoi pour ${user.email}:`, error);
-          throw error;
+          totalFailed++;
+          failedEmails.push({ email: user.email, error: error instanceof Error ? error.message : String(error) });
         }
-      })
-    );
+      }
 
-    // Analyser les résultats avec plus de détails
-    const successfulResults = results.filter(r => r.status === 'fulfilled');
-    const failedResults = results.filter(r => r.status === 'rejected');
-
-    console.log(`Newsletter envoyée avec succès à ${successfulResults.length} utilisateurs`);
-    if (failedResults.length > 0) {
-      console.log(`Détails des échecs (${failedResults.length} utilisateurs):`);
-      failedResults.forEach((result: PromiseRejectedResult) => {
-        console.error(result.reason);
-      });
+      // Si ce n'est pas le dernier lot, attendre avant le prochain lot
+      if (batchIndex < batches.length - 1) {
+        console.log(`Pause de ${DELAY_BETWEEN_BATCHES/1000} secondes avant le prochain lot...`);
+        await delay(DELAY_BETWEEN_BATCHES);
+      }
     }
 
-    return { 
-      successful: successfulResults.length, 
-      failed: failedResults.length,
-      failedDetails: failedResults.map((r: PromiseRejectedResult) => r.reason)
+    return {
+      successful: totalSuccessful,
+      failed: totalFailed,
+      failedEmails,
+      totalProcessed: users.length
     };
     
   } catch (error) {
