@@ -60,6 +60,25 @@ interface PlaylistData {
   };
 }
 
+interface SpotifyTrack {
+  id: string;
+  popularity: number;
+  preview_url: string | null;
+  album: {
+    id: string;
+    name: string;
+    images: Array<{
+      url: string;
+      height: number;
+      width: number;
+    }>;
+    external_urls: {
+      spotify: string;
+    };
+    release_date: string;
+  };
+}
+
 export async function getAccessToken(): Promise<string> {
   const client_id = process.env.SPOTIFY_CLIENT_ID as string;
   const client_secret = process.env.SPOTIFY_CLIENT_SECRET as string;
@@ -860,7 +879,6 @@ export async function getListElectroArtists() {
     "6nS5roXSAGhTGr34W6n7Et",
     "240wlM8vDrf6S4zCyzGj2W",
     "6caPJFLv1wesmM7gwK1ACy",
-    "1KpCi9BOfviCVhmpI4G2sY",
     "7w1eTNePApzDk8XtgykCPS",
     "28uJnu5EsrGml2tBd7y8ts",
     "1VJ0briNOlXRtJUAzoUJdt",
@@ -933,4 +951,50 @@ export async function getListKPopArtists() {
     "13rF01aOogvnkuQXOlgTW8",
   ];
   return getListArtists(playlistIds, "kpop");
+}
+
+// Fonction pour mettre à jour un lot de tracks
+export async function updateTracksDataBatch(trackIds: string[]) {
+  const token = await getAccessToken();
+  
+  try {
+    const response = await fetch(`https://api.spotify.com/v1/tracks?ids=${trackIds.join(',')}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Échec de la mise à jour du batch de tracks`);
+    }
+
+    const data = await response.json();
+    
+    const updatePromises = data.tracks.map(async (track: SpotifyTrack) => {
+      if (!track) return;
+      
+      const trackData = {
+        popularity: track.popularity,
+        previewUrl: track.preview_url,
+        album: {
+          id: track.album.id,
+          name: track.album.name,
+          images: track.album.images,
+          share_link: track.album.external_urls.spotify,
+          release_date: track.album.release_date,
+        }
+      };
+
+      await Track.findOneAndUpdate(
+        { spotifyId: track.id },
+        { $set: trackData }
+      );
+    });
+
+    await Promise.all(updatePromises);
+    return true;
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour du batch:", error);
+    return false;
+  }
 }
