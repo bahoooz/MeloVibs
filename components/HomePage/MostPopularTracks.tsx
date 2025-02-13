@@ -242,7 +242,7 @@ export default function MostPopularTracks() {
                       {track.name}
                     </h3>
                     <h4 className="font-medium text-xl text-[#28CB62] truncate max-w-[200px] sm:max-w-[400px] lg:max-w-[500px] xl:max-w-[250px]">
-                      {track.artists[0].name}
+                      {track.artists.map((artist) => artist.name).join(", ")}
                     </h4>
                   </CardTitle>
                   <div className="flex flex-col gap-3 sm:flex-row sm:gap-5">

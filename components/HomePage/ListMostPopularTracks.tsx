@@ -128,7 +128,7 @@ export default function ListMostPopularTracks() {
                 <CardTrack
                   image={track.album.images[0].url}
                   title={track.name}
-                  artist={track.artists[0].name}
+                  artist={track.artists.map((artist) => artist.name).join(", ")}
                   votes={formatVoteCount(track.votes)}
                   isLoading={loadingTrackId === track._id}
                   onClick={() => handleVote(track._id)}
@@ -177,7 +177,7 @@ export default function ListMostPopularTracks() {
             <CardTrack
               image={track.album.images[0].url}
               title={track.name}
-              artist={track.artists[0].name}
+              artist={track.artists.map((artist) => artist.name).join(", ")}
               votes={track.votes}
               isLoading={loadingTrackId === track._id}
               onClick={() => handleVote(track._id)}

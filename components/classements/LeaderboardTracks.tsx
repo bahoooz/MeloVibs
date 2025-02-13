@@ -228,7 +228,7 @@ export default function ListTracksRanking({
                   <CardRankingTrack
                     _id={track._id}
                     title={track.name}
-                    artist={track.artists[0].name}
+                    artist={track.artists.map((artist) => artist.name).join(", ")}
                     image={track.album.images[0].url}
                     votes={track.votes}
                     width={track.album.images[0].width}
@@ -314,7 +314,7 @@ export default function ListTracksRanking({
                   key={`track-grid-${track._id}`}
                   _id={track._id}
                   title={track.name}
-                  artist={track.artists[0].name}
+                  artist={track.artists.map((artist) => artist.name).join(", ")}
                   image={track.album.images[0].url}
                   votes={track.votes}
                   width={track.album.images[0].width}
