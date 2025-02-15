@@ -6,6 +6,7 @@ import Footer from "@/components/global/Footer";
 import { Analytics } from "@vercel/analytics/react"
 import Script from 'next/script'
 import { GA_TRACKING_ID } from '@/lib/gtag'
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 
 export default function RootLayout({
@@ -42,6 +43,7 @@ export default function RootLayout({
           <Toaster />
           <Footer />
           <Analytics />
+          <SpeedInsights />
         </SessionProvider>
       </body>
     </html>
