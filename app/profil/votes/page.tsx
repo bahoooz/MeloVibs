@@ -36,7 +36,7 @@ export default function Votes() {
 
           const data = await response.json();
           console.log("Réponse API:", data);
-          setVotedTracks(data.tracks);
+          setVotedTracks(data.tracks.slice().reverse());
         } catch (error) {
           console.error("Erreur:", error);
         } finally {
