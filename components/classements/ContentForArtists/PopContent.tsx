@@ -15,6 +15,7 @@ export default function PopContent() {
     sortMethodByIncreasingOrDecreasing,
     setSortMethodByIncreasingOrDecreasing,
   ] = useState("decreasing");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const toggleSortByPopularityOrVotesOrFollowers = () => {
     setSortMethodByPopularityOrVotesOrFollowers((current) => {
@@ -63,6 +64,8 @@ export default function PopContent() {
           sortMethodByPopularityOrVotesOrFollowers
         }
         sortByIncreasingOrDecreasing={sortMethodByIncreasingOrDecreasing}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
       />
       </div>
       <LeaderboardArtists
@@ -71,6 +74,7 @@ export default function PopContent() {
         }
         sortMethodByIncreasingOrDecreasing={sortMethodByIncreasingOrDecreasing}
         genre="pop"
+        searchQuery={searchQuery}
       />
       <StatsAboutYou />
     </div>

@@ -7,6 +7,7 @@ import { SpeakerHifi } from "@phosphor-icons/react";
 import React, { useState } from "react";
 
 export default function AfroBeatsContent() {
+  const [searchQuery, setSearchQuery] = useState("");
   const [
     sortMethodByPopularityOrVotesOrFollowers,
     setSortMethodByPopularityOrVotesOrFollowers,
@@ -36,7 +37,7 @@ export default function AfroBeatsContent() {
     <div className="mt-48 lg:mt-52 xl:mt-56 px-8 overflow-x-hidden w-screen">
       <div className="mb-28 lg:mb-32 flex flex-col gap-6">
         <h1 className="text-5xl md:w-[600px] md:mx-auto lg:w-[700px] xl:w-[1200px] xl:text-center">
-        Les artistes les{" "}
+          Les artistes les{" "}
           {sortMethodByIncreasingOrDecreasing === "increasing"
             ? "moins"
             : "plus"}{" "}
@@ -54,16 +55,18 @@ export default function AfroBeatsContent() {
           />{" "}
           Afro Beats
         </h2>
-      <FilterArtists
-        toggleSortByPopularityOrVotesOrFollowers={
-          toggleSortByPopularityOrVotesOrFollowers
-        }
-        toggleSortByIncreasingOrDecreasing={toggleSortByIncreasingOrDecreasing}
-        sortByPopularityOrVotesOrFollowers={
-          sortMethodByPopularityOrVotesOrFollowers
-        }
-        sortByIncreasingOrDecreasing={sortMethodByIncreasingOrDecreasing}
-      />
+        <FilterArtists
+          toggleSortByPopularityOrVotesOrFollowers={
+            toggleSortByPopularityOrVotesOrFollowers
+          }
+          toggleSortByIncreasingOrDecreasing={toggleSortByIncreasingOrDecreasing}
+          sortByPopularityOrVotesOrFollowers={
+            sortMethodByPopularityOrVotesOrFollowers
+          }
+          sortByIncreasingOrDecreasing={sortMethodByIncreasingOrDecreasing}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
       </div>
       <LeaderboardArtists
         sortMethodByPopularityOrVotesOrFollowers={
@@ -71,6 +74,7 @@ export default function AfroBeatsContent() {
         }
         sortMethodByIncreasingOrDecreasing={sortMethodByIncreasingOrDecreasing}
         genre="afro-beats"
+        searchQuery={searchQuery}
       />
       <StatsAboutYou />
     </div>

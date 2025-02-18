@@ -15,6 +15,8 @@ export default function Latines() {
     sortMethodByIncreasingOrDecreasing,
     setSortMethodByIncreasingOrDecreasing,
   ] = useState("decreasing");
+  const [searchQuery, setSearchQuery] = useState("");
+
 
   const toggleSortByPopularityOrVotesOrFollowers = () => {
     setSortMethodByPopularityOrVotesOrFollowers((current) => {
@@ -63,6 +65,8 @@ export default function Latines() {
           sortMethodByPopularityOrVotesOrFollowers
         }
         sortByIncreasingOrDecreasing={sortMethodByIncreasingOrDecreasing}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
       />
       </div>
       <LeaderboardArtists
@@ -71,6 +75,7 @@ export default function Latines() {
         }
         sortMethodByIncreasingOrDecreasing={sortMethodByIncreasingOrDecreasing}
         genre="latines"
+        searchQuery={searchQuery}
       />
       <StatsAboutYou />
     </div>

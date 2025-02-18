@@ -28,6 +28,7 @@ interface ListTracksRankingProps {
   sortMethodByPopularityOrVotes: string;
   sortMethodByDate: string;
   sortMethodByIncreasingOrDecreasing: string;
+  searchQuery: string;
 }
 
 export default function ListTracksRanking({
@@ -35,6 +36,7 @@ export default function ListTracksRanking({
   sortMethodByPopularityOrVotes,
   sortMethodByDate,
   sortMethodByIncreasingOrDecreasing,
+  searchQuery,
 }: ListTracksRankingProps) {
   const { toast } = useToast();
   const { data: session, update } = useSession();
@@ -47,12 +49,25 @@ export default function ListTracksRanking({
   const [loadingTrackId, setLoadingTrackId] = useState<string | null>(null);
 
   // Calcul du nombre total de pages nécessaires
-  const totalPages = Math.ceil(tracks.length / tracksPerPage);
+  const totalPages = Math.ceil(
+    tracks.filter((track) =>
+      track.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      track.artists.some((artist) =>
+        artist.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    ).length / tracksPerPage
+  );
 
-  // Fonction pour obtenir les pistes de la page courante
+  // Fonction pour obtenir les pistes de la page courante avec filtre de recherche
   const getCurrentPageTracks = () => {
     const startIndex = (currentPage - 1) * tracksPerPage;
-    return tracks.slice(startIndex, startIndex + tracksPerPage);
+    const filteredTracks = tracks.filter((track) =>
+      track.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      track.artists.some((artist) =>
+        artist.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    );
+    return filteredTracks.slice(startIndex, startIndex + tracksPerPage);
   };
 
   const handleVote = useMemo(() => {
@@ -246,19 +261,21 @@ export default function ListTracksRanking({
                     ranking={globalIndex}
                     podium={currentPage === 1 && i === 0 ? true : false}
                     popularity={
-                      track.popularity >= 80
-                        ? "Hit incontournable"
-                        : track.popularity >= 70
-                        ? "Hit du moment"
-                        : track.popularity >= 60
-                        ? "Favori du public"
-                        : track.popularity >= 50
-                        ? "Tendance montante"
-                        : track.popularity >= 30
-                        ? "À découvrir"
-                        : track.popularity >= 10
-                        ? "Note discrète"
-                        : "Nouveau"
+                      track.popularity >= 95
+                    ? "Phénomène mondial"
+                    : track.popularity >= 80
+                    ? "Hit incontournable"
+                    : track.popularity >= 70
+                    ? "Hit du moment"
+                    : track.popularity >= 60
+                    ? "Favori du public"
+                    : track.popularity >= 50
+                    ? "Tendance montante"
+                    : track.popularity >= 30
+                    ? "À découvrir"
+                    : track.popularity >= 10
+                    ? "Note discrète"
+                    : "Nouveau"
                     }
                     shareLink={track.album.share_link}
                   />

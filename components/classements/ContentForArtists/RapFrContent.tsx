@@ -15,6 +15,7 @@ export default function RapFrContent() {
     sortMethodByIncreasingOrDecreasing,
     setSortMethodByIncreasingOrDecreasing,
   ] = useState("decreasing");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const toggleSortByPopularityOrVotesOrFollowers = () => {
     setSortMethodByPopularityOrVotesOrFollowers((current) => {
@@ -63,6 +64,8 @@ export default function RapFrContent() {
           sortMethodByPopularityOrVotesOrFollowers
         }
         sortByIncreasingOrDecreasing={sortMethodByIncreasingOrDecreasing}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
       />
       </div>
       <LeaderboardArtists
@@ -71,6 +74,7 @@ export default function RapFrContent() {
         }
         sortMethodByIncreasingOrDecreasing={sortMethodByIncreasingOrDecreasing}
         genre="rap-fr"
+        searchQuery={searchQuery}
       />
       <StatsAboutYou />
     </div>

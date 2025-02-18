@@ -252,7 +252,7 @@ export async function getListAfroBeatsTracks() {
 // ///////////////////////////
 
 export async function getListRapUsTracks() {
-  const playlistIds = ["5fAhM64rOJprFIQEnmWQd1", "1awYlVqR3LpIS0fkUW3kbw"];
+  const playlistIds = ["5fAhM64rOJprFIQEnmWQd1", "1awYlVqR3LpIS0fkUW3kbw", "0fOI1c9t4S1Qtu00PGlygb"];
   return getPlaylistTracks(playlistIds, "rap-us");
 }
 
@@ -338,31 +338,37 @@ export async function getArtistsRapFr() {
 
 async function getListArtists(artistIds: string[], genre: string) {
   const token = await getAccessToken();
+  const batchSize = 50; // Taille maximale autorisée par l'API Spotify
+  let allArtistsItems: SpotifyArtist[] = [];
 
   try {
-    const res = await fetch(
-      `https://api.spotify.com/v1/artists?ids=${artistIds.join(",")}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    // Diviser les IDs en lots de 50
+    for (let i = 0; i < artistIds.length; i += batchSize) {
+      const batch = artistIds.slice(i, i + batchSize);
+      const res = await fetch(
+        `https://api.spotify.com/v1/artists?ids=${batch.join(",")}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error(`Échec de la récupération des artistes ${genre} (lot ${i/batchSize + 1})`);
       }
-    );
 
-    if (!res.ok) {
-      throw new Error(`Échec de la récupération des artistes ${genre}`);
+      const listArtists = await res.json();
+      allArtistsItems = [...allArtistsItems, ...listArtists.artists];
     }
-
-    const listArtists = await res.json();
-    const artistsItems = listArtists.artists;
 
     await connectDb();
     console.log(
       `Connexion à la base de données réussie pour les artistes ${genre}`
     );
-    console.log(`Nombre d'artistes ${genre} trouvés:`, artistsItems.length);
+    console.log(`Nombre d'artistes ${genre} trouvés:`, allArtistsItems.length);
 
-    const artistsPromises = artistsItems.map(async (artist: SpotifyArtist) => {
+    const artistsPromises = allArtistsItems.map(async (artist: SpotifyArtist) => {
       // Récupérer toutes les pistes de l'artiste
       const tracks = await Track.find({
         "artists.id": artist.id,
@@ -392,7 +398,7 @@ async function getListArtists(artistIds: string[], genre: string) {
     });
 
     await Promise.all(artistsPromises);
-    return artistsItems;
+    return allArtistsItems;
   } catch (error) {
     console.error(`Erreur lors de la sauvegarde des artistes ${genre}:`, error);
     throw error;
@@ -451,6 +457,7 @@ export async function getListRapFrArtists() {
     "3MNnSV5hDd2UzZzgqD8xlU",
     "6Mm2g25BTeJ6BICPFWGkPg",
     "3xEJ7cDz5rdg6VM8E6Mqhf",
+    "7DUTsWY3RBd64vh8UtgtYA",
   ];
   return getListArtists(playlistIds, "rap-fr");
 }

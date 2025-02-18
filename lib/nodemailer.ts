@@ -193,3 +193,38 @@ export const sendNewsletterToAllUsers = async () => {
     throw error;
   }
 };
+
+export const sendContactEmail = async (
+  senderEmail: string,
+  subject: string,
+  message: string,
+  userName?: string
+) => {
+  if (!process.env.EMAIL_USER) {
+    throw new Error("EMAIL_USER n'est pas configuré dans les variables d'environnement");
+  }
+
+  const mailOptions = {
+    from: {
+      name: userName || senderEmail,
+      address: process.env.EMAIL_USER
+    },
+    replyTo: senderEmail,
+    to: "contact@melovibs.com",
+    subject: `[Contact MeloVib's] ${subject}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2>Nouveau message de contact</h2>
+        ${userName ? `<p><strong>De :</strong> ${userName}</p>` : ''}
+        <p><strong>Email :</strong> ${senderEmail}</p>
+        <p><strong>Objet :</strong> ${subject}</p>
+        <hr style="margin: 20px 0; border: 1px solid #eee;">
+        <div style="white-space: pre-wrap;">
+          ${message}
+        </div>
+      </div>
+    `
+  };
+
+  await transporter.sendMail(mailOptions);
+};

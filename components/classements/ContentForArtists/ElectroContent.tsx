@@ -15,6 +15,7 @@ export default function ElectroContent() {
     sortMethodByIncreasingOrDecreasing,
     setSortMethodByIncreasingOrDecreasing,
   ] = useState("decreasing");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const toggleSortByPopularityOrVotesOrFollowers = () => {
     setSortMethodByPopularityOrVotesOrFollowers((current) => {
@@ -63,6 +64,8 @@ export default function ElectroContent() {
           sortMethodByPopularityOrVotesOrFollowers
         }
         sortByIncreasingOrDecreasing={sortMethodByIncreasingOrDecreasing}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
       />
       </div>
       <LeaderboardArtists
@@ -71,6 +74,7 @@ export default function ElectroContent() {
         }
         sortMethodByIncreasingOrDecreasing={sortMethodByIncreasingOrDecreasing}
         genre="electro"
+        searchQuery={searchQuery}
       />
       <StatsAboutYou />
     </div>

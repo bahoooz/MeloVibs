@@ -17,6 +17,7 @@ export default function AfroBeatsContent() {
       sortMethodByIncreasingOrDecreasing,
       setSortMethodByIncreasingOrDecreasing,
     ] = useState("decreasing");
+    const [searchQuery, setSearchQuery] = useState("");
   
     useEffect(() => {
       setCurrentGenre("afro-beats");
@@ -84,6 +85,8 @@ export default function AfroBeatsContent() {
             sortByPopularityOrVotes={sortMethodByPopularityOrVotes}
             sortByDate={sortMethodByDate}
             sortByIncreasingOrDecreasing={sortMethodByIncreasingOrDecreasing}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
           />
         </div>
         <LeaderboardTracks
@@ -91,6 +94,7 @@ export default function AfroBeatsContent() {
           sortMethodByPopularityOrVotes={sortMethodByPopularityOrVotes}
           sortMethodByDate={sortMethodByDate}
           sortMethodByIncreasingOrDecreasing={sortMethodByIncreasingOrDecreasing}
+          searchQuery={searchQuery}
         />
         <StatsAboutYou />
       </div>

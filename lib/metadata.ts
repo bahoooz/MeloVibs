@@ -53,8 +53,31 @@ export const defaultMetadata: Metadata = {
     },
   },
   icons: {
-    icon: "/Logos/Icon-MeloVib's-1-128x128.png",
-    apple: "/Logos/Icon-MeloVib's-1-128x128.png",
+    icon: [
+      {
+        url: "/Logos/icon-melovibs-64x64.png",
+        sizes: "64x64",
+        type: "image/png"
+      },
+      {
+        url: "/Logos/icon-melovibs-192x192",
+        sizes: "192x192",
+        type: "image/png"
+      },
+      {
+        url: "/Logos/icon-melovibs-512x512.png",
+        sizes: "512x512",
+        type: "image/png"
+      }
+    ],
+    shortcut: "/Logos/icon-melovibs-64x64.png",
+    apple: [
+      {
+        url: "/Logos/icon-melovibs-180x180.png",
+        sizes: "180x180",
+        type: "image/png"
+      }
+    ]
   },
   openGraph: {
     type: "website",
@@ -66,7 +89,7 @@ export const defaultMetadata: Metadata = {
     siteName: "MeloVib's",
     images: [
       {
-        url: "/Logos/Logo-MeloVib's-1-1024x1024.png",
+        url: "/Logos/icon-melovibs-1024x1024.png",
         width: 1024,
         height: 1024,
         alt: "Logo MeloVib's",
@@ -78,7 +101,7 @@ export const defaultMetadata: Metadata = {
     title: "MeloVib's - Votez pour vos morceaux préférés",
     description:
       "Découvrez MeloVib's, la plateforme destinée aux fans de musique qui vous permet de voter pour vos morceaux préférés dans tous les genres. Chaque mois, explore les classements, suis les tendances et ajoute tes votes dans un univers musical interactif et dynamique.",
-    images: ["/Logos/Logo-MeloVib's-1-1024x1024.png"],
+    images: ["/Logos/icon-melovibs-1024x1024.png"],
     creator: "@melovibs",
     site: "@melovibs",
   },

@@ -27,12 +27,14 @@ interface LeaderboardArtistsProps {
   sortMethodByPopularityOrVotesOrFollowers: string;
   sortMethodByIncreasingOrDecreasing: string;
   genre: string;
+  searchQuery: string;
 }
 
 export default function LeaderboardArtists({
   sortMethodByPopularityOrVotesOrFollowers,
   sortMethodByIncreasingOrDecreasing,
   genre,
+  searchQuery,
 }: LeaderboardArtistsProps) {
   const [artists, setArtists] = useState<Artist[]>([]);
   const [currentPage, setCurrentPage] = useState(1); // État pour gérer la page courante
@@ -79,7 +81,10 @@ export default function LeaderboardArtists({
   // Fonction pour obtenir les pistes de la page courante
   const getCurrentPageArtists = () => {
     const startIndex = (currentPage - 1) * artistPerPage;
-    return artists.slice(startIndex, startIndex + artistPerPage);
+    const filteredArtists = artists.filter((artist) =>
+      artist.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    return filteredArtists.slice(startIndex, startIndex + artistPerPage);
   };
 
   // Fonction pour générer les numéros de page à afficher dans la pagination

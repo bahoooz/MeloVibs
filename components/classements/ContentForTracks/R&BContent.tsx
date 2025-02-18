@@ -9,7 +9,7 @@ import FiltersTracks from "@/components/classements/FiltersTracks";
 
 export default function RnBContent() {
   const { setCurrentGenre } = useTrackStore();
-
+  const [searchQuery, setSearchQuery] = useState("");
   const [sortMethodByPopularityOrVotes, setSortMethodByPopularityOrVotes] =
     useState("popularity");
   const [sortMethodByDate, setSortMethodByDate] = useState("30-last-days");
@@ -84,6 +84,8 @@ export default function RnBContent() {
           sortByPopularityOrVotes={sortMethodByPopularityOrVotes}
           sortByDate={sortMethodByDate}
           sortByIncreasingOrDecreasing={sortMethodByIncreasingOrDecreasing}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
         />
       </div>
       <LeaderboardTracks
@@ -91,6 +93,7 @@ export default function RnBContent() {
         sortMethodByPopularityOrVotes={sortMethodByPopularityOrVotes}
         sortMethodByDate={sortMethodByDate}
         sortMethodByIncreasingOrDecreasing={sortMethodByIncreasingOrDecreasing}
+        searchQuery={searchQuery}
       />
       <StatsAboutYou />
     </div>

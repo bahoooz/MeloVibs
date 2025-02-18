@@ -102,14 +102,14 @@ export default function CardRankingArtist({
           followers
         </h4>
         <h5 className="text-blueColorTertiary">
-          {popularity >= 81
+          {popularity >= 80
             ? "Superstar"
-            : popularity >= 61
+            : popularity >= 60
             ? "Tête d'affiche"
-            : popularity >= 41
-            ? "En pleine ascension"
-            : popularity >= 21
-            ? "Début de carrière"
+            : popularity >= 40
+            ? "Artiste populaire"
+            : popularity >= 20
+            ? "Début de hype"
             : "Outsider"}
         </h5>
         <h6 className="text-sm">{votes} votes</h6>

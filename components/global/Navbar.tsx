@@ -66,7 +66,7 @@ export default function Navbar() {
               </p>
               <div className="opacity-0 group-hover:opacity-100 group-hover:-bottom-4 transition-all duration-300 absolute -bottom-0 translate-y-full left-1/2 -translate-x-1/2 bg-[#252639] text-xs w-44 p-2 rounded-lg pointer-events-none -z-10 infobulle">
                 <p>
-                  Vos votes disponibles et vos points, 2 votes en plus toutes les 3 heures.
+                  Vos votes disponibles et <br /> vos points, 2 votes en plus toutes les 3 heures.
                 </p>
                 <div className="absolute top-1 right-1 bg-[#252639] rounded-full p-2 translate-x-1/2 -translate-y-1/2">
                   <Lightbulb
@@ -261,7 +261,7 @@ export default function Navbar() {
               </p>
               <div className="opacity-0 group-hover:opacity-100 group-hover:-bottom-10 xl:group-hover:-bottom-8 transition-all duration-300 absolute -bottom-0 translate-y-full left-1/2 -translate-x-1/2 bg-[#252639] text-sm w-52 p-2 rounded-lg pointer-events-none -z-10 infobulle">
                 <p>
-                  Vos votes disponibles et vos points, 2 votes en plus toutes les 3 heures.
+                  Vos votes disponibles et <br /> vos points, 2 votes en plus toutes les 3 heures.
                 </p>
                 <div className="absolute top-1 right-1 bg-[#252639] rounded-full p-2 translate-x-1/2 -translate-y-1/2">
                   <Lightbulb
