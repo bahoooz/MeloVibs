@@ -287,20 +287,6 @@ export default function ListTracksRanking({
     return carousels;
   };
 
-  // Au début du composant, ajoutez ce hook personnalisé
-  const [windowWidth, setWindowWidth] = useState(
-    typeof window !== "undefined" ? window.innerWidth : 0
-  );
-
-  useEffect(() => {
-    function handleResize() {
-      setWindowWidth(window.innerWidth);
-    }
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   // Rendu du composant
   return (
     <div>
