@@ -61,12 +61,17 @@ export default function ListTracksRanking({
   // Fonction pour obtenir les pistes de la page courante avec filtre de recherche
   const getCurrentPageTracks = () => {
     const startIndex = (currentPage - 1) * tracksPerPage;
-    const filteredTracks = tracks.filter((track) =>
-      track.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      track.artists.some((artist) =>
-        artist.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
+    const filteredTracks = tracks
+      .map((track, index) => ({
+        ...track,
+        originalIndex: index + 1
+      }))
+      .filter((track) =>
+        track.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        track.artists.some((artist) =>
+          artist.name.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
     return filteredTracks.slice(startIndex, startIndex + tracksPerPage);
   };
 
@@ -227,61 +232,52 @@ export default function ListTracksRanking({
           className="w-full mx-auto md:w-[600px] md:mx-auto lg:w-[700px] xl:w-[1200px]"
         >
           <CarouselContent hideOverflow={false} className="-ml-8 sm:-ml-10">
-            {carouselTracks.map((track, trackIndex) => {
-              // Calcul du vrai index de la track
-              const globalIndex =
-                (currentPage - 1) * tracksPerPage + // Index de base pour la page
-                i * tracksPerCarousel + // Index de base pour le carousel
-                trackIndex +
-                1; // Index dans le carousel actuel (+1 pour commencer à 1)
-
-              return (
-                <CarouselItem
-                  key={`track-${track._id}-${currentPage}`}
-                  className="basis-[300px] pl-8 sm:pl-10"
-                >
-                  <CardRankingTrack
-                    _id={track._id}
-                    title={track.name}
-                    artist={track.artists.map((artist) => artist.name).join(", ")}
-                    image={track.album.images[0].url}
-                    votes={track.votes}
-                    width={track.album.images[0].width}
-                    height={track.album.images[0].height}
-                    isLoading={loadingTrackId === track._id}
-                    onClick={() => handleVote(track._id)}
-                    stylesIsVotedButton={`${
-                      isVoted(track._id) ? "bg-btnColorIsVoted border-4 border-white overflow-hidden" : ""
-                    }`}
-                    stylesIsVotedIcon={
-                      isVoted(track._id)
-                        ? "min-h-32 min-w-32"
-                        : "min-h-12 min-w-12"
-                    }
-                    ranking={globalIndex}
-                    podium={currentPage === 1 && i === 0 ? true : false}
-                    popularity={
-                      track.popularity >= 95
-                    ? "Phénomène mondial"
-                    : track.popularity >= 80
-                    ? "Hit incontournable"
-                    : track.popularity >= 70
-                    ? "Hit du moment"
-                    : track.popularity >= 60
-                    ? "Favori du public"
-                    : track.popularity >= 50
-                    ? "Tendance montante"
-                    : track.popularity >= 30
-                    ? "À découvrir"
-                    : track.popularity >= 10
-                    ? "Note discrète"
-                    : "Nouveau"
-                    }
-                    shareLink={track.album.share_link}
-                  />
-                </CarouselItem>
-              );
-            })}
+            {carouselTracks.map((track) => (
+              <CarouselItem
+                key={`track-${track._id}-${currentPage}`}
+                className="basis-[300px] pl-8 sm:pl-10"
+              >
+                <CardRankingTrack
+                  _id={track._id}
+                  title={track.name}
+                  artist={track.artists.map((artist) => artist.name).join(", ")}
+                  image={track.album.images[0].url}
+                  votes={track.votes}
+                  width={track.album.images[0].width}
+                  height={track.album.images[0].height}
+                  isLoading={loadingTrackId === track._id}
+                  onClick={() => handleVote(track._id)}
+                  stylesIsVotedButton={`${
+                    isVoted(track._id) ? "bg-btnColorIsVoted border-4 border-white overflow-hidden" : ""
+                  }`}
+                  stylesIsVotedIcon={
+                    isVoted(track._id)
+                      ? "min-h-32 min-w-32"
+                      : "min-h-12 min-w-12"
+                  }
+                  ranking={track.originalIndex}
+                  podium={track.originalIndex <= 5}
+                  popularity={
+                    track.popularity >= 95
+                      ? "Phénomène mondial"
+                      : track.popularity >= 80
+                      ? "Hit incontournable"
+                      : track.popularity >= 70
+                      ? "Hit du moment"
+                      : track.popularity >= 60
+                      ? "Favori du public"
+                      : track.popularity >= 50
+                      ? "Tendance montante"
+                      : track.popularity >= 30
+                      ? "À découvrir"
+                      : track.popularity >= 10
+                      ? "Note discrète"
+                      : "Nouveau"
+                  }
+                  shareLink={track.album.share_link}
+                />
+              </CarouselItem>
+            ))}
           </CarouselContent>
           <CarouselPrevious className="bg-blueColorTertiary" />
           <CarouselNext className="bg-blueColorTertiary" />
@@ -323,57 +319,48 @@ export default function ListTracksRanking({
 
           {/* Grille visible uniquement sur desktop */}
           <div className="hidden lg:grid lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-5 gap-8 lg:w-[700px] xl:w-[1200px] mx-auto">
-            {getCurrentPageTracks().map((track, index) => {
-              const globalIndex = (currentPage - 1) * tracksPerPage + index + 1;
-
-              return (
-                <CardRankingTrack
-                  key={`track-grid-${track._id}`}
-                  _id={track._id}
-                  title={track.name}
-                  artist={track.artists.map((artist) => artist.name).join(", ")}
-                  image={track.album.images[0].url}
-                  votes={track.votes}
-                  width={track.album.images[0].width}
-                  height={track.album.images[0].height}
-                  isLoading={loadingTrackId === track._id}
-                  onClick={() => handleVote(track._id)}
-                  stylesIsVotedButton={`${
-                    isVoted(track._id) ? "bg-btnColorIsVoted border-[3px] border-white overflow-hidden" : ""
-                  }`}
-                  stylesIsVotedIcon={
-                    isVoted(track._id)
-                      ? "min-h-20 min-w-20"
-                      : "min-h-12 min-w-12"
-                  }
-                  ranking={globalIndex}
-                  podium={
-                    currentPage === 1 &&
-                    (windowWidth >= 1280 // 2xl breakpoint
-                      ? globalIndex <= 5
-                      : globalIndex <= 3)
-                  }
-                  popularity={
-                    track.popularity >= 95
-                      ? "Phénomène mondial"
-                      : track.popularity >= 80
-                      ? "Hit incontournable"
-                      : track.popularity >= 70
-                      ? "Hit du moment"
-                      : track.popularity >= 60
-                      ? "Favori du public"
-                      : track.popularity >= 50
-                      ? "Tendance montante"
-                      : track.popularity >= 30
-                      ? "À découvrir"
-                      : track.popularity >= 10
-                      ? "Note discrète"
-                      : "Nouveau"
-                  }
-                  shareLink={track.album.share_link}
-                />
-              );
-            })}
+            {getCurrentPageTracks().map((track) => (
+              <CardRankingTrack
+                key={`track-grid-${track._id}`}
+                _id={track._id}
+                title={track.name}
+                artist={track.artists.map((artist) => artist.name).join(", ")}
+                image={track.album.images[0].url}
+                votes={track.votes}
+                width={track.album.images[0].width}
+                height={track.album.images[0].height}
+                isLoading={loadingTrackId === track._id}
+                onClick={() => handleVote(track._id)}
+                stylesIsVotedButton={`${
+                  isVoted(track._id) ? "bg-btnColorIsVoted border-[3px] border-white overflow-hidden" : ""
+                }`}
+                stylesIsVotedIcon={
+                  isVoted(track._id)
+                    ? "min-h-20 min-w-20"
+                    : "min-h-12 min-w-12"
+                }
+                ranking={track.originalIndex}
+                podium={track.originalIndex <= 5}
+                popularity={
+                  track.popularity >= 95
+                    ? "Phénomène mondial"
+                    : track.popularity >= 80
+                    ? "Hit incontournable"
+                    : track.popularity >= 70
+                    ? "Hit du moment"
+                    : track.popularity >= 60
+                    ? "Favori du public"
+                    : track.popularity >= 50
+                    ? "Tendance montante"
+                    : track.popularity >= 30
+                    ? "À découvrir"
+                    : track.popularity >= 10
+                    ? "Note discrète"
+                    : "Nouveau"
+                }
+                shareLink={track.album.share_link}
+              />
+            ))}
           </div>
 
           {/* Pagination */}

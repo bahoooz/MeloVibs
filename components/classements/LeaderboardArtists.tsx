@@ -78,12 +78,17 @@ export default function LeaderboardArtists({
 
   const totalPages = Math.ceil(artists.length / artistPerPage);
 
-  // Fonction pour obtenir les pistes de la page courante
+  // Fonction pour obtenir les artistes de la page courante
   const getCurrentPageArtists = () => {
     const startIndex = (currentPage - 1) * artistPerPage;
-    const filteredArtists = artists.filter((artist) =>
-      artist.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredArtists = artists
+      .map((artist, index) => ({
+        ...artist,
+        originalIndex: index + 1
+      }))
+      .filter((artist) =>
+        artist.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     return filteredArtists.slice(startIndex, startIndex + artistPerPage);
   };
 
@@ -128,35 +133,26 @@ export default function LeaderboardArtists({
           className="w-full mx-auto md:w-[600px] md:mx-auto lg:w-[700px] xl:w-[1200px]"
         >
           <CarouselContent hideOverflow={false} className="-ml-8 sm:-ml-10">
-            {carouselArtists.map((artist: Artist, artistIndex: number) => {
-              // Calcul du vrai index de l'artiste
-              const globalIndex =
-                (currentPage - 1) * artistPerPage + // Index de base pour la page
-                i * artistPerCarousel + // Index de base pour le carousel
-                artistIndex +
-                1; // Index dans le carousel actuel (+1 pour commencer à 1)
-
-              return (
-                <CarouselItem
-                  key={`artist-${artist._id}-${currentPage}`}
-                  className="basis-auto pl-10"
-                >
-                  <CardRankingArtist
-                    _id={artist._id}
-                    name={artist.name}
-                    image={artist.images[0].url}
-                    votes={artist.votes}
-                    width={artist.images[0].width}
-                    height={artist.images[0].height}
-                    ranking={globalIndex}
-                    podium={currentPage === 1 && i === 0 ? true : false}
-                    popularity={artist.popularity}
-                    followers={artist.followers}
-                    shareLink={artist.share_link}
-                  />
-                </CarouselItem>
-              );
-            })}
+            {carouselArtists.map((artist) => (
+              <CarouselItem
+                key={`artist-${artist._id}-${currentPage}`}
+                className="basis-auto pl-10"
+              >
+                <CardRankingArtist
+                  _id={artist._id}
+                  name={artist.name}
+                  image={artist.images[0].url}
+                  votes={artist.votes}
+                  width={artist.images[0].width}
+                  height={artist.images[0].height}
+                  ranking={artist.originalIndex <= 5 ? artist.originalIndex : 0}
+                  podium={artist.originalIndex <= 5}
+                  popularity={artist.popularity}
+                  followers={artist.followers}
+                  shareLink={artist.share_link}
+                />
+              </CarouselItem>
+            ))}
           </CarouselContent>
           <CarouselPrevious className="bg-blueColorTertiary" />
           <CarouselNext className="bg-blueColorTertiary" />
@@ -193,31 +189,22 @@ export default function LeaderboardArtists({
 
       {/* Grille visible uniquement sur desktop */}
       <div className="hidden lg:grid lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-5 gap-20 lg:w-[700px] xl:w-[1200px] mx-auto">
-        {getCurrentPageArtists().map((artist: Artist, index: number) => {
-          const globalIndex = (currentPage - 1) * artistPerPage + index + 1;
-
-          return (
-            <CardRankingArtist
-              key={`track-grid-${artist._id}`}
-              _id={artist._id}
-              name={artist.name}
-              image={artist.images[0].url}
-              votes={artist.votes}
-              width={artist.images[0].width}
-              height={artist.images[0].height}
-              ranking={globalIndex}
-              podium={
-                currentPage === 1 &&
-                (windowWidth >= 1280 // 2xl breakpoint
-                  ? globalIndex <= 5
-                  : globalIndex <= 3)
-              }
-              popularity={artist.popularity}
-              followers={artist.followers}
-              shareLink={artist.share_link}
-            />
-          );
-        })}
+        {getCurrentPageArtists().map((artist) => (
+          <CardRankingArtist
+            key={`track-grid-${artist._id}`}
+            _id={artist._id}
+            name={artist.name}
+            image={artist.images[0].url}
+            votes={artist.votes}
+            width={artist.images[0].width}
+            height={artist.images[0].height}
+            ranking={artist.originalIndex <= 5 ? artist.originalIndex : 0}
+            podium={artist.originalIndex <= 5}
+            popularity={artist.popularity}
+            followers={artist.followers}
+            shareLink={artist.share_link}
+          />
+        ))}
       </div>
       {/* Pagination */}
       {totalPages > 1 && (
