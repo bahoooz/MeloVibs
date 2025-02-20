@@ -245,7 +245,7 @@ export async function getListRnBTracks() {
 }
 
 export async function getListAfroBeatsTracks() {
-  const playlistIds = ["4ykrONBhOgPr4sMhAVCoPx", "5myeBzohhCVewaK2Thqmo5"];
+  const playlistIds = ["4ykrONBhOgPr4sMhAVCoPx", "5myeBzohhCVewaK2Thqmo5", "25Y75ozl2aI0NylFToefO5"];
   return getPlaylistTracks(playlistIds, "afro-beats");
 }
 
