@@ -13,7 +13,7 @@ export const metadata = generateMetadata(
     "classement évolutif",
     "melovib's"
   ],
-  "/Logos/Logo-MeloVib's-1-1024x1024.png"
+  "/Logos/icon-melovibs-512x512.png"
 );
 
 export default function Home() {
